@@ -35,3 +35,4 @@ Collate:
     'computeWeight.R'
     'createParticle.R'
     'plots.R'
+BugReports: https://github.com/GaelBn/BRREW-ABC/issues

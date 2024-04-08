@@ -1,13 +1,15 @@
 Package: BRREWABC
 Type: Package
-Title: BRREW-ABC - Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation
+Title: Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Gaël Beaunée <gael.beaunee@inrae.fr>
+Maintainer: Gaël Beaunée <gael.beaunee@inrae.fr>
+Description: An R package designed to facilitate inference through a parallelized
+    Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm.
+    This package streamlines the process of conducting Bayesian inference for
+    complex models by implementing efficient parallelization techniques.
 License: GPL (>= 3)
-URL: https://github.com/GaelBn/BRREW-ABC, https://gaelbn.github.io/BRREW-ABC/
+URL: https://github.com/GaelBn/BRREWABC, https://gaelbn.github.io/BRREWABC/
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -35,4 +37,4 @@ Collate:
     'computeWeight.R'
     'createParticle.R'
     'plots.R'
-BugReports: https://github.com/GaelBn/BRREW-ABC/issues
+BugReports: https://github.com/GaelBn/BRREWABC/issues

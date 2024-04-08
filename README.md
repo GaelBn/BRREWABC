@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-BRREW-ABC (Batched Resilient and Rapid Estimation Workflow through
+BRREWABC (Batched Resilient and Rapid Estimation Workflow through
 Approximate Bayesian Computation) : an R package designed to facilitate
 inference through a parallelized Approximate Bayesian Computation
 Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the
@@ -20,7 +20,7 @@ You can install the development version of BRREWABC from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("GaelBn/BRREW-ABC")
+devtools::install_github("GaelBn/BRREWABC")
 ```
 
 ## Usage
@@ -63,40 +63,40 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 #> prtrbtn_krnl_sd: NA NA 
 #> -
 #> gen 2 
-#> threshold: 3.957004 
-#> prtrbtn_krnl_sd: 1.15533 0.2888219 
+#> threshold: 3.737803 
+#> prtrbtn_krnl_sd: 1.155267 0.2888316 
 #> -
 #> gen 3 
-#> threshold: 2.21928 
-#> prtrbtn_krnl_sd: 0.9438753 0.2654561 
+#> threshold: 1.983287 
+#> prtrbtn_krnl_sd: 0.9096719 0.260107 
 #> -
 #> gen 4 
-#> threshold: 1.326846 
-#> prtrbtn_krnl_sd: 0.7723687 0.2661741 
+#> threshold: 1.24357 
+#> prtrbtn_krnl_sd: 0.7365027 0.2600087 
 #> -
 #> gen 5 
-#> threshold: 0.8512537 
-#> prtrbtn_krnl_sd: 0.6380401 0.2745553 
+#> threshold: 0.7919258 
+#> prtrbtn_krnl_sd: 0.6140646 0.2642821 
 #> -
 #> gen 6 
-#> threshold: 0.540139 
-#> prtrbtn_krnl_sd: 0.542202 0.2599372 
+#> threshold: 0.5143133 
+#> prtrbtn_krnl_sd: 0.5233506 0.2621831 
 #> -
 #> gen 7 
-#> threshold: 0.3840295 
-#> prtrbtn_krnl_sd: 0.474508 0.251434 
+#> threshold: 0.3568089 
+#> prtrbtn_krnl_sd: 0.4602892 0.2574246 
 #> -
 #> gen 8 
-#> threshold: 0.2651064 
-#> prtrbtn_krnl_sd: 0.4081638 0.2415765 
+#> threshold: 0.2562583 
+#> prtrbtn_krnl_sd: 0.4206442 0.2448884 
 #> -
 #> gen 9 
-#> threshold: 0.1826087 
-#> prtrbtn_krnl_sd: 0.3521538 0.227762 
+#> threshold: 0.1746439 
+#> prtrbtn_krnl_sd: 0.3752413 0.2300746 
 #> -
 #> gen 10 
-#> threshold: 0.1300748 
-#> prtrbtn_krnl_sd: 0.3267991 0.2101253 
+#> threshold: 0.1286489 
+#> prtrbtn_krnl_sd: 0.3576637 0.2233128 
 #> -
 #> Experiment done!
 

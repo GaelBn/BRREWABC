@@ -53,50 +53,50 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 #> Check folder_path for : tmp
 #> Folder created successfully.
 #> Check folder_path for : res
-#> Folder already exists.
+#> Folder created successfully.
 #> Check folder_path for : res/csv
-#> Folder already exists.
+#> Folder created successfully.
 #> Check folder_path for : res/figs
-#> Folder already exists.
+#> Folder created successfully.
 #> gen 1 
 #> threshold: 
 #> prtrbtn_krnl_sd: NA NA 
 #> -
 #> gen 2 
-#> threshold: 3.998623 
-#> prtrbtn_krnl_sd: 1.155235 0.2888307 
+#> threshold: 3.957004 
+#> prtrbtn_krnl_sd: 1.15533 0.2888219 
 #> -
 #> gen 3 
-#> threshold: 2.153006 
-#> prtrbtn_krnl_sd: 0.9469025 0.2584123 
+#> threshold: 2.21928 
+#> prtrbtn_krnl_sd: 0.9438753 0.2654561 
 #> -
 #> gen 4 
-#> threshold: 1.397381 
-#> prtrbtn_krnl_sd: 0.7849039 0.2657151 
+#> threshold: 1.326846 
+#> prtrbtn_krnl_sd: 0.7723687 0.2661741 
 #> -
 #> gen 5 
-#> threshold: 0.8519803 
-#> prtrbtn_krnl_sd: 0.646988 0.2736002 
+#> threshold: 0.8512537 
+#> prtrbtn_krnl_sd: 0.6380401 0.2745553 
 #> -
 #> gen 6 
-#> threshold: 0.5684694 
-#> prtrbtn_krnl_sd: 0.5465287 0.2701191 
+#> threshold: 0.540139 
+#> prtrbtn_krnl_sd: 0.542202 0.2599372 
 #> -
 #> gen 7 
-#> threshold: 0.4040715 
-#> prtrbtn_krnl_sd: 0.4819998 0.2591692 
+#> threshold: 0.3840295 
+#> prtrbtn_krnl_sd: 0.474508 0.251434 
 #> -
 #> gen 8 
-#> threshold: 0.2762117 
-#> prtrbtn_krnl_sd: 0.420591 0.2436711 
+#> threshold: 0.2651064 
+#> prtrbtn_krnl_sd: 0.4081638 0.2415765 
 #> -
 #> gen 9 
-#> threshold: 0.1980603 
-#> prtrbtn_krnl_sd: 0.3758658 0.2273871 
+#> threshold: 0.1826087 
+#> prtrbtn_krnl_sd: 0.3521538 0.227762 
 #> -
 #> gen 10 
-#> threshold: 0.1379844 
-#> prtrbtn_krnl_sd: 0.3317047 0.2123022 
+#> threshold: 0.1300748 
+#> prtrbtn_krnl_sd: 0.3267991 0.2101253 
 #> -
 #> Experiment done!
 

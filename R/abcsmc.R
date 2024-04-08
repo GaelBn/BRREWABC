@@ -53,7 +53,7 @@
 #' res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 #' ss_obs = sum_stat_obs, max_number_of_gen = 10, nb_acc_prtcl_per_gen = 1000,
 #' new_threshold_quantile = 0.8, experiment_folderpath = "",
-#' max_concurrent_jobs = 2, verbose = FALSE)
+#' max_concurrent_jobs = 2, verbose = TRUE)
 #'
 #' # get results and plots
 #' all_accepted_particles = res$particles

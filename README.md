@@ -53,50 +53,50 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 #> Check folder_path for : tmp
 #> Folder created successfully.
 #> Check folder_path for : res
-#> Folder created successfully.
+#> Folder already exists.
 #> Check folder_path for : res/csv
-#> Folder created successfully.
+#> Folder already exists.
 #> Check folder_path for : res/figs
-#> Folder created successfully.
+#> Folder already exists.
 #> gen 1 
 #> threshold: 
 #> prtrbtn_krnl_sd: NA NA 
 #> -
 #> gen 2 
-#> threshold: 3.8241 
-#> prtrbtn_krnl_sd: 1.155307 0.2888311 
+#> threshold: 3.998623 
+#> prtrbtn_krnl_sd: 1.155235 0.2888307 
 #> -
 #> gen 3 
-#> threshold: 2.124396 
-#> prtrbtn_krnl_sd: 0.9411677 0.262425 
+#> threshold: 2.153006 
+#> prtrbtn_krnl_sd: 0.9469025 0.2584123 
 #> -
 #> gen 4 
-#> threshold: 1.304413 
-#> prtrbtn_krnl_sd: 0.7790466 0.2606397 
+#> threshold: 1.397381 
+#> prtrbtn_krnl_sd: 0.7849039 0.2657151 
 #> -
 #> gen 5 
-#> threshold: 0.7881324 
-#> prtrbtn_krnl_sd: 0.6282967 0.2600914 
+#> threshold: 0.8519803 
+#> prtrbtn_krnl_sd: 0.646988 0.2736002 
 #> -
 #> gen 6 
-#> threshold: 0.5236896 
-#> prtrbtn_krnl_sd: 0.5290049 0.2651203 
+#> threshold: 0.5684694 
+#> prtrbtn_krnl_sd: 0.5465287 0.2701191 
 #> -
 #> gen 7 
-#> threshold: 0.3709691 
-#> prtrbtn_krnl_sd: 0.4812579 0.2589308 
+#> threshold: 0.4040715 
+#> prtrbtn_krnl_sd: 0.4819998 0.2591692 
 #> -
 #> gen 8 
-#> threshold: 0.2567042 
-#> prtrbtn_krnl_sd: 0.42443 0.2441114 
+#> threshold: 0.2762117 
+#> prtrbtn_krnl_sd: 0.420591 0.2436711 
 #> -
 #> gen 9 
-#> threshold: 0.1831002 
-#> prtrbtn_krnl_sd: 0.3795465 0.2302809 
+#> threshold: 0.1980603 
+#> prtrbtn_krnl_sd: 0.3758658 0.2273871 
 #> -
 #> gen 10 
-#> threshold: 0.132646 
-#> prtrbtn_krnl_sd: 0.3398539 0.2133927 
+#> threshold: 0.1379844 
+#> prtrbtn_krnl_sd: 0.3317047 0.2123022 
 #> -
 #> Experiment done!
 
@@ -114,6 +114,38 @@ plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "GnBu")
 #> [1] "Plot saved as 'png'."
 ```
 
-<!-- ```{r pairplot, echo = FALSE}
-plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
-``` -->
+<div class="figure">
+
+<img src="man/figures/pairplot_m1.png" alt="Pairplot of all iterations" width="100%" />
+<p class="caption">
+Pairplot of all iterations
+</p>
+
+</div>
+
+<div class="figure">
+
+<img src="man/figures/thresholds_dist1.png" alt="Threshold evolution over iterations" width="100%" />
+<p class="caption">
+Threshold evolution over iterations
+</p>
+
+</div>
+
+<div class="figure">
+
+<img src="man/figures/densityridges_m1_alpha.png" alt="Density estimates for alpha" width="100%" />
+<p class="caption">
+Density estimates for alpha
+</p>
+
+</div>
+
+<div class="figure">
+
+<img src="man/figures/densityridges_m1_beta.png" alt="Density estimates for beta" width="100%" />
+<p class="caption">
+Density estimates for beta
+</p>
+
+</div>

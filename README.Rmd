@@ -64,6 +64,19 @@ plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal =
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "GnBu")
 ```
 
-<!-- ```{r pairplot, echo = FALSE}
-plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
-``` -->
+
+```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
+knitr::include_graphics("man/figures/pairplot_m1.png")
+```
+
+```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
+knitr::include_graphics("man/figures/thresholds_dist1.png")
+```
+
+```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
+knitr::include_graphics("man/figures/densityridges_m1_alpha.png")
+```
+
+```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
+knitr::include_graphics("man/figures/densityridges_m1_beta.png")
+```

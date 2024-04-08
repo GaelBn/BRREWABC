@@ -1,22 +1,28 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # BRREWABC <img src="man/figures/icon.png" align="right" width="90" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-BRREW-ABC (Batched Resilient and Rapid Estimation Workflow through
-Approximate Bayesian Computation) : an R package designed to facilitate
-inference through a parallelized Approximate Bayesian Computation
-Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the
-process of conducting Bayesian inference for complex models by
-implementing efficient parallelization techniques.
+BRREW-ABC (Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation) : an R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the process of conducting Bayesian inference for complex models by implementing efficient parallelization techniques.
 
 ## Installation
 
-You can install the development version of BRREWABC from
-[GitHub](https://github.com/) with:
+You can install the development version of BRREWABC from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -27,7 +33,7 @@ devtools::install_github("GaelBn/BRREW-ABC")
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
+```{r example}
 library(BRREWABC)
 
 # model definition
@@ -54,14 +60,8 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
-#> [1] "Plot saved as '.png'."
-#> Registered S3 method overwritten by 'GGally':
-#>   method from   
-#>   +.gg   ggplot2
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
-#> [1] "Plot saved as '.png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "GnBu")
-#> [1] "Plot saved as 'png'."
 ```
 
 <!-- ```{r pairplot, echo = FALSE}

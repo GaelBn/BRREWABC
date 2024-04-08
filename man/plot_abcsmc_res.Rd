@@ -7,7 +7,7 @@
 plot_abcsmc_res(
   data,
   prior,
-  filename = "pairplot.pdf",
+  filename = "pairplot.png",
   figtitle = "ABC smc results",
   colorpal = "GnBu",
   iter = NA

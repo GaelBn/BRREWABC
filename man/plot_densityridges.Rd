@@ -7,7 +7,7 @@
 plot_densityridges(
   data,
   prior,
-  filename = "densityridges.pdf",
+  filename = "densityridges.png",
   figtitle = "",
   colorpal = "Blues"
 )

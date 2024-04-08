@@ -16,7 +16,9 @@ subjob <- function( job_id,
 
   # loadEnvir(path_to_ABC_state) # TODO : using a  function is not working, need to fix this
   load(path_to_ABC_state)
-  source(model_def)
+  if(!is.null(model_def)) {
+    source(model_def)
+  }
 
   #           _                      _       _     _
   #  ___  ___| |_   __   ____ _ _ __(_) __ _| |__ | | ___  ___

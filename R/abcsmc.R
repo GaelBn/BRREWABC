@@ -1,8 +1,8 @@
 
 #' Run ABC-SMC inference in parallel
 #'
-#' @param model_def a R file containing only the model(s) function(s)
 #' @param model_list a list linking model name ( character string) to associated function
+#' @param model_def a R file containing only the model(s) function(s)
 #' @param prior_dist a list linking model name (character string) to a list describing the prior distribution of each parameter to be estimated
 #' @param ss_obs the observed summary statistics
 #' @param max_number_of_gen the maximum number of generations to be performed
@@ -33,33 +33,36 @@
 #' @include createLHSfromPrior.R defineNextThreshold.R setEmpiricalSD.R subjob.R saveEnvir.R
 #'
 #' @examples
-#' # library(BRREWABC)
-#' #
-#' # # model definition
-#' # compute_dist = function(x, ss_obs){
-#' #     ss_sim = c( x[["alpha"]] + x[["beta"]] + rnorm(1,0,0.1),
-#' #            x[["alpha"]] * x[["beta"]] + rnorm(1,0,0.1) ) # a very simple toy model
-#' #     dist = sum((ss_sim-ss_obs)^2)
-#' #     return(c(dist))
-#' # }
-#' #
-#' # MODEL_LIST <- list("m1" = compute_dist)
-#' # PRIOR_DIST <- list("m1" = list(c('alpha', 'unif', 0, 4), c('beta', 'unif', 0, 1)))
-#' #
-#' # # create a reference trajectory
-#' # sum_stat_obs = c(2.0,0.75)
-#' #
-#' # # run abc smc procedure
-#' # res = abcsmc( model_def = "test_brrewabc_models.R", model_list = MODEL_LIST, prior_dist = PRIOR_DIST, ss_obs = sum_stat_obs, max_number_of_gen = 1, nb_acc_prtcl_per_gen = 10, new_threshold_quantile = 0.8, experiment_folderpath = "", max_concurrent_jobs = 1, verbose = TRUE )
-#' #
-#' # # get results and plots
-#' # all_accepted_particles = res$particles
-#' # all_thresholds = res$thresholds
-#' # plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, filename = "pairplot_all.png", colorpal = "GnBu")
-#' # plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, filename = "densityridges.png", colorpal = "GnBu")
-#' # plot_thresholds(data = all_thresholds, nb_threshold = 1, filename = "thresholds.png", colorpal = "GnBu")
-abcsmc <- function( model_def = NULL, # required
-                    model_list = list(), # required
+#' library(BRREWABC)
+#'
+#' # model definition
+#' compute_dist = function(x, ss_obs){
+#'     ss_sim = c( x[["alpha"]] + x[["beta"]] + rnorm(1,0,0.1),
+#'            x[["alpha"]] * x[["beta"]] + rnorm(1,0,0.1) ) # a very simple toy model
+#'     dist = sum((ss_sim-ss_obs)^2)
+#'     return(c(dist))
+#' }
+#'
+#' MODEL_LIST <- list("m1" = compute_dist)
+#' PRIOR_DIST <- list("m1" = list(c('alpha', 'unif', 0, 4), c('beta', 'unif', 0, 1)))
+#'
+#' # create a reference trajectory
+#' sum_stat_obs = c(2.0,0.75)
+#'
+#' # run abc smc procedure
+#' res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
+#' ss_obs = sum_stat_obs, max_number_of_gen = 10, nb_acc_prtcl_per_gen = 1000,
+#' new_threshold_quantile = 0.8, experiment_folderpath = "",
+#' max_concurrent_jobs = 2, verbose = FALSE)
+#'
+#' # get results and plots
+#' all_accepted_particles = res$particles
+#' all_thresholds = res$thresholds
+#' plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
+#' plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
+#' plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "GnBu")
+abcsmc <- function( model_list = list(), # required
+                    model_def = NULL,
                     prior_dist = list(), # required
                     ss_obs = NA, # required
                     max_number_of_gen = 15,

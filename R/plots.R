@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' # see the abcsmc function help for details on how to produce results and plots
-plot_abcsmc_res = function(data, prior, filename = "pairplot.pdf", figtitle = "ABC smc results", colorpal = "GnBu", iter = NA){
+plot_abcsmc_res = function(data, prior, filename = "pairplot.png", figtitle = "ABC smc results", colorpal = "GnBu", iter = NA){
     # message("The plot may fail if, for one or more iterations, only one particle has been selected for one of the models.")
     tmp = data
     colorshift = 2  # because the first colours is often too light
@@ -99,7 +99,7 @@ plot_abcsmc_res = function(data, prior, filename = "pairplot.pdf", figtitle = "A
 #'
 #' @examples
 #' # see the abcsmc function help for details on how to produce results and plots
-plot_densityridges = function(data, prior, filename = "densityridges.pdf", figtitle = "", colorpal = "Blues"){
+plot_densityridges = function(data, prior, filename = "densityridges.png", figtitle = "", colorpal = "Blues"){
     tmp = data
     colorshift = 2  # because the first colours is often too light
     nb.cols = max(tmp$gen)+1+colorshift
@@ -161,7 +161,7 @@ plot_densityridges = function(data, prior, filename = "densityridges.pdf", figti
 #'
 #' @examples
 #' # see the abcsmc function help for details on how to produce results and plots
-plot_thresholds = function(data, nb_threshold = 1, filename = "thresholds.pdf", figtitle = "", colorpal = "Blues"){
+plot_thresholds = function(data, nb_threshold = 1, filename = "thresholds.png", figtitle = "", colorpal = "Blues"){
     tmp = data
     colorshift = 2  # because the first colours is often too light
     nb.cols = max(tmp$gen)+1+colorshift

@@ -7,7 +7,7 @@
 plot_thresholds(
   data,
   nb_threshold = 1,
-  filename = "thresholds.pdf",
+  filename = "thresholds.png",
   figtitle = "",
   colorpal = "Blues"
 )

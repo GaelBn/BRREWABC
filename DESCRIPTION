@@ -7,5 +7,31 @@ Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
+URL: https://github.com/GaelBn/BRREW-ABC
 Encoding: UTF-8
 LazyData: true
+Imports:
+    callr,
+    dplyr,
+    filelock,
+    GGally,
+    ggplot2,
+    ggridges,
+    grDevices,
+    lhs,
+    progress,
+    RColorBrewer,
+    scales,
+    stats,
+    utils
+RoxygenNote: 7.3.1
+Collate:
+    'saveEnvir.R'
+    'subjob.R'
+    'setEmpiricalSD.R'
+    'defineNextThreshold.R'
+    'createLHSfromPrior.R'
+    'abcsmc.R'
+    'computeWeight.R'
+    'createParticle.R'
+    'plots.R'

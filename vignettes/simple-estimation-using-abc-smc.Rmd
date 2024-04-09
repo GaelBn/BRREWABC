@@ -1,0 +1,79 @@
+---
+title: "Simple estimation using ABC-SMC"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simple estimation using ABC-SMC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BRREWABC)
+```
+
+## Model definition
+```{r}
+compute_dist = function(x, ss_obs){
+    ss_sim = c( x[["alpha"]] + x[["beta"]] + rnorm(1,0,0.1),
+           x[["alpha"]] * x[["beta"]] + rnorm(1,0,0.1) )
+    dist = sum((ss_sim-ss_obs)^2)
+    return(c(dist))
+}
+
+MODEL_LIST <- list("m1" = compute_dist)
+```
+
+## Define prior distribution
+```{r}
+PRIOR_DIST <- list("m1" = list(c('alpha', 'unif', 0, 4), c('beta', 'unif', 0, 1)))
+```
+
+## Create a reference trajectory
+```{r}
+sum_stat_obs = c(2.0,0.75)
+```
+
+## Run abc smc procedure
+```{r}
+res = abcsmc( model_list = MODEL_LIST,
+              prior_dist = PRIOR_DIST,
+              ss_obs = sum_stat_obs,
+              max_number_of_gen = 15,
+              nb_acc_prtcl_per_gen = 2000,
+              new_threshold_quantile = 0.8,
+              experiment_folderpath = "smpl",
+              max_concurrent_jobs = 5,
+              verbose = FALSE )
+```
+
+## Plot results
+```{r}
+all_accepted_particles = res$particles
+all_thresholds = res$thresholds
+plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, filename = "figures/smpl_pairplot_all.png", colorpal = "YlGnBu")
+plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, filename = "figures/smpl_densityridges.png", colorpal = "YlGnBu")
+plot_thresholds(data = all_thresholds, nb_threshold = 1, filename = "figures/smpl_thresholds.png", colorpal = "YlGnBu")
+```
+
+```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
+knitr::include_graphics("../man/figures/smpl_pairplot_all_m1.png")
+```
+
+```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
+knitr::include_graphics("../man/figures/smpl_thresholds_dist1.png")
+```
+
+```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
+knitr::include_graphics("../man/figures/smpl_densityridges_m1_alpha.png")
+```
+
+```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
+knitr::include_graphics("../man/figures/smpl_densityridges_m1_beta.png")
+```

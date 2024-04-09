@@ -46,71 +46,112 @@ sum_stat_obs = c(2.0,0.75)
 
 # run abc smc procedure
 res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
-  ss_obs = sum_stat_obs, max_number_of_gen = 10, nb_acc_prtcl_per_gen = 1000,
+  ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 3000,
   new_threshold_quantile = 0.8, experiment_folderpath = "",
   max_concurrent_jobs = 2, verbose = TRUE)
 #> [1] "tmp/currentABCState.RData"
 #> Check folder_path for : tmp
 #> Folder created successfully.
 #> Check folder_path for : res
-#> Folder created successfully.
+#> Folder already exists.
 #> Check folder_path for : res/csv
-#> Folder created successfully.
+#> Folder already exists.
 #> Check folder_path for : res/figs
-#> Folder created successfully.
+#> Folder already exists.
 #> gen 1 
 #> threshold: 
 #> prtrbtn_krnl_sd: NA NA 
 #> -
 #> gen 2 
-#> threshold: 3.737803 
-#> prtrbtn_krnl_sd: 1.155267 0.2888316 
+#> threshold: 4.028069 
+#> prtrbtn_krnl_sd: 1.154902 0.2887234 
 #> -
 #> gen 3 
-#> threshold: 1.983287 
-#> prtrbtn_krnl_sd: 0.9096719 0.260107 
+#> threshold: 2.144677 
+#> prtrbtn_krnl_sd: 0.9314262 0.2606515 
 #> -
 #> gen 4 
-#> threshold: 1.24357 
-#> prtrbtn_krnl_sd: 0.7365027 0.2600087 
+#> threshold: 1.318785 
+#> prtrbtn_krnl_sd: 0.7742273 0.2621097 
 #> -
 #> gen 5 
-#> threshold: 0.7919258 
-#> prtrbtn_krnl_sd: 0.6140646 0.2642821 
+#> threshold: 0.8125375 
+#> prtrbtn_krnl_sd: 0.6405105 0.2649226 
 #> -
 #> gen 6 
-#> threshold: 0.5143133 
-#> prtrbtn_krnl_sd: 0.5233506 0.2621831 
+#> threshold: 0.5382799 
+#> prtrbtn_krnl_sd: 0.5345319 0.2671884 
 #> -
 #> gen 7 
-#> threshold: 0.3568089 
-#> prtrbtn_krnl_sd: 0.4602892 0.2574246 
+#> threshold: 0.3673938 
+#> prtrbtn_krnl_sd: 0.4715125 0.2567703 
 #> -
 #> gen 8 
-#> threshold: 0.2562583 
-#> prtrbtn_krnl_sd: 0.4206442 0.2448884 
+#> threshold: 0.2547235 
+#> prtrbtn_krnl_sd: 0.4156183 0.2435061 
 #> -
 #> gen 9 
-#> threshold: 0.1746439 
-#> prtrbtn_krnl_sd: 0.3752413 0.2300746 
+#> threshold: 0.1790777 
+#> prtrbtn_krnl_sd: 0.3651152 0.2244952 
 #> -
 #> gen 10 
-#> threshold: 0.1286489 
-#> prtrbtn_krnl_sd: 0.3576637 0.2233128 
+#> threshold: 0.1268142 
+#> prtrbtn_krnl_sd: 0.3356348 0.2150104 
 #> -
+#> gen 11 
+#> threshold: 0.09292255 
+#> prtrbtn_krnl_sd: 0.3091853 0.2053241 
+#> -
+#> gen 12 
+#> threshold: 0.06938362 
+#> prtrbtn_krnl_sd: 0.2935447 0.1979522 
+#> -
+#> gen 13 
+#> threshold: 0.05311042 
+#> prtrbtn_krnl_sd: 0.2699788 0.1876449 
+#> -
+#> gen 14 
+#> threshold: 0.04051743 
+#> prtrbtn_krnl_sd: 0.2553968 0.177729 
+#> -
+#> gen 15 
+#> threshold: 0.0315603 
+#> prtrbtn_krnl_sd: 0.2461897 0.1712717 
+#> -
+#> gen 16 
+#> threshold: 0.02477117 
+#> prtrbtn_krnl_sd: 0.2389223 0.1683386 
+#> -
+#> gen 17 
+#> threshold: 0.01964872 
+#> prtrbtn_krnl_sd: 0.2346167 0.1649224 
+#> -
+#> gen 18 
+#> threshold: 0.01588233 
+#> prtrbtn_krnl_sd: 0.2311844 0.1612676 
+#> -
+#> gen 19 
+#> threshold: 0.01261688 
+#> prtrbtn_krnl_sd: 0.2175436 0.1535265 
+#> -
+#> gen 20 
+#> threshold: 0.00999965 
+#> prtrbtn_krnl_sd: 0.2104832 0.1460712
+#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
+#> [1] 0.00999965
 #> Experiment done!
 
 # get results and plots
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
-plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
+plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
 #> [1] "Plot saved as '.png'."
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
 #>   +.gg   ggplot2
-plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "GnBu")
+plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
 #> [1] "Plot saved as '.png'."
-plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "GnBu")
+plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "Blues")
 #> [1] "Plot saved as 'png'."
 ```
 

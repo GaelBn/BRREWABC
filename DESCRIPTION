@@ -38,3 +38,7 @@ Collate:
     'createParticle.R'
     'plots.R'
 BugReports: https://github.com/GaelBn/BRREWABC/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

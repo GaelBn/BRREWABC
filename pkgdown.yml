@@ -1,8 +1,11 @@
 pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
-articles: {}
-last_built: 2024-04-08T13:59Z
+articles:
+  BRREWABC: BRREWABC.html
+  estimation-and-model-selection-using-abc-smc: estimation-and-model-selection-using-abc-smc.html
+  resume-an-estimation-using-abc-smc: resume-an-estimation-using-abc-smc.html
+last_built: 2024-04-10T11:54Z
 urls:
   reference: https://gaelbn.github.io/BRREW-ABC/reference
   article: https://gaelbn.github.io/BRREW-ABC/articles

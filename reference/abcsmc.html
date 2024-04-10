@@ -18,8 +18,18 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/BRREWABC.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/estimation-and-model-selection-using-abc-smc.html">Estimation and model selection using ABC-SMC</a>
+    <a class="dropdown-item" href="../articles/resume-an-estimation-using-abc-smc.html">Resume an estimation using ABC-SMC</a>
+  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -213,21 +223,23 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># run abc smc procedure</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">=</span> <span class="fu">abcsmc</span><span class="op">(</span>model_list <span class="op">=</span> <span class="va">MODEL_LIST</span>, prior_dist <span class="op">=</span> <span class="va">PRIOR_DIST</span>,</span></span>
-<span class="r-in"><span>ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>, max_number_of_gen <span class="op">=</span> <span class="fl">10</span>, nb_acc_prtcl_per_gen <span class="op">=</span> <span class="fl">1000</span>,</span></span>
+<span class="r-in"><span>ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>, max_number_of_gen <span class="op">=</span> <span class="fl">20</span>, nb_acc_prtcl_per_gen <span class="op">=</span> <span class="fl">2000</span>,</span></span>
 <span class="r-in"><span>new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>, experiment_folderpath <span class="op">=</span> <span class="st">""</span>,</span></span>
 <span class="r-in"><span>max_concurrent_jobs <span class="op">=</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009706274</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get results and plots</span></span></span>
 <span class="r-in"><span><span class="va">all_accepted_particles</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">particles</span></span></span>
 <span class="r-in"><span><span class="va">all_thresholds</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">thresholds</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"GnBu"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as '.png'."</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'GGally':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   method from   </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   +.gg   ggplot2</span>
-<span class="r-in"><span><span class="fu"><a href="plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"GnBu"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as '.png'."</span>
-<span class="r-in"><span><span class="fu"><a href="plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>, colorpal <span class="op">=</span> <span class="st">"GnBu"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as 'png'."</span>
 </code></pre></div>
     </div>

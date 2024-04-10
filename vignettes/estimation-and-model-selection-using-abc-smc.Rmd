@@ -73,9 +73,9 @@ res = abcsmc( model_list = MODEL_LIST,
 ```{r}
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
-plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, filename = "figures/mdlslctn_pairplot_all.png", colorpal = "YlGnBu")
-plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, filename = "figures/mdlslctn_densityridges.png", colorpal = "YlGnBu")
-plot_thresholds(data = all_thresholds, nb_threshold = 1, filename = "figures/mdlslctn_thresholds.png", colorpal = "YlGnBu")
+plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, filename = "mdlslctn_pairplot_all.png", colorpal = "YlGnBu")
+plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, filename = "mdlslctn_densityridges.png", colorpal = "YlGnBu")
+plot_thresholds(data = all_thresholds, nb_threshold = 1, filename = "mdlslctn_thresholds.png", colorpal = "YlGnBu")
 ```
 
 ```{r barplot, echo=FALSE, fig.cap="Selected models over iterations", out.width = '100%'}
@@ -97,3 +97,5 @@ knitr::include_graphics("../man/figures/mdlslctn_densityridges_m1_alpha.png")
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates of beta, for the predominantly selected model", out.width = '100%'}
 knitr::include_graphics("../man/figures/mdlslctn_densityridges_m1_beta.png")
 ```
+
+

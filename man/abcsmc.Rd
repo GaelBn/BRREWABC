@@ -113,9 +113,9 @@ sum_stat_obs = c(2.0,0.75)
 
 # run abc smc procedure
 res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
-ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 3000,
+ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
 new_threshold_quantile = 0.8, experiment_folderpath = "",
-max_concurrent_jobs = 2, verbose = TRUE)
+max_concurrent_jobs = 2, verbose = FALSE)
 
 # get results and plots
 all_accepted_particles = res$particles

@@ -51,16 +51,16 @@
 #'
 #' # run abc smc procedure
 #' res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
-#' ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 3000,
+#' ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
 #' new_threshold_quantile = 0.8, experiment_folderpath = "",
-#' max_concurrent_jobs = 2, verbose = TRUE)
+#' max_concurrent_jobs = 2, verbose = FALSE)
 #'
 #' # get results and plots
 #' all_accepted_particles = res$particles
 #' all_thresholds = res$thresholds
-#' plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
-#' plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
-#' plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "Blues")
+#' plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
+#' plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
+#' plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr")
 abcsmc <- function( model_list = list(), # required
                     model_def = NULL,
                     prior_dist = list(), # required

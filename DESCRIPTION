@@ -3,7 +3,10 @@ Type: Package
 Title: Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation
 Version: 0.1.0
 Author: Gaël Beaunée <gael.beaunee@inrae.fr>
-Maintainer: Gaël Beaunée <gael.beaunee@inrae.fr>
+Authors@R: c(
+    person("Gaël", "Beaunée", , "gael.beaunee@inrae.fr", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0002-2627", Website = "https://gaelbn.com"))
+  )
 Description: An R package designed to facilitate inference through a parallelized
     Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm.
     This package streamlines the process of conducting Bayesian inference for
@@ -38,7 +41,7 @@ Collate:
     'createParticle.R'
     'plots.R'
 BugReports: https://github.com/GaelBn/BRREWABC/issues
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr

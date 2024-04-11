@@ -25,4 +25,5 @@ devtools::install_github("GaelBn/BRREWABC")
 
 ## Usage
 
-For a basic example, see the Get started section.
+For a basic example, see the [Get
+Started](%60vignette(%22BRREWABC%22)%60) section.

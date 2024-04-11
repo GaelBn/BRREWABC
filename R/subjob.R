@@ -2,20 +2,20 @@
 # #' Run a subtask of the ABC-SMC
 # #'
 # #' @param job_id
-# #' @param path_to_ABC_state
+# #' @param path_to_abc_state
 # #'
 # #' @return
 # # ' @export
 # #' @include createParticle.R computeWeight.R saveEnvir.R
 # #'
 # #' @examples
-subjob <- function( job_id,
-                    path_to_ABC_state ) {
+subjob <- function(job_id,
+                   path_to_abc_state) {
 
   # library(BRREWABC)
 
-  # loadEnvir(path_to_ABC_state) # TODO : using a  function is not working, need to fix this
-  load(path_to_ABC_state)
+  # loadEnvir(path_to_abc_state) # TODO : using a  function is not working, need to fix this
+  load(path_to_abc_state)
   if(!is.null(model_def)) {
     source(model_def)
   }

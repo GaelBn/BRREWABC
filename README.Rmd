@@ -31,4 +31,4 @@ devtools::install_github("GaelBn/BRREWABC")
 
 ## Usage
 
-For a basic example, see the Get started section.
+For a basic example, see the [Get Started](`vignette("BRREWABC")`) section.

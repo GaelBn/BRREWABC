@@ -181,7 +181,7 @@ Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
     #
 
-    subjob_script_content <- "library(BRREWABC\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob(job_id = id, path_to_ABC_state = '%s')\n"
+    subjob_script_content <- "library(BRREWABC\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob(job_id = id, path_to_abc_state = '%s')\n"
     subjob_script <- sprintf(subjob_script_content, tmp_current_abc_state)
     writeLines(subjob_script, subjob_script_path)
 
@@ -320,9 +320,9 @@ Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
                     # func = subjob,
                     func = function() {
                         library(BRREWABC)  # Load your package
-                        subjob(job_id = task_index, path_to_ABC_state = tmp_current_abc_state)  # Call your function
+                        subjob(job_id = task_index, path_to_abc_state = tmp_current_abc_state)  # Call your function
                     },
-                    # args = list(job_id = task_index, path_to_ABC_state = tmp_current_abc_state),
+                    # args = list(job_id = task_index, path_to_abc_state = tmp_current_abc_state),
                     stdout = paste0(tmp_local_task_std_out,"abc_smc_task_",task_index,".out"),
                     stderr = paste0(tmp_local_task_std_err,"abc_smc_task_",task_index,".err"),
                     package = TRUE

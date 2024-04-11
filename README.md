@@ -26,12 +26,14 @@ intermediate distributions in each iteration, converging towards the
 posterior distribution.
 
 The specific implementation used in the package improves upon Del Moral
-et al. (2006) original algorithm[^1] in three ways: - (1) an adaptive
-threshold schedule selection based on quantiles of distances between
-simulated and observed data [^2] [^3] - (2) an adaptive perturbation
-kernel width during the sampling step, dependent on the previous
-intermediate posterior distribution [^4] [^5] - and (3) the capability
-to use multiple criteria simultaneously.
+et al. (2006) original algorithm[^1] in three ways:
+
+- an adaptive threshold schedule selection based on quantiles of
+  distances between simulated and observed data [^2] [^3]
+- an adaptive perturbation kernel width during the sampling step,
+  dependent on the previous intermediate posterior distribution [^4]
+  [^5]
+- and the capability to use multiple criteria simultaneously.
 
 ## Features
 

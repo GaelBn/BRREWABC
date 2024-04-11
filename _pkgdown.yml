@@ -1,3 +1,6 @@
 url: https://gaelbn.github.io/BRREWABC/
 template:
   bootstrap: 5
+authors:
+  Gaël Beaunée:
+    href: "https://gaelbn.com"

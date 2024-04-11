@@ -4,7 +4,7 @@ Title: Batched Resilient and Rapid Estimation Workflow through Approximate Bayes
 Version: 0.1.0
 Author: Gaël Beaunée <gael.beaunee@inrae.fr>
 Authors@R: c(
-    person("Gaël", "Beaunée", , "gael.beaunee@inrae.fr", role = c("aut", "cre"),
+    person("Gaël", "Beaunée", , email = "gael.beaunee@inrae.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0002-2627", Website = "https://gaelbn.com"))
   )
 Description: An R package designed to facilitate inference through a parallelized

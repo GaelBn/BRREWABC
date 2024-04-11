@@ -26,7 +26,7 @@ intermediate distributions in each iteration, converging towards the
 posterior distribution.
 
 The specific implementation used in the package improves upon Del Moral
-et al. (2006) original algorithm[^1] in three ways:
+et al. (2006) original algorithm [^1] in three ways:
 
 - an adaptive threshold schedule selection based on quantiles of
   distances between simulated and observed data [^2] [^3]

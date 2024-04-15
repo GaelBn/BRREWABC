@@ -88,8 +88,8 @@ abcsmc <- function( model_list = list(), # required
 #SBATCH --hint=nomultithread
 #SBATCH --time=24:00:00
 #SBATCH --array=%s-%s%%%d
-output_fpath=$s
-error_fpath=$s
+output_fpath=%s
+error_fpath=%s
 #SBATCH --output=$output_fpath/output_%%A_%%a.out
 #SBATCH --error=$error_fpath/error_%%A_%%a.out
 mkdir -p $output_fpath
@@ -107,8 +107,8 @@ Rscript $s $SLURM_ARRAY_TASK_ID
 #$ -tc %d
 #$ -o /dev/null
 #$ -e /dev/null
-output_fpath=$s
-error_fpath=$s
+output_fpath=%s
+error_fpath=%s
 mkdir -p $output_fpath
 mkdir -p $error_fpath
 Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
@@ -300,7 +300,7 @@ Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
                 stop("Cluster type not supported in the current version")
             }
             # Write the modified cluster job script to a file
-            writeLines(cluster_script, "abc_smc_array_job.sh")
+            writeLines(cluster_script, "abc_smc_array_job.sh") # TODO : write and execute script in the tmp folder
             # Submit the array job and capture the job ID
             if (cluster_type == "slurm") {
                 cluster_job_id <- system('sbatch abc_smc_array_job.sh | awk \'{print $4}\'', intern = TRUE)

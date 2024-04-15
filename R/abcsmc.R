@@ -94,7 +94,7 @@ error_fpath=%s
 #SBATCH --error=$error_fpath/error_%%A_%%a.out
 mkdir -p $output_fpath
 mkdir -p $error_fpath
-Rscript $s $SLURM_ARRAY_TASK_ID
+Rscript %s $SLURM_ARRAY_TASK_ID
 ', # TODO : queue selection via a function argument
                     sge_script_template = '#!/bin/bash
 #$ -S /bin/bash
@@ -111,7 +111,7 @@ output_fpath=%s
 error_fpath=%s
 mkdir -p $output_fpath
 mkdir -p $error_fpath
-Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
+Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
 ', # TODO : queue selection via a function argument
                     max_concurrent_jobs = 1,
                     abc_user_param_file_path = NULL,

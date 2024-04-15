@@ -5,7 +5,9 @@ articles:
   BRREWABC: BRREWABC.html
   estimation-and-model-selection-using-abc-smc: estimation-and-model-selection-using-abc-smc.html
   resume-an-estimation-using-abc-smc: resume-an-estimation-using-abc-smc.html
-last_built: 2024-04-11T11:13Z
+  running-an-abc-smc-procedure-on-a-cluster: running-an-abc-smc-procedure-on-a-cluster.html
+  use-of-several-distances-with-abc-smc: use-of-several-distances-with-abc-smc.html
+last_built: 2024-04-15T08:57Z
 urls:
   reference: https://gaelbn.github.io/BRREWABC/reference
   article: https://gaelbn.github.io/BRREWABC/articles

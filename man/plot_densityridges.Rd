@@ -9,15 +9,19 @@ plot_densityridges(
   prior,
   filename = "densityridges.png",
   figtitle = "",
-  colorpal = "Blues"
+  colorpal = "Greys"
 )
 }
 \arguments{
-\item{data}{a dataframe containing the estimation results (set of particles accepted during iterations)}
+\item{data}{a dataframe containing the estimation results (set of particles
+accepted during iterations)}
 
-\item{prior}{a list linking model name (character string) to a list describing the prior distribution of each parameter estimated (the same as used for the abcsmc function)}
+\item{prior}{a list linking model name (character string) to a list
+describing the prior distribution of each parameter estimated (the same as
+used for the abcsmc function)}
 
-\item{filename}{the file name to be used to save the plots (the extension defines the format: pdf or png)}
+\item{filename}{the file name to be used to save the plots (the extension
+defines the format: pdf or png)}
 
 \item{figtitle}{the figure title}
 
@@ -30,5 +34,5 @@ one or several plots in pdf or png format
 Plot abcsmc results : densityridges for estimated parameters
 }
 \examples{
-# see the abcsmc function help for details on how to produce results and plots
+# see the abcsmc function help for details on how to plot results
 }

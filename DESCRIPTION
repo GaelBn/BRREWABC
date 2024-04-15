@@ -32,13 +32,13 @@ Imports:
 RoxygenNote: 7.3.1
 Collate:
     'saveEnvir.R'
+    'computeWeight.R'
+    'createParticle.R'
     'subjob.R'
     'setEmpiricalSD.R'
     'defineNextThreshold.R'
     'createLHSfromPrior.R'
     'abcsmc.R'
-    'computeWeight.R'
-    'createParticle.R'
     'plots.R'
 BugReports: https://github.com/GaelBn/BRREWABC/issues
 Suggests:

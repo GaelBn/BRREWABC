@@ -9,15 +9,18 @@ plot_thresholds(
   nb_threshold = 1,
   filename = "thresholds.png",
   figtitle = "",
-  colorpal = "Blues"
+  colorpal = "Greys"
 )
 }
 \arguments{
-\item{data}{a dataframe containing the estimation results (thresholds over iterations)}
+\item{data}{a dataframe containing the estimation results (thresholds over
+iterations)}
 
-\item{nb_threshold}{number of thresholds used (see the abcsmc function help for more details)}
+\item{nb_threshold}{number of thresholds used (see the abcsmc function help
+for more details)}
 
-\item{filename}{the file name to be used to save the plots (the extension defines the format: pdf or png)}
+\item{filename}{the file name to be used to save the plots (the extension
+defines the format: pdf or png)}
 
 \item{figtitle}{the figure title}
 
@@ -30,5 +33,5 @@ one or several plots in pdf or png format
 Plot abcsmc results : thresholds over iterations
 }
 \examples{
-# see the abcsmc function help for details on how to produce results and plots
+# see the abcsmc function help for details on how to plot results
 }

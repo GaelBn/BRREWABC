@@ -25,9 +25,9 @@ abcsmc(
   on_cluster = FALSE,
   cluster_type = NULL,
   slurm_script_template =
-    "#!/bin/bash\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#SBATCH --job-name=job-array_\%\%A_\%\%a   # nom du job\\n#SBATCH --ntasks=1\\n#SBATCH --ntasks-per-node=1\\n#SBATCH --hint=nomultithread\\n#SBATCH --time=24:00:00\\n#SBATCH --array=\%s-\%s\%\%\%d\\noutput_fpath=$s\\nerror_fpath=$s\\n#SBATCH --output=$output_fpath/output_\%\%A_\%\%a.out\\n#SBATCH --error=$error_fpath/error_\%\%A_\%\%a.out\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript $s $SLURM_ARRAY_TASK_ID\\n",
+    "#!/bin/bash\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#SBATCH --job-name=job-array_\%\%A_\%\%a   # nom du job\\n#SBATCH --ntasks=1\\n#SBATCH --ntasks-per-node=1\\n#SBATCH --hint=nomultithread\\n#SBATCH --time=24:00:00\\n#SBATCH --array=\%s-\%s\%\%\%d\\noutput_fpath=\%s\\nerror_fpath=\%s\\n#SBATCH --output=$output_fpath/output_\%\%A_\%\%a.out\\n#SBATCH --error=$error_fpath/error_\%\%A_\%\%a.out\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript \%s $SLURM_ARRAY_TASK_ID\\n",
   sge_script_template =
-    "#!/bin/bash\\n#$ -S /bin/bash\\n#$ -N subjob_abcsmc_prlll\\n#$ -q \\"short.q|long.q\\"\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#$ -cwd\\n#$ -V\\n#$ -t \%s-\%s\\n#$ -tc \%d\\n#$ -o /dev/null\\n#$ -e /dev/null\\noutput_fpath=$s\\nerror_fpath=$s\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\\n",
+    "#!/bin/bash\\n#$ -S /bin/bash\\n#$ -N subjob_abcsmc_prlll\\n#$ -q \\"short.q|long.q\\"\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#$ -cwd\\n#$ -V\\n#$ -t \%s-\%s\\n#$ -tc \%d\\n#$ -o /dev/null\\n#$ -e /dev/null\\noutput_fpath=\%s\\nerror_fpath=\%s\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript \%s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\\n",
   max_concurrent_jobs = 1,
   abc_user_param_file_path = NULL,
   previous_gens = NA,
@@ -120,7 +120,7 @@ max_concurrent_jobs = 2, verbose = FALSE)
 # get results and plots
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
-plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
-plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Blues")
-plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "Blues")
+plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
+plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
+plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr")
 }

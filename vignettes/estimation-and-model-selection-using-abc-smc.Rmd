@@ -79,11 +79,11 @@ res <- abcsmc(model_list = model_list,
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
-                filename = "mdlslctn_pairplot_all.png", colorpal = "YlGnBu")
+                filename = "mdlslctn/res/figs/mdlslctn_pairplot_all.png", colorpal = "YlGnBu")
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "mdlslctn_densityridges.png", colorpal = "YlGnBu")
+                   filename = "mdlslctn/res/figs/mdlslctn_densityridges.png", colorpal = "YlGnBu")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
-                filename = "mdlslctn_thresholds.png", colorpal = "YlGnBu")
+                filename = "mdlslctn/res/figs/mdlslctn_thresholds.png", colorpal = "YlGnBu")
 ```
 
 ```{r barplot, echo=FALSE, fig.cap="Selected models over iterations", out.width = '100%'}

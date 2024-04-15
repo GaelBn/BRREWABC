@@ -59,11 +59,11 @@ res <- abcsmc(model_list = model_list,
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
-                filename = "rsmsmpl_pairplot_all.png", colorpal = "Greys")
+                filename = "rsmsmpl/res/figs/rsmsmpl_pairplot_all.png", colorpal = "Greys")
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "rsmsmpl_densityridges.png", colorpal = "Greys")
+                   filename = "rsmsmpl/res/figs/rsmsmpl_densityridges.png", colorpal = "Greys")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
-                filename = "rsmsmpl_thresholds.png", colorpal = "Greys")
+                filename = "rsmsmpl/res/figs/rsmsmpl_thresholds.png", colorpal = "Greys")
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
@@ -103,12 +103,12 @@ res <- abcsmc(model_list = model_list,
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
-                filename = "rsmsmpl_pairplot_all_rsm.png", colorpal = "OrRd")
+                filename = "rsmsmpl/res/figs/rsmsmpl_pairplot_all_rsm.png", colorpal = "OrRd")
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "rsmsmpl_densityridges_rsm.png",
+                   filename = "rsmsmpl/res/figs/rsmsmpl_densityridges_rsm.png",
                    colorpal = "OrRd")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
-                filename = "rsmsmpl_thresholds_rsm.png", colorpal = "OrRd")
+                filename = "rsmsmpl/res/figs/rsmsmpl_thresholds_rsm.png", colorpal = "OrRd")
 ```
 
 ```{r pairplot_rsm, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}

@@ -181,7 +181,7 @@ Rscript $s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
     #
 
-    subjob_script_content <- "library(BRREWABC\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob(job_id = id, path_to_abc_state = '%s')\n"
+    subjob_script_content <- "library(BRREWABC)\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob(job_id = id, path_to_abc_state = '%s')\n"
     subjob_script <- sprintf(subjob_script_content, tmp_current_abc_state)
     writeLines(subjob_script, subjob_script_path)
 

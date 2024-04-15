@@ -1,8 +1,8 @@
 ---
-title: "BRREWABC"
+title: "Use of several distances with ABC-SMC"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BRREWABC}
+  %\VignetteIndexEntry{Use of several distances with ABC-SMC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,8 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Simple estimation using ABC-SMC
-
 ```{r setup}
 library(BRREWABC)
 ```
@@ -25,7 +23,7 @@ library(BRREWABC)
 compute_dist <- function(x, ss_obs) {
   ss_sim <- c(x[["alpha"]] + x[["beta"]] + rnorm(1, 0, 0.1),
               x[["alpha"]] * x[["beta"]] + rnorm(1, 0, 0.1))
-  dist <- sum((ss_sim - ss_obs)^2)
+  dist <- (ss_sim - ss_obs)^2 # the function returns a vector of 2 values
   return(c(dist))
 }
 
@@ -51,7 +49,8 @@ res <- abcsmc(model_list = model_list,
               max_number_of_gen = 15,
               nb_acc_prtcl_per_gen = 2000,
               new_threshold_quantile = 0.8,
-              experiment_folderpath = "smpl",
+              nb_threshold = 2, # the number of thresholds/distances used has to be indicated
+              experiment_folderpath = "svrldist",
               max_concurrent_jobs = 5,
               verbose = FALSE)
 ```
@@ -61,25 +60,29 @@ res <- abcsmc(model_list = model_list,
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
-                filename = "smpl/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")
+                filename = "svrldist/res/figs/svrldist_pairplot_all.png", colorpal = "YlGnBu")
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
-plot_thresholds(data = all_thresholds, nb_threshold = 1,
-                filename = "smpl/res/figs/smpl_thresholds.png", colorpal = "YlGnBu")
+                   filename = "svrldist/res/figs/svrldist_densityridges.png", colorpal = "YlGnBu")
+plot_thresholds(data = all_thresholds, nb_threshold = 2, # the number of thresholds/distances used has to be indicated
+                filename = "svrldist/res/figs/svrldist_thresholds.png", colorpal = "YlGnBu")
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_pairplot_all_m1.png")
+knitr::include_graphics("../man/figures/svrldist_pairplot_all_m1.png")
 ```
 
-```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_thresholds_dist1.png")
+```{r thresholds1, echo=FALSE, fig.cap="Threshold evolution over iterations (1)", out.width = '100%'}
+knitr::include_graphics("../man/figures/svrldist_thresholds_dist1.png")
+```
+
+```{r thresholds2, echo=FALSE, fig.cap="Threshold evolution over iterations (2)", out.width = '100%'}
+knitr::include_graphics("../man/figures/svrldist_thresholds_dist2.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_densityridges_m1_alpha.png")
+knitr::include_graphics("../man/figures/svrldist_densityridges_m1_alpha.png")
 ```
 
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_densityridges_m1_beta.png")
+knitr::include_graphics("../man/figures/svrldist_densityridges_m1_beta.png")
 ```

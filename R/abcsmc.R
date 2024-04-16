@@ -301,7 +301,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       cluster_script <- ""
       # Replace placeholders in the template with actual parameter values
       nbjobs <- max_concurrent_jobs
-      if (gen == 1) {nbjobs = min(nb_acc_prtcl_before_next_gen, max_concurrent_jobs)}
+      if ((gen == 1) && (use_lhs_for_first_iter)) {nbjobs = min(nb_acc_prtcl_before_next_gen, max_concurrent_jobs)}
       if (cluster_type == "slurm") {
         cluster_script <- sprintf(slurm_script_template, 1, nbjobs, max_concurrent_jobs, tmp_local_task_std_out, tmp_local_task_std_err, subjob_script_path)
       } else if (cluster_type == "sge") {
@@ -365,7 +365,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       }
     }
     # cancel subjob on cluster
-    if (gen == 1) {
+    if ((gen == 1) && (use_lhs_for_first_iter)) {
       # nothing to do
     } else {
       if (on_cluster) {

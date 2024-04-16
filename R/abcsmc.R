@@ -313,10 +313,10 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       writeLines(cluster_script, abc_smc_array_job_script_path)
       # Submit the array job and capture the job ID
       if (cluster_type == "slurm") {
-        cluster_job_id <- system(paste0("sbatch ", abc_smc_array_job_script_path, " | awk \'{print $4}\'"), intern = TRUE)
+        cluster_job_id <- system(paste0('sbatch ', abc_smc_array_job_script_path, ' | awk \'{print $4}\''), intern = TRUE)
         print(paste("Submitted Slurm array job with ID:", cluster_job_id))
       } else if (cluster_type == "sge") {
-        cluster_job_id <- system(paste0("qsub ", abc_smc_array_job_script_path, " | awk -F "." \'{print $1}\' | awk \'{print $3}\'"), intern = TRUE)
+        cluster_job_id <- system(paste0('qsub ', abc_smc_array_job_script_path, ' | awk -F "." \'{print $1}\' | awk \'{print $3}\''), intern = TRUE)
         print(paste("Submitted SGE array job with ID:", cluster_job_id))
       } else {
         stop("Cluster type not supported in the current version")

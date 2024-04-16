@@ -143,7 +143,7 @@ plot_densityridges <- function(data,
       sub_plot <- ggplot2::ggplot(subtmp, ggplot2::aes(x = param, y = gen, fill = gen, color = gen))+
         ggridges::geom_density_ridges(ggplot2::aes(), scale = 2.0, alpha = .6, bandwidth = (as.double(p[4]) - as.double(p[3])) / 100) +
         ggridges::theme_ridges() +
-        gplot2::scale_y_discrete(expand = ggplot2::expansion(add = c(0.3, 2.5))) +
+        ggplot2::scale_y_discrete(expand = ggplot2::expansion(add = c(0.3, 2.5))) +
         ggplot2::scale_x_continuous(limits = c(as.double(p[3]), as.double(p[4])), expand = c(0.01, 0)) +
         ggplot2::scale_fill_manual(values = mycolors) +
         ggplot2::scale_colour_manual(values = mycolors) +

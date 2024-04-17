@@ -75,7 +75,7 @@ plot_abcsmc_res <- function(data,
     for (mm in sort(unique(tmp$model))) {
       param_names <- sapply(prior[[mm]], "[[", 1)
       tmpm <- tmp[tmp$model == mm, ]
-      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - ")) +
+      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
         ggplot2::scale_fill_manual(values = mycolors) + ggplot2::scale_colour_manual(values = mycolors) + ggplot2::theme_minimal()
       if (last_three == "png") {
         newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),

@@ -1,8 +1,8 @@
 ---
-title: "Running an ABC-SMC procedure on a cluster"
+title: "Running an ABC-SMC procedure on a cluster (SGE)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Running an ABC-SMC procedure on a cluster}
+  %\VignetteIndexEntry{Running an ABC-SMC procedure on a cluster (SGE)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -75,7 +75,7 @@ plot_thresholds(data = all_thresholds, nb_threshold = 1,
 Rscript abc-smc_on_sge_cluster.R
 ```
 
-Then launch the master job on the sge cluster with a qsub : `qsub launch_abc-smc_on_sge_cluster.sh`.
+Then launch the master job on the sge cluster: `qsub launch_abc-smc_on_sge_cluster.sh`.
 
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}

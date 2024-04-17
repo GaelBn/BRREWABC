@@ -2,7 +2,8 @@
 % Please edit documentation in R/subjob.R
 \name{subjob}
 \alias{subjob}
-\title{Run a subtask of the ABC-SMC. Shouldn't have to be used by the user, this function is visible so that it can be used on cluster by the main script}
+\title{Run a subtask of the ABC-SMC. Shouldn't have to be used by the user,
+this function is visible so that it can be used on cluster by the main script}
 \usage{
 subjob(job_id, path_to_abc_state)
 }
@@ -15,5 +16,6 @@ subjob(job_id, path_to_abc_state)
 nothing, write results in a tmp file
 }
 \description{
-Run a subtask of the ABC-SMC. Shouldn't have to be used by the user, this function is visible so that it can be used on cluster by the main script
+Run a subtask of the ABC-SMC. Shouldn't have to be used by the user,
+this function is visible so that it can be used on cluster by the main script
 }

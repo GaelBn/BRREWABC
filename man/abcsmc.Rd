@@ -36,41 +36,60 @@ abcsmc(
 )
 }
 \arguments{
-\item{model_list}{a list linking model name ( character string) to associated function}
+\item{model_list}{a list linking model name ( character string) to
+associated function}
 
 \item{model_def}{a R file containing only the model(s) function(s)}
 
-\item{prior_dist}{a list linking model name (character string) to a list describing the prior distribution of each parameter to be estimated}
+\item{prior_dist}{a list linking model name (character string) to a list
+describing the prior distribution of each parameter to be estimated}
 
 \item{ss_obs}{the observed summary statistics}
 
 \item{max_number_of_gen}{the maximum number of generations to be performed}
 
-\item{nb_acc_prtcl_per_gen}{the number of particles (per model, the total number corresponding to this number multiplied by the number of models) to be accepted during a generation before moving on to the next one}
+\item{nb_acc_prtcl_per_gen}{the number of particles (per model, the total
+number corresponding to this number multiplied by the number of models) to
+be accepted during a generation before moving on to the next one}
 
-\item{var_prtrbtn_krnl}{the standard deviation to be used for the perturbation kernel, if NA the empirical standard deviation will be used instead}
+\item{var_prtrbtn_krnl}{the standard deviation to be used for the
+perturbation kernel, if NA the empirical standard deviation will
+be used instead}
 
-\item{var_prtrbtn_krnl_min}{the minimum standard deviation to be used for the perturbation kernel (must be greater than zero)}
+\item{var_prtrbtn_krnl_min}{the minimum standard deviation to be used for
+the perturbation kernel (must be greater than zero)}
 
-\item{scaling_sd_prtrbtn_krnl}{scaling parameter for increasing or decreasing the value of the standard deviation used for the perturbation kernel}
+\item{scaling_sd_prtrbtn_krnl}{scaling parameter for increasing or decreasing
+the value of the standard deviation used for the perturbation kernel}
 
-\item{model_jump_prob}{probability of changing model when creating a new particle}
+\item{model_jump_prob}{probability of changing model when creating
+a new particle}
 
-\item{nb_threshold}{number of thresholds used, corresponding to the number of distances returned by the function(s) stipulated in the model list (model_list)}
+\item{nb_threshold}{number of thresholds used, corresponding to the number
+of distances returned by the function(s) stipulated in the
+model list (model_list)}
 
-\item{new_threshold_quantile}{the quantile to be used to decrease the threshold(s) during iterations}
+\item{new_threshold_quantile}{the quantile to be used to decrease the
+threshold(s) during iterations}
 
-\item{distance_threshold_min}{the minimum threshold below which the procedure stops (in order to prevent excessively long computations)}
+\item{distance_threshold_min}{the minimum threshold below which the procedure
+stops (in order to prevent excessively long computations)}
 
-\item{max_attempts}{the maximum number of particles to be tested during an iteration, beyond which the procedure stops (in order to prevent excessively long computations)}
+\item{max_attempts}{the maximum number of particles to be tested during an
+iteration, beyond which the procedure stops (in order to prevent
+excessively long computations)}
 
-\item{acceptance_rate_min}{the acceptance rate below which the procedure stops (in order to prevent excessively long computations)}
+\item{acceptance_rate_min}{the acceptance rate below which the procedure
+stops (in order to prevent excessively long computations)}
 
-\item{use_lhs_for_first_iter}{whether or not to use a LHS sampling method for the first iteration}
+\item{use_lhs_for_first_iter}{whether or not to use a LHS sampling method
+for the first iteration}
 
-\item{experiment_folderpath}{the folder in which to carry out the estimation procedure and save the results}
+\item{experiment_folderpath}{the folder in which to carry out the estimation
+procedure and save the results}
 
-\item{on_cluster}{whether or not the procedure is run on a computation cluster}
+\item{on_cluster}{whether or not the procedure is run on a
+computation cluster}
 
 \item{cluster_type}{cluster type used (sge and slurm currently supported)}
 
@@ -80,16 +99,21 @@ abcsmc(
 
 \item{max_concurrent_jobs}{maximum number of jobs/tasks run in parallel}
 
-\item{abc_user_param_file_path}{an R file containing the algorithm's parameters (usage not recommended, included in this version for reasons of compatibility with the procedure in script form used in some projects)}
+\item{abc_user_param_file_path}{an R file containing the algorithm's
+parameters (usage not recommended, included in this version for reasons of
+compatibility with the procedure in script form used in some projects)}
 
-\item{previous_gens}{an object (dataframe) containing previous results (set of iterations), in order to start from the last iteration performed}
+\item{previous_gens}{an object (dataframe) containing previous results (set
+of iterations), in order to start from the last iteration performed}
 
-\item{previous_epsilons}{an object (dataframe) containing previous results (set of thresholds), in order to start from the last iteration performed}
+\item{previous_epsilons}{an object (dataframe) containing previous results
+(set of thresholds), in order to start from the last iteration performed}
 
 \item{verbose}{whether or not to display specific information}
 }
 \value{
-a list containing two dataframes corresponding to (1) the particles accepted and (2) the thresholds used, during the successive iterations
+a list containing two dataframes corresponding to (1) the particles
+accepted and (2) the thresholds used, during the successive iterations
 }
 \description{
 Run ABC-SMC inference in parallel
@@ -100,13 +124,14 @@ library(BRREWABC)
 # model definition
 compute_dist = function(x, ss_obs){
     ss_sim = c( x[["alpha"]] + x[["beta"]] + rnorm(1,0,0.1),
-           x[["alpha"]] * x[["beta"]] + rnorm(1,0,0.1) ) # a very simple toy model
+           x[["alpha"]] * x[["beta"]] + rnorm(1,0,0.1) ) # a simple toy model
     dist = sum((ss_sim-ss_obs)^2)
     return(c(dist))
 }
 
 MODEL_LIST <- list("m1" = compute_dist)
-PRIOR_DIST <- list("m1" = list(c('alpha', 'unif', 0, 4), c('beta', 'unif', 0, 1)))
+PRIOR_DIST <- list("m1" = list(c('alpha', 'unif', 0, 4),
+                               c('beta', 'unif', 0, 1)))
 
 # create a reference trajectory
 sum_stat_obs = c(2.0,0.75)

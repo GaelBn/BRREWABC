@@ -7,11 +7,12 @@
 <!-- badges: end -->
 
 BRREWABC (Batched Resilient and Rapid Estimation Workflow through
-Approximate Bayesian Computation) : an R package designed to facilitate
-inference through a parallelized Approximate Bayesian Computation
-Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the
-process of conducting Bayesian inference for complex models by
-implementing efficient parallelization techniques.
+Approximate Bayesian Computation, pronounced “brew abc”: /bruː
+ˌeɪ.biːˈsiː/) : an R package designed to facilitate inference through a
+parallelized Approximate Bayesian Computation Sequential Monte Carlo
+(ABC SMC) algorithm. This package streamlines the process of conducting
+Bayesian inference for complex models by implementing efficient
+parallelization techniques.
 
 ## Overview
 
@@ -94,8 +95,8 @@ of people, many thanks to them.
 If you encounter any issues, please feel free to contact us.
 
 [^1]: Del Moral, P., Doucet, A., and Jasra, A. (2006). Sequential Monte
-    Carlo samplers. Journal of the Royal Statistical Society : Series B
-    (Statistical Methodology), 68 :411–436
+    Carlo samplers. Journal of the Royal Statistical Society: Series B
+    (Statistical Methodology), 68:411–436
 
 [^2]: Del Moral, P., A. Doucet and A. Jasra (2011): “An adaptive
     sequential monte carlo method for approximate bayesian computation,”

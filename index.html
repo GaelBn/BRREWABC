@@ -46,7 +46,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/estimation-and-model-selection-using-abc-smc.html">Estimation and model selection using ABC-SMC</a>
     <a class="dropdown-item" href="articles/resume-an-estimation-using-abc-smc.html">Resume an estimation using ABC-SMC</a>
-    <a class="dropdown-item" href="articles/running-an-abc-smc-procedure-on-a-cluster.html">Running an ABC-SMC procedure on a cluster</a>
+    <a class="dropdown-item" href="articles/running-an-abc-smc-procedure-on-a-cluster-sge.html">Running an ABC-SMC procedure on a cluster (SGE)</a>
+    <a class="dropdown-item" href="articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html">Running an ABC-SMC procedure on a cluster (Slurm)</a>
     <a class="dropdown-item" href="articles/use-of-several-distances-with-abc-smc.html">Use of several distances with ABC-SMC</a>
   </div>
 </li>
@@ -74,12 +75,12 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>BRREWABC (Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation) : an R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the process of conducting Bayesian inference for complex models by implementing efficient parallelization techniques.</p>
+<p>BRREWABC (Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation, pronounced “brew abc”: /bruː ˌeɪ.biːˈsiː/) : an R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the process of conducting Bayesian inference for complex models by implementing efficient parallelization techniques.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>The algorithm used corresponds to an Approximate Bayesian Computation approach using a Sequential Monte Carlo sampler. This iterative algorithm enhances the basic ABC algorithm by incorporating two main steps: weighted resampling of simulated particles and a gradual reduction in tolerance. Similar to the ABC rejection approach, a prior distribution is defined, aiming to estimate a posterior distribution. In ABC-SMC, this estimation is achieved sequentially by constructing intermediate distributions in each iteration, converging towards the posterior distribution.</p>
-<p>The specific implementation used in the package improves upon Del Moral et al. (2006) original algorithm <a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Del Moral, P., Doucet, A., and Jasra, A. (2006). Sequential Monte Carlo samplers. Journal of the Royal Statistical Society : Series B (Statistical Methodology), 68 :411–436&lt;/p&gt;"><sup>1</sup></a> in three ways:</p>
+<p>The specific implementation used in the package improves upon Del Moral et al. (2006) original algorithm <a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Del Moral, P., Doucet, A., and Jasra, A. (2006). Sequential Monte Carlo samplers. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 68:411–436&lt;/p&gt;"><sup>1</sup></a> in three ways:</p>
 <ul>
 <li>an adaptive threshold schedule selection based on quantiles of distances between simulated and observed data <a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Del Moral, P., A. Doucet and A. Jasra (2011): “An adaptive sequential monte carlo method for approximate bayesian computation,” Stat. Comput., 22, 1–12.&lt;/p&gt;"><sup>2</sup></a> <a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Drovandi, C. C. and A. N. Pettitt (2011): “Estimation of parameters for macroparasite population evolution using approximate bayesian computation” Biometrics, 67(1), 225–233.&lt;/p&gt;"><sup>3</sup></a>
 </li>

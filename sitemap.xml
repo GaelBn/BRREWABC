@@ -19,7 +19,10 @@
     <loc>https://gaelbn.github.io/BRREWABC/articles/resume-an-estimation-using-abc-smc.html</loc>
   </url>
   <url>
-    <loc>https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster.html</loc>
+    <loc>https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-sge.html</loc>
+  </url>
+  <url>
+    <loc>https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html</loc>
   </url>
   <url>
     <loc>https://gaelbn.github.io/BRREWABC/articles/use-of-several-distances-with-abc-smc.html</loc>

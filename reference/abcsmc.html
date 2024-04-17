@@ -29,7 +29,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/estimation-and-model-selection-using-abc-smc.html">Estimation and model selection using ABC-SMC</a>
     <a class="dropdown-item" href="../articles/resume-an-estimation-using-abc-smc.html">Resume an estimation using ABC-SMC</a>
-    <a class="dropdown-item" href="../articles/running-an-abc-smc-procedure-on-a-cluster.html">Running an ABC-SMC procedure on a cluster</a>
+    <a class="dropdown-item" href="../articles/running-an-abc-smc-procedure-on-a-cluster-sge.html">Running an ABC-SMC procedure on a cluster (SGE)</a>
+    <a class="dropdown-item" href="../articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html">Running an ABC-SMC procedure on a cluster (Slurm)</a>
     <a class="dropdown-item" href="../articles/use-of-several-distances-with-abc-smc.html">Use of several distances with ABC-SMC</a>
   </div>
 </li>
@@ -95,7 +96,8 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>model_list</dt>
-<dd><p>a list linking model name ( character string) to associated function</p></dd>
+<dd><p>a list linking model name ( character string) to
+associated function</p></dd>
 
 
 <dt>model_def</dt>
@@ -103,7 +105,8 @@
 
 
 <dt>prior_dist</dt>
-<dd><p>a list linking model name (character string) to a list describing the prior distribution of each parameter to be estimated</p></dd>
+<dd><p>a list linking model name (character string) to a list
+describing the prior distribution of each parameter to be estimated</p></dd>
 
 
 <dt>ss_obs</dt>
@@ -115,55 +118,72 @@
 
 
 <dt>nb_acc_prtcl_per_gen</dt>
-<dd><p>the number of particles (per model, the total number corresponding to this number multiplied by the number of models) to be accepted during a generation before moving on to the next one</p></dd>
+<dd><p>the number of particles (per model, the total
+number corresponding to this number multiplied by the number of models) to
+be accepted during a generation before moving on to the next one</p></dd>
 
 
 <dt>var_prtrbtn_krnl</dt>
-<dd><p>the standard deviation to be used for the perturbation kernel, if NA the empirical standard deviation will be used instead</p></dd>
+<dd><p>the standard deviation to be used for the
+perturbation kernel, if NA the empirical standard deviation will
+be used instead</p></dd>
 
 
 <dt>var_prtrbtn_krnl_min</dt>
-<dd><p>the minimum standard deviation to be used for the perturbation kernel (must be greater than zero)</p></dd>
+<dd><p>the minimum standard deviation to be used for
+the perturbation kernel (must be greater than zero)</p></dd>
 
 
 <dt>scaling_sd_prtrbtn_krnl</dt>
-<dd><p>scaling parameter for increasing or decreasing the value of the standard deviation used for the perturbation kernel</p></dd>
+<dd><p>scaling parameter for increasing or decreasing
+the value of the standard deviation used for the perturbation kernel</p></dd>
 
 
 <dt>model_jump_prob</dt>
-<dd><p>probability of changing model when creating a new particle</p></dd>
+<dd><p>probability of changing model when creating
+a new particle</p></dd>
 
 
 <dt>nb_threshold</dt>
-<dd><p>number of thresholds used, corresponding to the number of distances returned by the function(s) stipulated in the model list (model_list)</p></dd>
+<dd><p>number of thresholds used, corresponding to the number
+of distances returned by the function(s) stipulated in the
+model list (model_list)</p></dd>
 
 
 <dt>new_threshold_quantile</dt>
-<dd><p>the quantile to be used to decrease the threshold(s) during iterations</p></dd>
+<dd><p>the quantile to be used to decrease the
+threshold(s) during iterations</p></dd>
 
 
 <dt>distance_threshold_min</dt>
-<dd><p>the minimum threshold below which the procedure stops (in order to prevent excessively long computations)</p></dd>
+<dd><p>the minimum threshold below which the procedure
+stops (in order to prevent excessively long computations)</p></dd>
 
 
 <dt>max_attempts</dt>
-<dd><p>the maximum number of particles to be tested during an iteration, beyond which the procedure stops (in order to prevent excessively long computations)</p></dd>
+<dd><p>the maximum number of particles to be tested during an
+iteration, beyond which the procedure stops (in order to prevent
+excessively long computations)</p></dd>
 
 
 <dt>acceptance_rate_min</dt>
-<dd><p>the acceptance rate below which the procedure stops (in order to prevent excessively long computations)</p></dd>
+<dd><p>the acceptance rate below which the procedure
+stops (in order to prevent excessively long computations)</p></dd>
 
 
 <dt>use_lhs_for_first_iter</dt>
-<dd><p>whether or not to use a LHS sampling method for the first iteration</p></dd>
+<dd><p>whether or not to use a LHS sampling method
+for the first iteration</p></dd>
 
 
 <dt>experiment_folderpath</dt>
-<dd><p>the folder in which to carry out the estimation procedure and save the results</p></dd>
+<dd><p>the folder in which to carry out the estimation
+procedure and save the results</p></dd>
 
 
 <dt>on_cluster</dt>
-<dd><p>whether or not the procedure is run on a computation cluster</p></dd>
+<dd><p>whether or not the procedure is run on a
+computation cluster</p></dd>
 
 
 <dt>cluster_type</dt>
@@ -183,15 +203,19 @@
 
 
 <dt>abc_user_param_file_path</dt>
-<dd><p>an R file containing the algorithm's parameters (usage not recommended, included in this version for reasons of compatibility with the procedure in script form used in some projects)</p></dd>
+<dd><p>an R file containing the algorithm's
+parameters (usage not recommended, included in this version for reasons of
+compatibility with the procedure in script form used in some projects)</p></dd>
 
 
 <dt>previous_gens</dt>
-<dd><p>an object (dataframe) containing previous results (set of iterations), in order to start from the last iteration performed</p></dd>
+<dd><p>an object (dataframe) containing previous results (set
+of iterations), in order to start from the last iteration performed</p></dd>
 
 
 <dt>previous_epsilons</dt>
-<dd><p>an object (dataframe) containing previous results (set of thresholds), in order to start from the last iteration performed</p></dd>
+<dd><p>an object (dataframe) containing previous results
+(set of thresholds), in order to start from the last iteration performed</p></dd>
 
 
 <dt>verbose</dt>
@@ -202,7 +226,8 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>a list containing two dataframes corresponding to (1) the particles accepted and (2) the thresholds used, during the successive iterations</p>
+<p>a list containing two dataframes corresponding to (1) the particles
+accepted and (2) the thresholds used, during the successive iterations</p>
     </div>
 
     <div class="section level2">
@@ -212,13 +237,14 @@
 <span class="r-in"><span><span class="co"># model definition</span></span></span>
 <span class="r-in"><span><span class="va">compute_dist</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ss_obs</span><span class="op">)</span><span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="va">ss_sim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="va">x</span><span class="op">[[</span><span class="st">"alpha"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[[</span><span class="st">"beta"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0.1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>           <span class="va">x</span><span class="op">[[</span><span class="st">"alpha"</span><span class="op">]</span><span class="op">]</span> <span class="op">*</span> <span class="va">x</span><span class="op">[[</span><span class="st">"beta"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0.1</span><span class="op">)</span> <span class="op">)</span> <span class="co"># a very simple toy model</span></span></span>
+<span class="r-in"><span>           <span class="va">x</span><span class="op">[[</span><span class="st">"alpha"</span><span class="op">]</span><span class="op">]</span> <span class="op">*</span> <span class="va">x</span><span class="op">[[</span><span class="st">"beta"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0.1</span><span class="op">)</span> <span class="op">)</span> <span class="co"># a simple toy model</span></span></span>
 <span class="r-in"><span>    <span class="va">dist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">ss_sim</span><span class="op">-</span><span class="va">ss_obs</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">MODEL_LIST</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"m1"</span> <span class="op">=</span> <span class="va">compute_dist</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">PRIOR_DIST</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"m1"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'unif'</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'beta'</span>, <span class="st">'unif'</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">PRIOR_DIST</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"m1"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'unif'</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'beta'</span>, <span class="st">'unif'</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create a reference trajectory</span></span></span>
 <span class="r-in"><span><span class="va">sum_stat_obs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.0</span>,<span class="fl">0.75</span><span class="op">)</span></span></span>
@@ -228,6 +254,8 @@
 <span class="r-in"><span>ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>, max_number_of_gen <span class="op">=</span> <span class="fl">20</span>, nb_acc_prtcl_per_gen <span class="op">=</span> <span class="fl">2000</span>,</span></span>
 <span class="r-in"><span>new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>, experiment_folderpath <span class="op">=</span> <span class="st">""</span>,</span></span>
 <span class="r-in"><span>max_concurrent_jobs <span class="op">=</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009351603</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get results and plots</span></span></span>
 <span class="r-in"><span><span class="va">all_accepted_particles</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">particles</span></span></span>
@@ -237,6 +265,8 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'GGally':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   method from   </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   +.gg   ggplot2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span>
 <span class="r-in"><span><span class="fu"><a href="plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"YlOrBr"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as '.png'."</span>
 <span class="r-in"><span><span class="fu"><a href="plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>, colorpal <span class="op">=</span> <span class="st">"YlOrBr"</span><span class="op">)</span></span></span>

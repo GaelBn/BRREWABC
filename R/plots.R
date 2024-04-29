@@ -27,13 +27,25 @@ plot_abcsmc_res <- function(data,
   # only one particle has been selected for one of the models.")
   tmp <- data
   colorshift <- 2 # because the first colours is often too light
-  nb_cols <- max(tmp$gen) + 1 + colorshift
+  nb_gen = max(tmp$gen)
+  nb_cols <- nb_gen + colorshift
   mycolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(nb_cols)
   mycolors <- mycolors[seq(-1, -colorshift, -1)]
+  gen_threshold <- 15
+  # TODO : add warning if nb gen > gen_threshold
+  if((nb_gen > gen_threshold) || (length(iter) > gen_threshold)) {
+    print("Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot.")
+  }
+  # if((nb_gen > gen_threshold) || (length(iter) > gen_threshold)) {
+  #   print("Number of generations exceed the threshold (15) allowed by ggpairs, a reduced number of generations have been plotted. You may (re)define the iter argument to choose which generations to plot.")
+  #   modulo_nb_gen <- ceiling(nb_gen / gen_threshold)
+  #   iter <- seq(nb_gen, 1, -modulo_nb_gen)
+  # }
   if (all(!is.na(iter))) {
     tmp <- data[data$gen %in% iter, ]
     mycolors <- mycolors[iter]
   }
+
   tmp$gen <- as.factor(tmp$gen)
   # Get the last three characters
   last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
@@ -65,7 +77,9 @@ plot_abcsmc_res <- function(data,
         ggplot2::theme_minimal() +
         ggplot2::theme(legend.position = "bottom", panel.grid.minor = ggplot2::element_blank(), panel.grid.major = ggplot2::element_blank(), panel.grid.major.y = ggplot2::element_line(linewidth = .1, color = "black"))
       if (last_three == "png") {
-        grDevices::png(filename, width = 9, height = 9, units = "in", res = 150)
+        newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),
+                              "_modelprop", ".png")
+        grDevices::png(newfilename, width = 9, height = 9, units = "in", res = 150)
       }
       print(stackedbarplot)
       if (last_three == "png") {
@@ -75,7 +89,7 @@ plot_abcsmc_res <- function(data,
     for (mm in sort(unique(tmp$model))) {
       param_names <- sapply(prior[[mm]], "[[", 1)
       tmpm <- tmp[tmp$model == mm, ]
-      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
+      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", ggplot2::aes(fill = gen, colour = gen, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
         ggplot2::scale_fill_manual(values = mycolors) + ggplot2::scale_colour_manual(values = mycolors) + ggplot2::theme_minimal()
       if (last_three == "png") {
         newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),

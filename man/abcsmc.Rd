@@ -29,7 +29,6 @@ abcsmc(
   sge_script_template =
     "#!/bin/bash\\n#$ -S /bin/bash\\n#$ -N subjob_abcsmc_prlll\\n#$ -q \\"short.q|long.q\\"\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#$ -cwd\\n#$ -V\\n#$ -t \%s-\%s\\n#$ -tc \%d\\n#$ -o /dev/null\\n#$ -e /dev/null\\noutput_fpath=\%s\\nerror_fpath=\%s\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript \%s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\\n",
   max_concurrent_jobs = 1,
-  abc_user_param_file_path = NULL,
   previous_gens = NA,
   previous_epsilons = NA,
   verbose = FALSE
@@ -98,10 +97,6 @@ computation cluster}
 \item{sge_script_template}{script used to launch jobs on a sge cluster}
 
 \item{max_concurrent_jobs}{maximum number of jobs/tasks run in parallel}
-
-\item{abc_user_param_file_path}{an R file containing the algorithm's
-parameters (usage not recommended, included in this version for reasons of
-compatibility with the procedure in script form used in some projects)}
 
 \item{previous_gens}{an object (dataframe) containing previous results (set
 of iterations), in order to start from the last iteration performed}

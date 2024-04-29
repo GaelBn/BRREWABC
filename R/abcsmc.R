@@ -42,9 +42,9 @@
 #' @param slurm_script_template script used to launch jobs on a slurm cluster
 #' @param sge_script_template script used to launch jobs on a sge cluster
 #' @param max_concurrent_jobs maximum number of jobs/tasks run in parallel
-#' @param abc_user_param_file_path an R file containing the algorithm's
-#' parameters (usage not recommended, included in this version for reasons of
-#' compatibility with the procedure in script form used in some projects)
+# #' @param abc_user_param_file_path an R file containing the algorithm's
+# #' parameters (usage not recommended, included in this version for reasons of
+# #' compatibility with the procedure in script form used in some projects)
 #' @param previous_gens an object (dataframe) containing previous results (set
 #' of iterations), in order to start from the last iteration performed
 #' @param previous_epsilons an object (dataframe) containing previous results
@@ -139,15 +139,15 @@ mkdir -p $error_fpath
 Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
 ', # TODO : queue selection via a function argument
                    max_concurrent_jobs = 1,
-                   abc_user_param_file_path = NULL,
+                   # abc_user_param_file_path = NULL,
                    previous_gens = NA,
                    previous_epsilons = NA,
                    verbose = FALSE) {
 
-  # first, load user param file if exist
-  if (!is.null(abc_user_param_file_path)) {
-    source(abc_user_param_file_path)
-  }
+  # # first, load user param file if exist
+  # if (!is.null(abc_user_param_file_path)) {
+  #   source(abc_user_param_file_path)
+  # }
 
   #
 

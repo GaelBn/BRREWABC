@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BRREWABC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,9 @@
     <a class="dropdown-item" href="../articles/use-of-several-distances-with-abc-smc.html">Use of several distances with ABC-SMC</a>
     <a class="dropdown-item" href="../articles/using-a-model-defined-in-a-separate-file.html">Using a model defined in a separate file</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -128,7 +131,7 @@
 <span>              max_concurrent_jobs <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span></span>
-<span><span class="co">#&gt; [1] 0.009375142 0.004402936</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.009986183 0.003752885</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot-results">Plot results<a class="anchor" aria-label="anchor" href="#plot-results"></a>
@@ -142,8 +145,6 @@
 <span><span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span></span>
 <span><span class="co">#&gt;   method from   </span></span>
 <span><span class="co">#&gt;   +.gg   ggplot2</span></span>
-<span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
-<span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
 <span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                   filename <span class="op">=</span> <span class="st">"svrldist/res/figs/svrldist_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Plot saved as '.png'."</span></span>

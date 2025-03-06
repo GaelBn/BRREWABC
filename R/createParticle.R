@@ -15,15 +15,15 @@
 # # ' @export
 # #'
 # #' @examples
-createParticle <- function(gen,
-                           rep,
-                           lhs_for_first_iter,
-                           previous_acc_particles,
-                           empirical_sd,
-                           use_lhs_for_first_iter,
-                           prior_dist,
-                           model_names,
-                           model_jump_prob) {
+createParticleForSMC <- function(gen,
+                                 rep,
+                                 lhs_for_first_iter,
+                                 previous_acc_particles,
+                                 empirical_sd,
+                                 use_lhs_for_first_iter,
+                                 prior_dist,
+                                 model_names,
+                                 model_jump_prob) {
   the_particle <- list()
   if (gen == 1) {
     # sample from prior of get from lhs
@@ -36,7 +36,7 @@ createParticle <- function(gen,
           val <- stats::runif(1, min = as.double(pp[3]), max = as.double(pp[4]))
           the_particle[[pp[1]]] <- val
         } else {
-          stop(p[2] + "- type of distribution not supported in the current version")
+          stop(pp[2] + "- type of distribution not supported in the current version")
         }
       }
     }
@@ -67,8 +67,24 @@ createParticle <- function(gen,
           }
         }
       } else {
-        stop(p[2] + " - type of distribution not supported in the current version")
+        stop(pp[2] + " - type of distribution not supported in the current version")
       }
+    }
+  }
+  return(the_particle)
+}
+
+
+createParticle <- function(prior_dist,
+                           model_names) {
+  the_particle <- list()
+  the_particle[["model"]] <- sample(model_names, 1)
+  for (pp in prior_dist[[the_particle[["model"]]]]) {
+    if (pp[2] == "unif") {
+      val <- stats::runif(1, min = as.double(pp[3]), max = as.double(pp[4]))
+      the_particle[[pp[1]]] <- val
+    } else {
+      stop(pp[2] + "- type of distribution not supported in the current version")
     }
   }
   return(the_particle)

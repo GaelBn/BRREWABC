@@ -245,3 +245,128 @@ plot_thresholds <- function(data,
     print("Plot saved as '.pdf'.")
   }
 }
+
+
+#' Plot abcrejection results : pairplot
+#'
+#' @param data a dataframe containing the estimation results (set of particles
+#' accepted during iterations)
+#' @param prior a list linking model name (character string) to a list
+#' describing the prior distribution of each parameter estimated (the same as
+#' used for the abcsmc function)
+#' @param thresholds if not NA, the threshold(s) (a value or a vector of
+#' thresholds) to use to select acceptable particles. Should be use only if
+#' abcrejection was run using thresholds = NA
+#' @param filename the file name to be used to save the plots (the extension
+#' defines the format: pdf or png)
+#' @param figtitle the figure title
+#' @param colorpal a palette name as used in the RColorBrewer package
+#'
+#' @return one or several plots in pdf or png format
+#' @export
+#'
+#' @examples
+#' # see the abcrejection function help for details on how to plot results
+plot_abcrejection_res <- function(data,
+                                  prior,
+                                  thresholds = NA,
+                                  filename = "pairplot.png",
+                                  figtitle = "ABC rejection results",
+                                  colorpal = "Greys") {
+  # message("The plot may fail if, for one or more iterations,
+  # only one particle has been selected for one of the models.")
+  colorshift <- 2 # because the first colours is often too light
+  nb_thresholds = length(thresholds)
+  nb_cols <- nb_thresholds + colorshift
+  mycolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(nb_cols)
+  mycolors <- mycolors[seq(-1, -colorshift, -1)]
+  nb_thresholds_limit <- 15
+  # TODO : add warning if nb_thresholds > nb_thresholds_limit
+  if(nb_thresholds > nb_thresholds_limit) {
+    print("Number of thresholds exceed the limit (15) allowed by ggpairs, it may cause long processing times. You may (re)define the thresholds argument to choose which thresholds to plot.")
+  }
+
+  # TODO : create a table based on the defined thresholds if not NA
+  tmp = data.frame()
+  if (all(!is.na(thresholds))) {
+    list_of_dataframes <- list()
+    for (tr in thresholds) {
+      tmp_current_cutoff = data[data$dist1 <= tr,]
+      tmp_current_cutoff$cutoff <- tr
+      list_of_dataframes <- append(list_of_dataframes, list(tmp_current_cutoff))
+    }
+    tmp <- do.call(rbind, list_of_dataframes)
+  } else {
+    tmp <- data
+    tmp$cutoff <- NA
+  }
+  tmp$cutoff <- factor(tmp$cutoff, levels = sort(unique(tmp$cutoff), decreasing = TRUE))
+
+  # Get the last three characters
+  last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
+  if (last_three == "png") {
+    # Save plot as PNG
+    print("Plot saved as '.png'.")
+  } else if (last_three == "pdf") {
+    # Save plot as PDF
+    grDevices::pdf(filename, width = 9, height = 9)
+  } else {
+    stop("The specified file format is neither 'png' nor 'pdf'.")
+  }
+  # param_names = unique(Reduce(c, sapply(prior, function(x) sapply(x, `[[`, 1))))
+  # pairplot = ggpairs(tmp[c(param_names, "cutoff")], aes(fill = cutoff, colour = cutoff, alpha=0.8),
+  #     columns = param_names, lower = list(continuous = wrap("points", alpha = 0.5, size=1.5)),
+  #     title = figtitle
+  #  ) + scale_fill_manual(values = mycolors) + scale_colour_manual(values = mycolors) + theme_dark()
+  # print(pairplot)
+  if (length(unique(tmp$model)) >= 1) {
+    if (length(unique(tmp$model)) > 1) {
+      tmpm <- tmp[, c("cutoff", "model")]
+      modelcolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(length(unique(tmpm$model)) + 1)
+      modelcolors <- modelcolors[-1]
+      stackedbarplot <- ggplot2::ggplot(data, ggplot2::aes(x = factor(cutoff), fill = model)) +
+        ggplot2::geom_bar(position = "fill") +
+        ggplot2::labs(x = "cutoff", y = "Count", fill = "model") +
+        ggplot2::ggtitle(paste(figtitle, "model selection", sep = " - ")) +
+        ggplot2::scale_fill_manual(values = modelcolors) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(legend.position = "bottom", panel.grid.minor = ggplot2::element_blank(), panel.grid.major = ggplot2::element_blank(), panel.grid.major.y = ggplot2::element_line(linewidth = .1, color = "black"))
+      if (last_three == "png") {
+        newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),
+                              "_modelprop", ".png")
+        grDevices::png(newfilename, width = 9, height = 9, units = "in", res = 150)
+      }
+      print(stackedbarplot)
+      if (last_three == "png") {
+        grDevices::dev.off()
+      }
+    }
+    for (mm in sort(unique(tmp$model))) {
+      param_names <- sapply(prior[[mm]], "[[", 1)
+      tmpm <- tmp[tmp$model == mm, ]
+      current_fig_title = paste(figtitle, mm, sep = " - ")
+      if (length(unique(tmp$model)) == 1) {
+        current_fig_title = figtitle
+      }
+      pairplot <- GGally::ggpairs(tmpm[c(param_names, "cutoff")], upper = "blank", ggplot2::aes(fill = cutoff, colour = cutoff, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
+        ggplot2::scale_fill_manual(values = mycolors) + ggplot2::scale_colour_manual(values = mycolors) + ggplot2::theme_minimal()
+      if (last_three == "png") {
+        newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),
+                              "_", mm, ".png")
+        if (length(unique(tmp$model)) == 1) {
+          newfilename <- filename
+        }
+        grDevices::png(newfilename, width = 9, height = 9,
+                       units = "in", res = 150)
+      }
+      print(pairplot)
+      if (last_three == "png") {
+        grDevices::dev.off()
+      }
+    }
+  }
+  if (last_three == "pdf") {
+    grDevices::dev.off()
+    print("Plot saved as '.pdf'.")
+  }
+}

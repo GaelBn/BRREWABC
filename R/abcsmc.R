@@ -59,6 +59,8 @@
 #' @examples
 #' library(BRREWABC)
 #'
+#' tmp_dir <- tempdir()
+#'
 #' # model definition
 #' compute_dist = function(x, ss_obs){
 #'     ss_sim = c( x[["alpha"]] + x[["beta"]] + rnorm(1,0,0.1),
@@ -77,15 +79,15 @@
 #' # run abc smc procedure
 #' res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 #' ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
-#' new_threshold_quantile = 0.8, experiment_folderpath = "",
+#' new_threshold_quantile = 0.8, experiment_folderpath = tmp_dir,
 #' max_concurrent_jobs = 2, verbose = FALSE)
 #'
 #' # get results and plots
 #' all_accepted_particles = res$particles
 #' all_thresholds = res$thresholds
-#' plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
-#' plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr")
-#' plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr")
+#' plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "abcsmc_results.png"))
+#' plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
+#' plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr", filename = file.path(tmp_dir, "thresholds.png"))
 abcsmc <- function(model_list = list(), # required
                    model_def = NULL,
                    prior_dist = list(), # required
@@ -106,12 +108,12 @@ abcsmc <- function(model_list = list(), # required
                    on_cluster = FALSE,
                    cluster_type = NULL, # "slurm" # "sge"
                    slurm_script_template = '#!/bin/bash
-# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED
-#SBATCH --job-name=job-array_%%A_%%a   # nom du job
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --hint=nomultithread
 #SBATCH --time=24:00:00
+# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED
+#SBATCH --job-name=job-array_%%A_%%a   # nom du job
 #SBATCH --array=%s-%s%%%d
 output_fpath=%s
 error_fpath=%s
@@ -124,7 +126,7 @@ Rscript %s $SLURM_ARRAY_TASK_ID
                    sge_script_template = '#!/bin/bash
 #$ -S /bin/bash
 #$ -N subjob_abcsmc_prlll
-#$ -q "short.q|long.q"
+# #$ -q "short.q|long.q"
 # THE FOLLOWING SECTION SHOULD NOT BE MODIFIED
 #$ -cwd
 #$ -V
@@ -164,10 +166,6 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   tmp_local_task_std_err <- file.path(tmp_folder_path, "std_err")
   tmp_current_abc_state <- file.path(tmp_folder_path, "currentABCState.RData")
 
-  if (verbose) {
-    print(tmp_current_abc_state)
-  }
-
   results_folder_path_CSV <- file.path(results_folder_path, "csv")
   results_folder_path_FIGS <- file.path(results_folder_path, "figs")
   accepted_particles_filepath <- file.path(results_folder_path_CSV, "all_accepted_particles.csv")
@@ -200,7 +198,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
   #
 
-  subjob_script_content <- "library(BRREWABC)\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob(job_id = id, path_to_abc_state = '%s')\n"
+  subjob_script_content <- "library(BRREWABC)\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob_smc(job_id = id, path_to_abc_state = '%s')\n"
   subjob_script <- sprintf(subjob_script_content, tmp_current_abc_state)
   writeLines(subjob_script, subjob_script_path)
 
@@ -326,13 +324,10 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       for (task_index in 1:max_concurrent_jobs) {
         # Launch external script
         local_process <- callr::r_bg(
-          # local_process = callr::r(
-          # func = subjob,
           func = function() {
-            library(BRREWABC)  # Load your package
-            subjob(job_id = task_index, path_to_abc_state = tmp_current_abc_state)  # Call your function
+            library(BRREWABC)
+            subjob_smc(job_id = task_index, path_to_abc_state = tmp_current_abc_state)
           },
-          # args = list(job_id = task_index, path_to_abc_state = tmp_current_abc_state),
           stdout = paste0(tmp_local_task_std_out,"abc_smc_task_",task_index,".out"),
           stderr = paste0(tmp_local_task_std_err,"abc_smc_task_",task_index,".err"),
           package = TRUE
@@ -358,7 +353,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
         current_iter_broke = TRUE
         break
       }
-      if ((totattempts >= (nb_acc_prtcl_per_gen*length(model_names))) && (current_acc_rate < acceptance_rate_min)) {
+      if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
         message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
         current_iter_broke = TRUE
         break

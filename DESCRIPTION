@@ -29,12 +29,13 @@ Imports:
     scales,
     stats,
     utils
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Collate:
     'saveEnvir.R'
     'computeWeight.R'
     'createParticle.R'
     'subjob.R'
+    'abcrejection.R'
     'setEmpiricalSD.R'
     'defineNextThreshold.R'
     'createLHSfromPrior.R'

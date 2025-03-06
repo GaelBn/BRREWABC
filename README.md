@@ -8,13 +8,25 @@
 
 BRREWABC (Batched Resilient and Rapid Estimation Workflow through
 Approximate Bayesian Computation, pronounced “brew abc”: /bruː
-ˌeɪ.biːˈsiː/) : an R package designed to facilitate inference through a
-parallelized Approximate Bayesian Computation Sequential Monte Carlo
-(ABC SMC) algorithm. This package streamlines the process of conducting
-Bayesian inference for complex models by implementing efficient
-parallelization techniques.
+ˌeɪ.biːˈsiː/) : an R package designed to facilitate inference through
+parallelized Approximate Bayesian Computation algorithms (Sequential
+Monte Carlo (ABC SMC), rejection). This package streamlines the process
+of conducting Bayesian inference for complex models by implementing
+efficient parallelization techniques.
 
 ## Overview
+
+### ABC-rejection
+
+The ABC rejection algorithm approximates the posterior distribution by
+sampling parameters from a prior, simulating data, and then calculating
+a distance between the summary statistics of the simulated and observed
+data. If this distance falls within a predefined tolerance, the
+parameters are accepted. This process is repeated until a sufficient
+number of parameter sets are accepted, approximating the posterior
+distribution of the parameters given the observed data.
+
+### ABC-SMC
 
 The algorithm used corresponds to an Approximate Bayesian Computation
 approach using a Sequential Monte Carlo sampler. This iterative

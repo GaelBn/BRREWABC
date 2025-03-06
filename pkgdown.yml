@@ -1,16 +1,16 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   BRREWABC: BRREWABC.html
   estimation-and-model-selection-using-abc-smc: estimation-and-model-selection-using-abc-smc.html
+  estimation-using-abc-rejection: estimation-using-abc-rejection.html
   resume-an-estimation-using-abc-smc: resume-an-estimation-using-abc-smc.html
   running-an-abc-smc-procedure-on-a-cluster-sge: running-an-abc-smc-procedure-on-a-cluster-sge.html
   running-an-abc-smc-procedure-on-a-cluster-slurm: running-an-abc-smc-procedure-on-a-cluster-slurm.html
   use-of-several-distances-with-abc-smc: use-of-several-distances-with-abc-smc.html
   using-a-model-defined-in-a-separate-file: using-a-model-defined-in-a-separate-file.html
-last_built: 2024-04-29T13:05Z
+last_built: 2025-03-06T14:53Z
 urls:
   reference: https://gaelbn.github.io/BRREWABC/reference
   article: https://gaelbn.github.io/BRREWABC/articles
-

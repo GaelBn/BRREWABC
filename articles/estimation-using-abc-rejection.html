@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>BRREWABC • BRREWABC</title>
+<title>Estimation using abc rejection • BRREWABC</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="BRREWABC">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimation using abc rejection">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -29,9 +29,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/BRREWABC.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/BRREWABC.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/estimation-and-model-selection-using-abc-smc.html">Estimation and model selection using ABC-SMC</a></li>
@@ -63,17 +63,17 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>BRREWABC</h1>
+      <h1>Estimation using abc rejection</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/GaelBn/BRREWABC/blob/main/vignettes/BRREWABC.Rmd" class="external-link"><code>vignettes/BRREWABC.Rmd</code></a></small>
-      <div class="d-none name"><code>BRREWABC.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/GaelBn/BRREWABC/blob/main/vignettes/estimation-using-abc-rejection.Rmd" class="external-link"><code>vignettes/estimation-using-abc-rejection.Rmd</code></a></small>
+      <div class="d-none name"><code>estimation-using-abc-rejection.Rmd</code></div>
     </div>
 
     
     
 <div class="section level2">
-<h2 id="simple-estimation-using-abc-smc">Simple estimation using ABC-SMC<a class="anchor" aria-label="anchor" href="#simple-estimation-using-abc-smc"></a>
+<h2 id="simple-estimation-using-abc-rejection">Simple estimation using ABC-rejection<a class="anchor" aria-label="anchor" href="#simple-estimation-using-abc-rejection"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GaelBn/BRREWABC" class="external-link">BRREWABC</a></span><span class="op">)</span></span></code></pre></div>
@@ -107,54 +107,39 @@
 <h3 id="run-abc-smc-procedure">Run abc smc procedure<a class="anchor" aria-label="anchor" href="#run-abc-smc-procedure"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abcsmc.html">abcsmc</a></span><span class="op">(</span>model_list <span class="op">=</span> <span class="va">model_list</span>,</span>
-<span>              prior_dist <span class="op">=</span> <span class="va">prior_dist</span>,</span>
-<span>              ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>,</span>
-<span>              max_number_of_gen <span class="op">=</span> <span class="fl">15</span>,</span>
-<span>              nb_acc_prtcl_per_gen <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>              new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>              experiment_folderpath <span class="op">=</span> <span class="st">"smpl"</span>,</span>
-<span>              max_concurrent_jobs <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abcrejection.html">abcrejection</a></span><span class="op">(</span>model_list <span class="op">=</span> <span class="va">model_list</span>,</span>
+<span>                    prior_dist <span class="op">=</span> <span class="va">prior_dist</span>,</span>
+<span>                    ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>,</span>
+<span>                    nb_acc_prtcl <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>                    thresholds <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                    max_attempts <span class="op">=</span> <span class="fl">100000</span>,</span>
+<span>                    acceptance_rate_min <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>                    experiment_folderpath <span class="op">=</span> <span class="st">"smplreject"</span>,</span>
+<span>                    max_concurrent_jobs <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                    verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Check folder_path for : smplreject/tmp</span></span>
+<span><span class="co">#&gt; Folder created successfully.</span></span>
+<span><span class="co">#&gt; Check folder_path for : smplreject/res</span></span>
+<span><span class="co">#&gt; Folder created successfully.</span></span>
+<span><span class="co">#&gt; Check folder_path for : smplreject/res/csv</span></span>
+<span><span class="co">#&gt; Folder created successfully.</span></span>
+<span><span class="co">#&gt; Check folder_path for : smplreject/res/figs</span></span>
+<span><span class="co">#&gt; Folder created successfully.</span></span>
+<span><span class="co">#&gt; Experiment done!</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plot-results">Plot results<a class="anchor" aria-label="anchor" href="#plot-results"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">all_accepted_particles</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">particles</span></span>
-<span><span class="va">all_thresholds</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">thresholds</span></span>
-<span><span class="fu"><a href="../reference/plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
-<span>                filename <span class="op">=</span> <span class="st">"smpl/res/figs/smpl_pairplot_all.png"</span>, colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as '.png'."</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span></span>
-<span><span class="co">#&gt;   method from   </span></span>
-<span><span class="co">#&gt;   +.gg   ggplot2</span></span>
-<span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
-<span>                   filename <span class="op">=</span> <span class="st">"smpl/res/figs/smpl_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as '.png'."</span></span>
-<span><span class="fu"><a href="../reference/plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                filename <span class="op">=</span> <span class="st">"smpl/res/figs/smpl_thresholds.png"</span>, colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span></code></pre></div>
-<div class="figure">
-<img src="../reference/figures/smpl_pairplot_all_m1.png" alt="Pairplot of all iterations" width="100%"><p class="caption">
-Pairplot of all iterations
-</p>
-</div>
-<div class="figure">
-<img src="../reference/figures/smpl_thresholds_dist1.png" alt="Threshold evolution over iterations" width="100%"><p class="caption">
-Threshold evolution over iterations
-</p>
-</div>
-<div class="figure">
-<img src="../reference/figures/smpl_densityridges_m1_alpha.png" alt="Density estimates for alpha" width="100%"><p class="caption">
-Density estimates for alpha
-</p>
-</div>
-<div class="figure">
-<img src="../reference/figures/smpl_densityridges_m1_beta.png" alt="Density estimates for beta" width="100%"><p class="caption">
-Density estimates for beta
-</p>
-</div>
+<code class="sourceCode R"><span><span class="va">all_accepted_particles</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">acc_particles</span></span>
+<span><span class="va">all_tested_particles</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">all_tested_particles</span></span>
+<span><span class="co"># plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,</span></span>
+<span><span class="co">#                 filename = "smplreject/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")</span></span>
+<span><span class="co"># plot_densityridges(data = all_accepted_particles, prior = prior_dist,</span></span>
+<span><span class="co">#                    filename = "smplreject/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")</span></span></code></pre></div>
+<!-- ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
+knitr::include_graphics("../man/figures/smplreject_pairplot_all_m1.png")
+``` -->
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

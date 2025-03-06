@@ -66,6 +66,7 @@ plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "smpl/res/figs/smpl_thresholds.png", colorpal = "YlGnBu")
+plot_ess(data = all_accepted_particles,filename = "smpl/res/figs/smpl_ess.png", colorpal = "YlGnBu")
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}

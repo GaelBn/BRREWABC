@@ -51,10 +51,11 @@ plot_abcsmc_res <- function(data,
   last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
   if (last_three == "png") {
     # Save plot as PNG
-    print("Plot saved as '.png'.")
+    print("Plot saved as 'png'.")
   } else if (last_three == "pdf") {
     # Save plot as PDF
     grDevices::pdf(filename, width = 9, height = 9)
+    print("Plot saved as 'pdf'.")
   } else {
     stop("The specified file format is neither 'png' nor 'pdf'.")
   }
@@ -105,7 +106,6 @@ plot_abcsmc_res <- function(data,
   }
   if (last_three == "pdf") {
     grDevices::dev.off()
-    print("Plot saved as '.pdf'.")
   }
 }
 
@@ -142,11 +142,11 @@ plot_densityridges <- function(data,
   last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
   if (last_three == "png") {
     # Save plot as PNG
-    print("Plot saved as '.png'.")
+    print("Plot saved as 'png'.")
   } else if (last_three == "pdf") {
     # Save plot as PDF
     grDevices::pdf(filename, width = 6, height = 8)
-    print("Plot saved as '.pdf'.")
+    print("Plot saved as 'pdf'.")
   } else {
     stop("The specified file format is neither 'png' nor 'pdf'.")
   }
@@ -176,7 +176,6 @@ plot_densityridges <- function(data,
   }
   if (last_three == "pdf") {
     grDevices::dev.off()
-    print("Plot saved as '.pdf'.")
   }
 }
 
@@ -217,7 +216,7 @@ plot_thresholds <- function(data,
   } else if (last_three == "pdf") {
     # Save plot as PDF
     grDevices::pdf(filename, width = 8, height = 5)
-    print("Plot saved as '.pdf'.")
+    print("Plot saved as 'pdf'.")
   } else {
     stop("The specified file format is neither 'png' nor 'pdf'.")
   }
@@ -242,8 +241,70 @@ plot_thresholds <- function(data,
   }
   if (last_three == "pdf") {
     grDevices::dev.off()
-    print("Plot saved as '.pdf'.")
   }
+}
+
+
+#' Plot abcsmc results : ESS (Effective Sample Size) over iterations
+#'
+#' @param data a dataframe containing the estimation results (thresholds over
+#' iterations)
+#' @param filename the file name to be used to save the plots (the extension
+#' defines the format: pdf or png)
+#' @param figtitle the figure title
+#' @param colorpal a palette name as used in the RColorBrewer package
+#'
+#' @return a dataframe and one or several plots in pdf or png format
+#' @export
+#'
+#' @examples
+#' # see the abcsmc function help for details on how to plot results
+plot_ess <- function(data,
+                     filename = "ess.png",
+                     figtitle = "",
+                     colorpal = "Greys") {
+  tmp <- data
+  colorshift <- 2  # because the first colours is often too light
+  nb_cols <- max(tmp$gen) + 1 + colorshift
+  mycolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(nb_cols)
+  mycolors <- mycolors[seq(-1, -colorshift, -1)]
+  tmp$gen <- as.factor(tmp$gen)
+  # Get the last three characters
+  last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
+  if (last_three == "png") {
+    # Save plot as PNG
+    grDevices::png(filename, width = 8, height = 5, units = "in", res = 150)
+    print("Plot saved as 'png'.")
+  } else if (last_three == "pdf") {
+    # Save plot as PDF
+    grDevices::pdf(filename, width = 8, height = 5)
+    print("Plot saved as 'pdf'.")
+  } else {
+    stop("The specified file format is neither 'png' nor 'pdf'.")
+  }
+  
+  ess_per_gen <- aggregate(pWeight ~ gen, data = tmp, FUN = function(x) 1 / sum(x^2))
+  colnames(ess_per_gen) <- c("gen", "ess")
+  
+  plot = ggplot2::ggplot(ess_per_gen, ggplot2::aes(x = gen, y = ess, fill = gen, color = gen))+
+    ggplot2::geom_bar(stat = "identity") +
+    ggplot2::scale_fill_manual(values = mycolors) +
+    ggplot2::scale_colour_manual(values = mycolors) +
+    ggplot2::labs(y = "Effective Sample Size", x = "iteration ID") +
+    ggplot2::theme_minimal() + ggplot2::theme(legend.position = "none")
+  if (last_three == "png") {
+    newfilename <- filename
+    grDevices::png(newfilename, width = 8, height = 5, units = "in", res = 150)
+  }
+  print(plot)
+  if (last_three == "png") {
+    grDevices::dev.off()
+  }
+    
+  if (last_three == "pdf") {
+    grDevices::dev.off()
+  }
+  return(ess_per_gen)
 }
 
 
@@ -281,12 +342,12 @@ plot_abcrejection_res <- function(data,
   mycolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(nb_cols)
   mycolors <- mycolors[seq(-1, -colorshift, -1)]
   nb_thresholds_limit <- 15
-  # TODO : add warning if nb_thresholds > nb_thresholds_limit
+
   if(nb_thresholds > nb_thresholds_limit) {
     print("Number of thresholds exceed the limit (15) allowed by ggpairs, it may cause long processing times. You may (re)define the thresholds argument to choose which thresholds to plot.")
   }
 
-  # TODO : create a table based on the defined thresholds if not NA
+  # Create a table based on the defined thresholds if not NA
   tmp = data.frame()
   if (all(!is.na(thresholds))) {
     list_of_dataframes <- list()
@@ -310,6 +371,7 @@ plot_abcrejection_res <- function(data,
   } else if (last_three == "pdf") {
     # Save plot as PDF
     grDevices::pdf(filename, width = 9, height = 9)
+    print("Plot saved as 'pdf'.")
   } else {
     stop("The specified file format is neither 'png' nor 'pdf'.")
   }
@@ -348,7 +410,7 @@ plot_abcrejection_res <- function(data,
       if (length(unique(tmp$model)) == 1) {
         current_fig_title = figtitle
       }
-      pairplot <- GGally::ggpairs(tmpm[c(param_names, "cutoff")], upper = "blank", ggplot2::aes(fill = cutoff, colour = cutoff, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
+      pairplot <- GGally::ggpairs(tmpm[c(param_names, "cutoff")], upper = "blank", ggplot2::aes(fill = cutoff, colour = cutoff, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = current_fig_title, cardinality_threshold = NULL) +
         ggplot2::scale_fill_manual(values = mycolors) + ggplot2::scale_colour_manual(values = mycolors) + ggplot2::theme_minimal()
       if (last_three == "png") {
         newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),
@@ -367,6 +429,5 @@ plot_abcrejection_res <- function(data,
   }
   if (last_three == "pdf") {
     grDevices::dev.off()
-    print("Plot saved as '.pdf'.")
   }
 }

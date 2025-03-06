@@ -61,12 +61,14 @@ res <- abcrejection(model_list = model_list,
 ```{r}
 all_accepted_particles <- res$acc_particles
 all_tested_particles <- res$all_tested_particles
-# plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
-#                 filename = "smplreject/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")
-# plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-#                    filename = "smplreject/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
+plot_abcrejection_res(all_accepted_particles, prior_dist,
+                      filename="smplreject/res/figs/pairplot.png")
+plot_abcrejection_res(all_tested_particles, prior_dist,
+                      thresholds=c(5.0, 4.0, 3.0, 2.0, 1.0, 0.1, 0.05, 0.01),
+                      filename="smplreject/res/figs/pairplot_custom_thresholds.png",
+                      colorpal = "YlGnBu")
 ```
-
+"smplreject/res/figs/mdlslctn_pairplot_all.png"
 <!-- ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
 knitr::include_graphics("../man/figures/smplreject_pairplot_all_m1.png")
 ``` -->

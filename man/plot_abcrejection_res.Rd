@@ -9,7 +9,7 @@ plot_abcrejection_res(
   prior,
   thresholds = NA,
   filename = "pairplot.png",
-  figtitle = "ABC smc results",
+  figtitle = "ABC rejection results",
   colorpal = "Greys"
 )
 }

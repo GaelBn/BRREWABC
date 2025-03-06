@@ -90,11 +90,18 @@ plot_abcsmc_res <- function(data,
     for (mm in sort(unique(tmp$model))) {
       param_names <- sapply(prior[[mm]], "[[", 1)
       tmpm <- tmp[tmp$model == mm, ]
-      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", ggplot2::aes(fill = gen, colour = gen, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = paste(figtitle, mm, sep = " - "), cardinality_threshold = NULL) +
+      current_fig_title = paste(figtitle, mm, sep = " - ")
+      if (length(unique(tmp$model)) == 1) {
+        current_fig_title = figtitle
+      }
+      pairplot <- GGally::ggpairs(tmpm[c(param_names, "gen")], upper = "blank", ggplot2::aes(fill = gen, colour = gen, alpha = 0.8), columns = param_names, lower = list(continuous = GGally::wrap("points", alpha = 0.5, size = 1.5)), title = current_fig_title, cardinality_threshold = NULL) +
         ggplot2::scale_fill_manual(values = mycolors) + ggplot2::scale_colour_manual(values = mycolors) + ggplot2::theme_minimal()
       if (last_three == "png") {
         newfilename <- paste0(substr(filename, 1, nchar(filename) - 4),
                               "_", mm, ".png")
+        if (length(unique(tmp$model)) == 1) {
+          newfilename <- filename
+        }
         grDevices::png(newfilename, width = 9, height = 9,
                        units = "in", res = 150)
       }
@@ -227,11 +234,14 @@ plot_thresholds <- function(data,
       ggplot2::geom_bar(stat = "identity") +
       ggplot2::scale_fill_manual(values = mycolors) +
       ggplot2::scale_colour_manual(values = mycolors) +
-      ggplot2::labs(y = paste0("threshold for ", dd), x = "iteration ID") +
+      ggplot2::labs(y = "threshold", x = "iteration ID") +
       # ggplot2::ggtitle(paste("Successive posterior distributions for parameter",p[1], sep=' '))
       ggplot2::theme_minimal() + ggplot2::theme(legend.position = "none")
     if (last_three == "png") {
       newfilename <- paste0(substr(filename, 1, nchar(filename) - 4), "_", dd, ".png")
+      if (nb_threshold == 1) {
+          newfilename <- filename
+        }
       grDevices::png(newfilename, width = 8, height = 5, units = "in", res = 150)
     }
     print(sub_plot)
@@ -282,10 +292,10 @@ plot_ess <- function(data,
   } else {
     stop("The specified file format is neither 'png' nor 'pdf'.")
   }
-  
+
   ess_per_gen <- aggregate(pWeight ~ gen, data = tmp, FUN = function(x) 1 / sum(x^2))
   colnames(ess_per_gen) <- c("gen", "ess")
-  
+
   plot = ggplot2::ggplot(ess_per_gen, ggplot2::aes(x = gen, y = ess, fill = gen, color = gen))+
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::scale_fill_manual(values = mycolors) +
@@ -300,7 +310,7 @@ plot_ess <- function(data,
   if (last_three == "png") {
     grDevices::dev.off()
   }
-    
+
   if (last_three == "pdf") {
     grDevices::dev.off()
   }

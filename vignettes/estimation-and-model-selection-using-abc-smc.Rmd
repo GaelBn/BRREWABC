@@ -84,7 +84,6 @@ plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "mdlslctn/res/figs/mdlslctn_densityridges.png", colorpal = "YlGnBu")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "mdlslctn/res/figs/mdlslctn_thresholds.png", colorpal = "YlGnBu")
-plot_ess(data = all_accepted_particles,filename = "mdlslctn/res/figs/mdlslctn_ess.png", colorpal = "YlGnBu")
 ```
 
 ```{r barplot, echo=FALSE, fig.cap="Selected models over iterations", out.width = '100%'}

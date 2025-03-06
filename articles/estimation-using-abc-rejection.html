@@ -133,13 +133,21 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_accepted_particles</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">acc_particles</span></span>
 <span><span class="va">all_tested_particles</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">all_tested_particles</span></span>
-<span><span class="co"># plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,</span></span>
-<span><span class="co">#                 filename = "smplreject/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")</span></span>
-<span><span class="co"># plot_densityridges(data = all_accepted_particles, prior = prior_dist,</span></span>
-<span><span class="co">#                    filename = "smplreject/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot_abcrejection_res.html">plot_abcrejection_res</a></span><span class="op">(</span><span class="va">all_accepted_particles</span>, <span class="va">prior_dist</span>,</span>
+<span>                      filename<span class="op">=</span><span class="st">"smplreject/res/figs/pairplot.png"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Plot saved as '.png'."</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span></span>
+<span><span class="co">#&gt;   method from   </span></span>
+<span><span class="co">#&gt;   +.gg   ggplot2</span></span>
+<span><span class="fu"><a href="../reference/plot_abcrejection_res.html">plot_abcrejection_res</a></span><span class="op">(</span><span class="va">all_tested_particles</span>, <span class="va">prior_dist</span>,</span>
+<span>                      thresholds<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.0</span>, <span class="fl">4.0</span>, <span class="fl">3.0</span>, <span class="fl">2.0</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.01</span><span class="op">)</span>,</span>
+<span>                      filename<span class="op">=</span><span class="st">"smplreject/res/figs/pairplot_custom_thresholds.png"</span>,</span>
+<span>                      colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Plot saved as '.png'."</span></span></code></pre></div>
+<p>“smplreject/res/figs/mdlslctn_pairplot_all.png”
 <!-- ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
 knitr::include_graphics("../man/figures/smplreject_pairplot_all_m1.png")
-``` -->
+``` --></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

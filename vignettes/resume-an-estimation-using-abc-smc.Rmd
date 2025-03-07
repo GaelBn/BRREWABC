@@ -67,19 +67,19 @@ plot_thresholds(data = all_thresholds, nb_threshold = 1,
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_pairplot_all_m1.png")
+knitr::include_graphics("../man/figures/rsmsmpl_pairplot_all.png")
 ```
 
 ```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_thresholds_dist1.png")
+knitr::include_graphics("../man/figures/rsmsmpl_thresholds.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_densityridges_m1_alpha.png")
+knitr::include_graphics("../man/figures/rsmsmpl_densityridges_alpha.png")
 ```
 
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_densityridges_m1_beta.png")
+knitr::include_graphics("../man/figures/rsmsmpl_densityridges_beta.png")
 ```
 
 ## Re-run abc smc procedure from last iteration of previous results
@@ -112,17 +112,17 @@ plot_thresholds(data = all_thresholds, nb_threshold = 1,
 ```
 
 ```{r pairplot_rsm, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_pairplot_all_rsm_m1.png")
+knitr::include_graphics("../man/figures/rsmsmpl_pairplot_all_rsm.png")
 ```
 
 ```{r thresholds_rsm, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_thresholds_rsm_dist1.png")
+knitr::include_graphics("../man/figures/rsmsmpl_thresholds_rsm.png")
 ```
 
 ```{r densityridges_alpha_rsm, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_densityridges_rsm_m1_alpha.png")
+knitr::include_graphics("../man/figures/rsmsmpl_densityridges_rsm_alpha.png")
 ```
 
 ```{r densityridges_beta_rsm, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/rsmsmpl_densityridges_rsm_m1_beta.png")
+knitr::include_graphics("../man/figures/rsmsmpl_densityridges_rsm_beta.png")
 ```

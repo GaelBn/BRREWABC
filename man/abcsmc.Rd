@@ -143,6 +143,7 @@ max_concurrent_jobs = 2, verbose = FALSE)
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "abcsmc_results.png"))
-plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr", filename = file.path(tmp_dir, "thresholds.png"))
+plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.path(tmp_dir, "ess.png"))
+plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
 }

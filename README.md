@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# BRREWABC <img src="man/figures/icon.png" align="right" width="90" />
+# BRREWABC <img src="man/figures/icon.png" alt="BRREWABC R package logo" align="right" width="90" />
 
 <!-- badges: start -->
 <!-- badges: end -->

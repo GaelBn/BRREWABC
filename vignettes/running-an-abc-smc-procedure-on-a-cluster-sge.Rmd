@@ -56,10 +56,11 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "smploncluster/res/figs/smploncluster_pairplot_all.png", colorpal = "Blues")
-plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "smploncluster/res/figs/smploncluster_densityridges.png", colorpal = "Blues")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "smploncluster/res/figs/smploncluster_thresholds.png", colorpal = "Blues")
+plot_ess(data = all_accepted_particles,filename = "smploncluster/res/figs/smploncluster_ess.png", colorpal = "Blues")
+plot_densityridges(data = all_accepted_particles, prior = prior_dist,
+                   filename = "smploncluster/res/figs/smploncluster_densityridges.png", colorpal = "Blues")
 ```
 
 (2) `launch_abc-smc_on_sge_cluster.sh` :
@@ -79,17 +80,21 @@ Then launch the master job on the sge cluster: `qsub launch_abc-smc_on_sge_clust
 
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smploncluster_pairplot_all_m1.png")
+knitr::include_graphics("../man/figures/smploncluster_pairplot_all.png")
 ```
 
 ```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smploncluster_thresholds_dist1.png")
+knitr::include_graphics("../man/figures/smploncluster_thresholds.png")
+```
+
+```{r ess, echo=FALSE, fig.cap="ESS evolution over iterations", out.width = '100%'}
+knitr::include_graphics("../man/figures/smploncluster_ess.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/smploncluster_densityridges_m1_alpha.png")
+knitr::include_graphics("../man/figures/smploncluster_densityridges_alpha.png")
 ```
 
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/smploncluster_densityridges_m1_beta.png")
+knitr::include_graphics("../man/figures/smploncluster_densityridges_beta.png")
 ```

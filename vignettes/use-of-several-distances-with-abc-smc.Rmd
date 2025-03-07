@@ -68,7 +68,7 @@ plot_thresholds(data = all_thresholds, nb_threshold = 2, # the number of thresho
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/svrldist_pairplot_all_m1.png")
+knitr::include_graphics("../man/figures/svrldist_pairplot_all.png")
 ```
 
 ```{r thresholds1, echo=FALSE, fig.cap="Threshold evolution over iterations (1)", out.width = '100%'}
@@ -80,9 +80,9 @@ knitr::include_graphics("../man/figures/svrldist_thresholds_dist2.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/svrldist_densityridges_m1_alpha.png")
+knitr::include_graphics("../man/figures/svrldist_densityridges_alpha.png")
 ```
 
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/svrldist_densityridges_m1_beta.png")
+knitr::include_graphics("../man/figures/svrldist_densityridges_beta.png")
 ```

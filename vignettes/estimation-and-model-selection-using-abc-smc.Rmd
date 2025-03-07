@@ -87,7 +87,7 @@ plot_thresholds(data = all_thresholds, nb_threshold = 1,
 ```
 
 ```{r barplot, echo=FALSE, fig.cap="Selected models over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/mdlslctn_pairplot_all.png")
+knitr::include_graphics("../man/figures/mdlslctn_pairplot_all_modelprop.png")
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations for the predominantly selected model", out.width = '100%'}
@@ -95,7 +95,7 @@ knitr::include_graphics("../man/figures/mdlslctn_pairplot_all_m1.png")
 ```
 
 ```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations for the predominantly selected model", out.width = '100%'}
-knitr::include_graphics("../man/figures/mdlslctn_thresholds_dist1.png")
+knitr::include_graphics("../man/figures/mdlslctn_thresholds.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates of alpha, for the predominantly selected model", out.width = '100%'}

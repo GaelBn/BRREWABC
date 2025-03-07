@@ -70,6 +70,10 @@ plot_abcrejection_res(all_tested_particles, prior_dist,
                       colorpal = "YlGnBu")
 ```
 
-<!-- ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
+```{r pairplot, echo=FALSE, fig.cap="Pairplot of accepted particles for the predefined threshold", out.width = '100%'}
 knitr::include_graphics("../man/figures/smplreject_pairplot.png")
-``` -->
+```
+
+```{r pairplot_custom, echo=FALSE, fig.cap="Pairplot of accepted particles for different acceptance thresholds", out.width = '100%'}
+knitr::include_graphics("../man/figures/smplreject_pairplot_custom_thresholds.png")
+```

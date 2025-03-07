@@ -173,6 +173,9 @@ plot_densityridges <- function(data,
         ggplot2::theme_minimal() + ggplot2::theme(legend.position = "none")
       if (last_three == "png") {
           newfilename <- paste0(substr(filename, 1, nchar(filename) - 4), "_", mm, "_", p[1], ".png")
+          if (length(unique(tmp$model)) == 1) {
+            newfilename <- paste0(substr(filename, 1, nchar(filename) - 4), "_", p[1], ".png")
+          }
           grDevices::png(newfilename, width = 6, height = 8, units = "in", res = 150)
       }
       print(sub_plot)
@@ -240,8 +243,8 @@ plot_thresholds <- function(data,
     if (last_three == "png") {
       newfilename <- paste0(substr(filename, 1, nchar(filename) - 4), "_", dd, ".png")
       if (nb_threshold == 1) {
-          newfilename <- filename
-        }
+        newfilename <- filename
+      }
       grDevices::png(newfilename, width = 8, height = 5, units = "in", res = 150)
     }
     print(sub_plot)
@@ -347,7 +350,7 @@ plot_abcrejection_res <- function(data,
   # message("The plot may fail if, for one or more iterations,
   # only one particle has been selected for one of the models.")
   colorshift <- 2 # because the first colours is often too light
-  nb_thresholds = length(thresholds)
+  nb_thresholds <- length(thresholds)
   nb_cols <- nb_thresholds + colorshift
   mycolors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, colorpal))(nb_cols)
   mycolors <- mycolors[seq(-1, -colorshift, -1)]
@@ -369,7 +372,7 @@ plot_abcrejection_res <- function(data,
     tmp <- do.call(rbind, list_of_dataframes)
   } else {
     tmp <- data
-    tmp$cutoff <- NA
+    tmp$cutoff <- 0
   }
   tmp$cutoff <- factor(tmp$cutoff, levels = sort(unique(tmp$cutoff), decreasing = TRUE))
 

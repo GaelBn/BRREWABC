@@ -62,25 +62,29 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "smpl/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")
-plot_densityridges(data = all_accepted_particles, prior = prior_dist,
-                   filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "smpl/res/figs/smpl_thresholds.png", colorpal = "YlGnBu")
 plot_ess(data = all_accepted_particles,filename = "smpl/res/figs/smpl_ess.png", colorpal = "YlGnBu")
+plot_densityridges(data = all_accepted_particles, prior = prior_dist,
+                   filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
 ```
 
 ```{r pairplot, echo=FALSE, fig.cap="Pairplot of all iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_pairplot_all_m1.png")
+knitr::include_graphics("../man/figures/smpl_pairplot_all.png")
 ```
 
 ```{r thresholds, echo=FALSE, fig.cap="Threshold evolution over iterations", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_thresholds_dist1.png")
+knitr::include_graphics("../man/figures/smpl_thresholds.png")
+```
+
+```{r ess, echo=FALSE, fig.cap="ESS evolution over iterations", out.width = '100%'}
+knitr::include_graphics("../man/figures/smpl_ess.png")
 ```
 
 ```{r densityridges_alpha, echo=FALSE, fig.cap="Density estimates for alpha", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_densityridges_m1_alpha.png")
+knitr::include_graphics("../man/figures/smpl_densityridges_alpha.png")
 ```
 
 ```{r densityridges_beta, echo=FALSE, fig.cap="Density estimates for beta", out.width = '100%'}
-knitr::include_graphics("../man/figures/smpl_densityridges_m1_beta.png")
+knitr::include_graphics("../man/figures/smpl_densityridges_beta.png")
 ```

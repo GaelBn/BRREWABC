@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BRREWABC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -119,10 +119,11 @@ to launch the master job on the cluster.</p>
 <span><span class="va">all_thresholds</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">thresholds</span></span>
 <span><span class="fu"><a href="../reference/plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_pairplot_all.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
-<span>                   filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_thresholds.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span></code></pre></div>
+<span>                filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_thresholds.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_ess.html">plot_ess</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>,filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_ess.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
+<span>                   filename <span class="op">=</span> <span class="st">"smploncluster/res/figs/smploncluster_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"Blues"</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
 <code>launch_abc-smc_on_slurm_cluster.sh</code> :</li>
@@ -134,22 +135,27 @@ to launch the master job on the cluster.</p>
 <p>Then launch the master job on the slurm cluster:
 <code>sbatch launch_abc-smc_on_slurm_cluster.sh</code>.</p>
 <div class="figure">
-<img src="../reference/figures/smploncluster_pairplot_all_m1.png" alt="Pairplot of all iterations" width="100%"><p class="caption">
+<img src="../reference/figures/smploncluster_pairplot_all.png" alt="Pairplot of all iterations" width="100%"><p class="caption">
 Pairplot of all iterations
 </p>
 </div>
 <div class="figure">
-<img src="../reference/figures/smploncluster_thresholds_dist1.png" alt="Threshold evolution over iterations" width="100%"><p class="caption">
+<img src="../reference/figures/smploncluster_thresholds.png" alt="Threshold evolution over iterations" width="100%"><p class="caption">
 Threshold evolution over iterations
 </p>
 </div>
 <div class="figure">
-<img src="../reference/figures/smploncluster_densityridges_m1_alpha.png" alt="Density estimates for alpha" width="100%"><p class="caption">
+<img src="../reference/figures/smploncluster_ess.png" alt="ESS evolution over iterations" width="100%"><p class="caption">
+ESS evolution over iterations
+</p>
+</div>
+<div class="figure">
+<img src="../reference/figures/smploncluster_densityridges_alpha.png" alt="Density estimates for alpha" width="100%"><p class="caption">
 Density estimates for alpha
 </p>
 </div>
 <div class="figure">
-<img src="../reference/figures/smploncluster_densityridges_m1_beta.png" alt="Density estimates for beta" width="100%"><p class="caption">
+<img src="../reference/figures/smploncluster_densityridges_beta.png" alt="Density estimates for beta" width="100%"><p class="caption">
 Density estimates for beta
 </p>
 </div>

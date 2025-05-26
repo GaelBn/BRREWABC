@@ -67,7 +67,8 @@ help(package = "BRREWABC")
 
 ## Contributing
 
-Contributions to BRREW-ABC are welcome! If you encounter any issues, have feature requests, or would like to contribute enhancements, please feel free to contact us.
+Contributions to BRREWABC are welcome! If you encounter any issues, have feature requests, or would like to contribute enhancements, please feel free to contact us.
+
 
 ## Project status
 
@@ -76,7 +77,8 @@ This project is constantly evolving, according to needs and suggestions, at a pa
 
 ## Authors and acknowledgment
 
-BRREW-ABC was developed by Gaël Beaunée thanks to the advice of a number of people, many thanks to them.
+BRREWABC was developed by Gaël Beaunée thanks to the advice of a number of people, many thanks to them.
+
 
 ## Troubleshooting
 

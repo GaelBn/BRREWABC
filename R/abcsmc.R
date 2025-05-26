@@ -338,7 +338,14 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     }
     #
     # Create a progress bar
-    pb <- progress::progress_bar$new(format = "gen :gen [:bar] :percent (ar: :accrate | :nbattempt) | eta: :eta (:elapsed)", clear = FALSE, total = nb_acc_prtcl_before_next_gen)
+    pb <- NULL
+    if (verbose && !on_cluster) {
+      pb <- progress::progress_bar$new(
+        format = "gen :gen [:bar] :percent (ar: :accrate | :nbattempt) | eta: :eta (:elapsed)",
+        clear = FALSE,
+        total = nb_acc_prtcl_before_next_gen
+      )
+    }
     #
     current_iter_broke <- FALSE
     while (nb_accepted < nb_acc_prtcl_before_next_gen) { # repeat until N particles accepted
@@ -348,7 +355,16 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       totattempts <- nrow(tmp_all_tested_particles)
       current_acc_rate <- nb_accepted/totattempts
       # Increment the progress bar
-      pb$update(min(nb_accepted/nb_acc_prtcl_before_next_gen, 1.00), tokens = list(gen = gen, accrate = format(round(current_acc_rate,digits=3),nsmall=3), nbattempt = totattempts))
+      if (verbose && !on_cluster) {
+        pb$update(
+          min(nb_accepted/nb_acc_prtcl_before_next_gen, 1.00),
+          tokens = list(
+            gen = gen,
+            accrate = format(round(current_acc_rate,digits=3),nsmall=3),
+            nbattempt = totattempts
+          )
+        )
+      }
       if (totattempts > max_attempts) {
         message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
         current_iter_broke = TRUE

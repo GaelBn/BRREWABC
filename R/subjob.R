@@ -35,8 +35,6 @@ subjob_smc <- function(job_id,
     }
   }
 
-  print(paste(job_id, nb_acc_prtcls, current_job_nb_acc_prtcl_before_next_gen, sep = " - "))
-
   #  _            _                       _   _      _
   # | |_ ___  ___| |_    _ __   __ _ _ __| |_(_) ___| | ___  ___
   # | __/ _ \/ __| __|  | '_ \ / _` | '__| __| |/ __| |/ _ \/ __|

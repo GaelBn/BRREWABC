@@ -31,6 +31,7 @@
 # #' parameters (usage not recommended, included in this version for reasons of
 # #' compatibility with the procedure in script form used in some projects)
 #' @param verbose whether or not to display specific information
+#' @param progressbar whether or not to display progressbar
 #'
 #' @return a list containing two dataframes corresponding to (1) the particles
 #' accepted and (2) all tested particles
@@ -84,7 +85,8 @@ mkdir -p $error_fpath
 Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
 ', # TODO : queue selection via a function argument
                          max_concurrent_jobs = 1,
-                         verbose = FALSE) {
+                         verbose = FALSE,
+                         progressbar = FALSE) {
 
   tmp_folder_path <- "tmp"
   results_folder_path <- "res"
@@ -201,7 +203,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   }
   #
   # Create a progress bar
-  if (verbose && !on_cluster) {
+  if (progressbar && !on_cluster) {
     pb <- progress::progress_bar$new(
       format = "[:bar] :percent (ar: :accrate | :nbattempt) | eta: :eta (:elapsed)",
       clear = FALSE,
@@ -209,33 +211,35 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     )
   }
   #
-  while (nb_accepted < tot_nb_acc_prtcl) { # repeat until N particles accepted
-    accepted_particles <- utils::read.csv(accepted_particles_filepath)
-    all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
-    nb_accepted <- nrow(accepted_particles)
-    totattempts <- nrow(all_tested_particles)
-    current_acc_rate <- nb_accepted/totattempts
-    # Increment the progress bar
-    if (verbose && !on_cluster) {
-      pb$update(
-        min(nb_accepted/tot_nb_acc_prtcl, 1.00),
-        tokens = list(
-          accrate = format(round(current_acc_rate,digits=3),nsmall=3),
-          nbattempt = totattempts
+  elapsed <- system.time({
+    while (nb_accepted < tot_nb_acc_prtcl) { # repeat until N particles accepted
+      accepted_particles <- utils::read.csv(accepted_particles_filepath)
+      all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
+      nb_accepted <- nrow(accepted_particles)
+      totattempts <- nrow(all_tested_particles)
+      current_acc_rate <- nb_accepted/totattempts
+      # Increment the progress bar
+      if (progressbar && !on_cluster) {
+        pb$update(
+          min(nb_accepted/tot_nb_acc_prtcl, 1.00),
+          tokens = list(
+            accrate = format(round(current_acc_rate,digits=3),nsmall=3),
+            nbattempt = totattempts
+          )
         )
-      )
-    }
-    if (totattempts > max_attempts) {
-      message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
-      break
-    }
-    if (all(!is.na(thresholds))) {
-      if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
-        message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
+      }
+      if (totattempts > max_attempts) {
+        message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
         break
       }
+      if (all(!is.na(thresholds))) {
+        if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
+          message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
+          break
+        }
+      }
     }
-  }
+  })
   # cancel subjob
   if (on_cluster) {
     # Cancel the array job
@@ -260,6 +264,14 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   # pb$terminate()
   # cat('\n')
   #
+  if (verbose) {
+    message(sprintf(
+      "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s",
+      elapsed["user.self"],
+      elapsed["sys.self"],
+      elapsed["elapsed"]
+    ))
+  }
   #
   acc_particles <- utils::read.csv(accepted_particles_filepath)
   all_tested_particles <- utils::read.csv(all_tested_particles_filepath)

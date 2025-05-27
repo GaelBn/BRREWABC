@@ -50,6 +50,7 @@
 #' @param previous_epsilons an object (dataframe) containing previous results
 #' (set of thresholds), in order to start from the last iteration performed
 #' @param verbose whether or not to display specific information
+#' @param progressbar whether or not to display progressbar
 #'
 #' @return a list containing two dataframes corresponding to (1) the particles
 #' accepted and (2) the thresholds used, during the successive iterations
@@ -145,7 +146,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
                    # abc_user_param_file_path = NULL,
                    previous_gens = NA,
                    previous_epsilons = NA,
-                   verbose = FALSE) {
+                   verbose = FALSE,
+                   progressbar = FALSE) {
 
   # # first, load user param file if exist
   # if (!is.null(abc_user_param_file_path)) {
@@ -277,6 +279,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     nb_accepted <- 0
     totattempts <- 0
     if (verbose) {
+      cat(Sys.time(), "\n")
       cat("gen", gen, "\n")
       cat("threshold:", epsilon, "\n")
       cat("prtrbtn_krnl_sd:", unlist(empirical_sd), "\n")
@@ -339,7 +342,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     #
     # Create a progress bar
     pb <- NULL
-    if (verbose && !on_cluster) {
+    if (progressbar && !on_cluster) {
       pb <- progress::progress_bar$new(
         format = "gen :gen [:bar] :percent (ar: :accrate | :nbattempt) | eta: :eta (:elapsed)",
         clear = FALSE,
@@ -348,33 +351,45 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     }
     #
     current_iter_broke <- FALSE
-    while (nb_accepted < nb_acc_prtcl_before_next_gen) { # repeat until N particles accepted
-      tmp_accepted_particles <- utils::read.csv(paste0(tmp_accepted_particles_filepath,"_",gen,".csv"))
-      tmp_all_tested_particles <- utils::read.csv(paste0(tmp_all_tested_particles_filepath,"_",gen,".csv"))
-      nb_accepted <- nrow(tmp_accepted_particles)
-      totattempts <- nrow(tmp_all_tested_particles)
-      current_acc_rate <- nb_accepted/totattempts
-      # Increment the progress bar
-      if (verbose && !on_cluster) {
-        pb$update(
-          min(nb_accepted/nb_acc_prtcl_before_next_gen, 1.00),
-          tokens = list(
-            gen = gen,
-            accrate = format(round(current_acc_rate,digits=3),nsmall=3),
-            nbattempt = totattempts
+    elapsed <- system.time({
+      while (nb_accepted < nb_acc_prtcl_before_next_gen) { # repeat until N particles accepted
+        tmp_accepted_particles <- utils::read.csv(paste0(tmp_accepted_particles_filepath,"_",gen,".csv"))
+        tmp_all_tested_particles <- utils::read.csv(paste0(tmp_all_tested_particles_filepath,"_",gen,".csv"))
+        nb_accepted <- nrow(tmp_accepted_particles)
+        totattempts <- nrow(tmp_all_tested_particles)
+        current_acc_rate <- nb_accepted/totattempts
+        # Increment the progress bar
+        if (progressbar && !on_cluster) {
+          pb$update(
+            min(nb_accepted/nb_acc_prtcl_before_next_gen, 1.00),
+            tokens = list(
+              gen = gen,
+              accrate = format(round(current_acc_rate,digits=3),nsmall=3),
+              nbattempt = totattempts
+            )
           )
-        )
+        }
+        if (totattempts > max_attempts) {
+          message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
+          current_iter_broke = TRUE
+          break
+        }
+        if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
+          message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
+          current_iter_broke = TRUE
+          break
+        }
       }
-      if (totattempts > max_attempts) {
-        message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
-        current_iter_broke = TRUE
-        break
-      }
-      if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
-        message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
-        current_iter_broke = TRUE
-        break
-      }
+    })
+    #
+    if (verbose) {
+      cat(Sys.time(), "\n")
+      message(sprintf(
+        "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s",
+        elapsed["user.self"],
+        elapsed["sys.self"],
+        elapsed["elapsed"]
+      ))
     }
     # cancel subjob on cluster
     if ((gen == 1) && (use_lhs_for_first_iter)) {
@@ -453,7 +468,10 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     }
     epsilon <- next_epsilon
     gen <- gen + 1
-    if (verbose) {cat("-\n")}
+    if (verbose) {
+      cat(Sys.time(), "\n")
+      cat("-\n")
+    }
   }
   if (verbose) {
     cat("Experiment done!", "\n")

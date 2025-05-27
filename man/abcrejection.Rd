@@ -21,7 +21,8 @@ abcrejection(
   sge_script_template =
     "#!/bin/bash\\n#$ -S /bin/bash\\n#$ -N subjob_abcrejection_prlll\\n# #$ -q \\"short.q|long.q\\"\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#$ -cwd\\n#$ -V\\n#$ -t \%s-\%s\\n#$ -tc \%d\\n#$ -o /dev/null\\n#$ -e /dev/null\\noutput_fpath=\%s\\nerror_fpath=\%s\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript \%s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\\n",
   max_concurrent_jobs = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  progressbar = FALSE
 )
 }
 \arguments{
@@ -66,6 +67,8 @@ computation cluster}
 \item{max_concurrent_jobs}{maximum number of jobs/tasks run in parallel}
 
 \item{verbose}{whether or not to display specific information}
+
+\item{progressbar}{whether or not to display progressbar}
 }
 \value{
 a list containing two dataframes corresponding to (1) the particles

@@ -31,7 +31,8 @@ abcsmc(
   max_concurrent_jobs = 1,
   previous_gens = NA,
   previous_epsilons = NA,
-  verbose = FALSE
+  verbose = FALSE,
+  progressbar = FALSE
 )
 }
 \arguments{
@@ -105,6 +106,8 @@ of iterations), in order to start from the last iteration performed}
 (set of thresholds), in order to start from the last iteration performed}
 
 \item{verbose}{whether or not to display specific information}
+
+\item{progressbar}{whether or not to display progressbar}
 }
 \value{
 a list containing two dataframes corresponding to (1) the particles

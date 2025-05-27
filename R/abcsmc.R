@@ -384,6 +384,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     #
     if (verbose) {
       cat(Sys.time(), "\n")
+      cat("totattempts:", totattempts, "\n")
+      cat("current_acc_rate:", format(round(nb_accepted/totattempts,digits=3),nsmall=3), "\n")
       message(sprintf(
         "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s",
         elapsed["user.self"],

@@ -265,13 +265,14 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   # cat('\n')
   #
   if (verbose) {
-    message(sprintf(
-      "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s",
+    cat(sprintf(
+      "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s \n",
       elapsed["user.self"],
       elapsed["sys.self"],
       elapsed["elapsed"]
     ))
   }
+
   #
   acc_particles <- utils::read.csv(accepted_particles_filepath)
   all_tested_particles <- utils::read.csv(all_tested_particles_filepath)

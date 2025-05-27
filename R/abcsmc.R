@@ -279,7 +279,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     nb_accepted <- 0
     totattempts <- 0
     if (verbose) {
-      cat(Sys.time(), "\n")
+      print(Sys.time())
       cat("gen", gen, "\n")
       cat("threshold:", epsilon, "\n")
       cat("prtrbtn_krnl_sd:", unlist(empirical_sd), "\n")
@@ -383,7 +383,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     })
     #
     if (verbose) {
-      cat(Sys.time(), "\n")
+      print(Sys.time())
       cat("totattempts:", totattempts, "\n")
       cat("current_acc_rate:", format(round(nb_accepted/totattempts,digits=3),nsmall=3), "\n")
       message(sprintf(
@@ -471,7 +471,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     epsilon <- next_epsilon
     gen <- gen + 1
     if (verbose) {
-      cat(Sys.time(), "\n")
+      print(Sys.time())
       cat("-\n")
     }
   }

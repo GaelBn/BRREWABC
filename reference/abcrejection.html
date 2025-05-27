@@ -67,7 +67,8 @@
 <span>  sge_script_template <span class="op">=</span></span>
 <span>    <span class="st">"#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcrejection_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID &gt;$output_fpath/subjob.${SGE_TASK_ID}.out 2&gt;$error_fpath/subjob.${SGE_TASK_ID}.err\n"</span>,</span>
 <span>  max_concurrent_jobs <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  progressbar <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -145,6 +146,10 @@ computation cluster</p></dd>
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>whether or not to display specific information</p></dd>
+
+
+<dt id="arg-progressbar">progressbar<a class="anchor" aria-label="anchor" href="#arg-progressbar"></a></dt>
+<dd><p>whether or not to display progressbar</p></dd>
 
 </dl></div>
     <div class="section level2">

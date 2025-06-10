@@ -244,7 +244,7 @@ accepted and (2) the thresholds used, during the successive iterations</p>
 <span class="r-in"><span>new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>, experiment_folderpath <span class="op">=</span> <span class="va">tmp_dir</span>,</span></span>
 <span class="r-in"><span>max_concurrent_jobs <span class="op">=</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009921577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009395208</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get results and plots</span></span></span>
 <span class="r-in"><span><span class="va">all_accepted_particles</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">particles</span></span></span>
@@ -261,25 +261,25 @@ accepted and (2) the thresholds used, during the successive iterations</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as 'png'."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    gen      ess</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    2 1898.340</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    3 1898.413</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    4 1926.313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    5 1924.612</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    6 1938.167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    7 1917.203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    8 1909.797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    9 1907.086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  10 1916.234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  11 1898.895</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  12 1888.650</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  13 1877.222</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14  14 1880.253</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  15 1871.632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  16 1849.454</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17  17 1810.050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18  18 1793.965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  19 1777.562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  20 1751.699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    2 1881.776</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    3 1921.409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    4 1924.558</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    5 1917.493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    6 1927.471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    7 1933.534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    8 1929.084</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    9 1917.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  10 1899.739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  11 1883.403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  12 1893.386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  13 1876.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  14 1854.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  15 1816.457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  16 1846.034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  17 1827.470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  18 1778.830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  19 1747.601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  20 1688.389</span>
 <span class="r-in"><span><span class="fu"><a href="plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"YlOrBr"</span>, filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp_dir</span>, <span class="st">"densityridges.png"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as 'png'."</span>
 </code></pre></div>

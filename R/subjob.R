@@ -55,15 +55,15 @@ subjob_smc <- function(job_id,
       # compute the weight
       pWeight <- 1
     } else {
-      # accept particle if d <= epsilon, and so compute the weight
-      if (all(dist <= epsilon)) {
+      # accept particle if d < epsilon, and so compute the weight
+      if (all(dist < epsilon)) {
         # compute the weight
         pWeight <- computeWeight(proposed_particle, previous_acc_particles, empirical_sd, prior_dist)
       }
     }
 
     # save particle in the shared table
-    if ((gen == 1) || (all(dist <= epsilon))) {
+    if ((gen == 1) || (all(dist < epsilon))) {
       # build the new row
       new.row <- c(list(gen = gen, pWeight = pWeight), proposed_particle, stats::setNames(as.list(dist), dist_names))
       new.row <- data.frame(new.row)

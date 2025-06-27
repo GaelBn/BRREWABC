@@ -12,7 +12,9 @@ plot_distances(
   colorpal = "Set2",
   bins = 20,
   alpha = 0.6,
-  adjust = 1.5
+  adjust = 1.5,
+  width = 8,
+  height = 5
 )
 }
 \arguments{
@@ -32,6 +34,10 @@ accepted during iterations, including : gen, model, pWeight and one or more dist
 \item{alpha}{histogram transparency level}
 
 \item{adjust}{density curve smoothing adjustment}
+
+\item{width}{plot width in inches (only applies to png/pdf output)}
+
+\item{height}{plot height in inches (only applies to png/pdf output)}
 }
 \value{
 a dataframe in long format of distances; the plot is saved to file

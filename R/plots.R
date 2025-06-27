@@ -332,6 +332,8 @@ plot_ess <- function(data,
 #' @param bins number of histogram bins
 #' @param alpha histogram transparency level
 #' @param adjust density curve smoothing adjustment
+#' @param width plot width in inches (only applies to png/pdf output)
+#' @param height plot height in inches (only applies to png/pdf output)
 #'
 #' @return a dataframe in long format of distances; the plot is saved to file
 #' @export
@@ -345,7 +347,9 @@ plot_distances <- function(data,
                            colorpal = "Set2",
                            bins = 20,
                            alpha = 0.6,
-                           adjust = 1.5) {
+                           adjust = 1.5,
+                           width = 8,
+                           height = 5) {
   df <- data
 
   # select generation
@@ -364,26 +368,26 @@ plot_distances <- function(data,
 
   # generate extended color palette based on number of models
   n_models <- length(unique(df_long$model))
-  # ensure minimum palette size for RColorBrewer
   base_size <- max(3, min(8, n_models))
   base_cols <- RColorBrewer::brewer.pal(base_size, colorpal)
-  # if fewer models than base_size, subset
   base_cols <- base_cols[seq_len(n_models)]
   mypal <- grDevices::colorRampPalette(base_cols)(n_models)
 
-  # open graphics device
+  # open graphics device with custom dimensions
   ext <- tools::file_ext(filename)
   if (ext == "png") {
-    grDevices::png(filename, width = 8, height = 5, units = "in", res = 150)
+    grDevices::png(filename, width = width, height = height, units = "in", res = 150)
   } else if (ext == "pdf") {
-    grDevices::pdf(filename, width = 8, height = 5)
+    grDevices::pdf(filename, width = width, height = height)
   } else {
     stop("unsupported file format; use 'png' or 'pdf'")
   }
 
-  # plot using updated aesthetics
+  # plot using stat(density) for compatibility
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, fill = model)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = bins, alpha = alpha, position = "identity", color = "black") +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
+                            bins = bins, alpha = alpha,
+                            position = "identity", color = "black") +
     ggplot2::geom_density(alpha = alpha / 2, adjust = adjust) +
     ggplot2::facet_wrap(~ distance, scales = "free") +
     ggplot2::scale_fill_manual(values = mypal) +
@@ -395,7 +399,6 @@ plot_distances <- function(data,
 
   invisible(df_long)
 }
-
 
 
 #' Plot abcrejection results : pairplot

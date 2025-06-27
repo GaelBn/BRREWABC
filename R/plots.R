@@ -364,7 +364,11 @@ plot_distances <- function(data,
 
   # generate extended color palette based on number of models
   n_models <- length(unique(df_long$model))
-  base_cols <- RColorBrewer::brewer.pal(min(8, n_models), colorpal)
+  # ensure minimum palette size for RColorBrewer
+  base_size <- max(3, min(8, n_models))
+  base_cols <- RColorBrewer::brewer.pal(base_size, colorpal)
+  # if fewer models than base_size, subset
+  base_cols <- base_cols[seq_len(n_models)]
   mypal <- grDevices::colorRampPalette(base_cols)(n_models)
 
   # open graphics device
@@ -377,9 +381,9 @@ plot_distances <- function(data,
     stop("unsupported file format; use 'png' or 'pdf'")
   }
 
-  # plot
+  # plot using updated aesthetics
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, fill = model)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ..density..), bins = bins, alpha = alpha, position = "identity", color = "black") +
+    ggplot2::geom_histogram(ggplot2::aes(y = after_stat(density)), bins = bins, alpha = alpha, position = "identity", color = "black") +
     ggplot2::geom_density(alpha = alpha / 2, adjust = adjust) +
     ggplot2::facet_wrap(~ distance, scales = "free") +
     ggplot2::scale_fill_manual(values = mypal) +
@@ -391,6 +395,7 @@ plot_distances <- function(data,
 
   invisible(df_long)
 }
+
 
 
 #' Plot abcrejection results : pairplot

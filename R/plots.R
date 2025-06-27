@@ -383,7 +383,7 @@ plot_distances <- function(data,
 
   # plot using updated aesthetics
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, fill = model)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = after_stat(density)), bins = bins, alpha = alpha, position = "identity", color = "black") +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = bins, alpha = alpha, position = "identity", color = "black") +
     ggplot2::geom_density(alpha = alpha / 2, adjust = adjust) +
     ggplot2::facet_wrap(~ distance, scales = "free") +
     ggplot2::scale_fill_manual(values = mypal) +

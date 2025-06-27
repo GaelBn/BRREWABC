@@ -1,7 +1,7 @@
 Package: BRREWABC
 Type: Package
 Title: Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation
-Version: 1.1.0
+Version: 1.2.0
 Author: Gaël Beaunée <gael.beaunee@inrae.fr>
 Authors@R: c(
     person("Gaël", "Beaunée", , email = "gael.beaunee@inrae.fr", role = c("aut", "cre"),

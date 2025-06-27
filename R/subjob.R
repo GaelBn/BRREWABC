@@ -28,10 +28,18 @@ subjob_smc <- function(job_id,
   current_job_nb_acc_prtcl_before_next_gen <- nb_acc_prtcl_before_next_gen
   if (gen == 1) {
     if (use_lhs_for_first_iter) {
-      nb_acc_prtcls <- 1 + (job_id - 1) * (nb_acc_prtcl_before_next_gen %/% min(max_concurrent_jobs, nb_acc_prtcl_before_next_gen))
-      if (job_id < min(max_concurrent_jobs, nb_acc_prtcl_before_next_gen)) {
-        current_job_nb_acc_prtcl_before_next_gen <- nb_acc_prtcls + (nb_acc_prtcl_before_next_gen %/% min(max_concurrent_jobs, nb_acc_prtcl_before_next_gen)) - 1
+      nbjobs = min(nb_acc_prtcl_before_next_gen, max_concurrent_jobs)
+      q <- nb_acc_prtcl_before_next_gen %/% nbjobs    # base workload
+      r <- nb_acc_prtcl_before_next_gen %%  nbjobs    # job with extra tasks
+      if (job_id <= r) {
+        start <- (job_id - 1) * (q + 1) + 1
+        end   <- start + q          # q + 1 tasks
+      } else {
+        start <- r * (q + 1) + (job_id - r - 1) * q + 1
+        end   <- start + q - 1      # q tasks
       }
+      nb_acc_prtcls = start
+      current_job_nb_acc_prtcl_before_next_gen = min(end, nb_acc_prtcl_before_next_gen)
     }
   }
 

@@ -321,6 +321,78 @@ plot_ess <- function(data,
 }
 
 
+#' Plot distribution of distances by model
+#'
+#' @param data a dataframe containing the estimation results (set of particles
+#' accepted during iterations, including : gen, model, pWeight and one or more dist columns)
+#' @param generation generation to plot; defaults to the maximum value in gen
+#' @param filename the file name to save the plot (extension png or pdf determines format)
+#' @param figtitle the figure title
+#' @param colorpal a palette name as used in the RColorBrewer package
+#' @param bins number of histogram bins
+#' @param alpha histogram transparency level
+#' @param adjust density curve smoothing adjustment
+#'
+#' @return a dataframe in long format of distances; the plot is saved to file
+#' @export
+#'
+#' @examples
+#' # plot_distances(data)
+plot_distances <- function(data,
+                           generation = NULL,
+                           filename = "distances.png",
+                           figtitle = "",
+                           colorpal = "Set2",
+                           bins = 20,
+                           alpha = 0.6,
+                           adjust = 1.5) {
+  df <- data
+
+  # select generation
+  if (is.null(generation)) {
+    generation <- max(df$gen, na.rm = TRUE)
+  }
+  df <- df[df$gen == generation, ]
+
+  # identify distance columns and compute total distance
+  dist_cols <- grep("^dist", names(df), value = TRUE)
+  df$distTot <- rowSums(df[, dist_cols, drop = FALSE], na.rm = TRUE)
+  dist_cols <- c(dist_cols, "distTot")
+
+  # reshape to long format
+  df_long <- tidyr::pivot_longer(df, cols = dist_cols, names_to = "distance", values_to = "value")
+
+  # generate extended color palette based on number of models
+  n_models <- length(unique(df_long$model))
+  base_cols <- RColorBrewer::brewer.pal(min(8, n_models), colorpal)
+  mypal <- grDevices::colorRampPalette(base_cols)(n_models)
+
+  # open graphics device
+  ext <- tools::file_ext(filename)
+  if (ext == "png") {
+    grDevices::png(filename, width = 8, height = 5, units = "in", res = 150)
+  } else if (ext == "pdf") {
+    grDevices::pdf(filename, width = 8, height = 5)
+  } else {
+    stop("unsupported file format; use 'png' or 'pdf'")
+  }
+
+  # plot
+  p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, fill = model)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ..density..), bins = bins, alpha = alpha, position = "identity", color = "black") +
+    ggplot2::geom_density(alpha = alpha / 2, adjust = adjust) +
+    ggplot2::facet_wrap(~ distance, scales = "free") +
+    ggplot2::scale_fill_manual(values = mypal) +
+    ggplot2::labs(x = "value", y = "density", title = figtitle) +
+    ggplot2::theme_minimal()
+
+  print(p)
+  grDevices::dev.off()
+
+  invisible(df_long)
+}
+
+
 #' Plot abcrejection results : pairplot
 #'
 #' @param data a dataframe containing the estimation results (set of particles

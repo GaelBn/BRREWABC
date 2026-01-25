@@ -221,7 +221,6 @@ plot_thresholds <- function(data,
   last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
   if (last_three == "png") {
     # Save plot as PNG
-    grDevices::png(filename, width = 8, height = 5, units = "in", res = 150)
     print("Plot saved as 'png'.")
   } else if (last_three == "pdf") {
     # Save plot as PDF
@@ -286,7 +285,6 @@ plot_ess <- function(data,
   last_three <- substr(filename, nchar(filename) - 2, nchar(filename))
   if (last_three == "png") {
     # Save plot as PNG
-    grDevices::png(filename, width = 8, height = 5, units = "in", res = 150)
     print("Plot saved as 'png'.")
   } else if (last_three == "pdf") {
     # Save plot as PDF

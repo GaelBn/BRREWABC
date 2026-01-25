@@ -1,0 +1,115 @@
+# Run ABC rejection inference in parallel
+
+Run ABC rejection inference in parallel
+
+## Usage
+
+``` r
+abcrejection(
+  model_list = list(),
+  model_def = NULL,
+  prior_dist = list(),
+  ss_obs = NA,
+  nb_acc_prtcl = 1000,
+  thresholds = NA,
+  max_attempts = 1e+05,
+  acceptance_rate_min = 0.01,
+  experiment_folderpath = "./",
+  on_cluster = FALSE,
+  cluster_type = NULL,
+  slurm_script_template =
+    "#!/bin/bash\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#SBATCH --job-name=job-array_%%A_%%a   # nom du job\n#SBATCH --ntasks=1\n#SBATCH --ntasks-per-node=1\n#SBATCH --hint=nomultithread\n#SBATCH --time=24:00:00\n#SBATCH --array=%s-%s%%%d\noutput_fpath=%s\nerror_fpath=%s\n#SBATCH --output=$output_fpath/output_%%A_%%a.out\n#SBATCH --error=$error_fpath/error_%%A_%%a.out\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SLURM_ARRAY_TASK_ID\n",
+  sge_script_template =
+    "#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcrejection_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\n",
+  max_concurrent_jobs = 1,
+  verbose = FALSE,
+  progressbar = FALSE
+)
+```
+
+## Arguments
+
+- model_list:
+
+  a list linking model name ( character string) to associated function
+
+- model_def:
+
+  a R file containing only the model(s) function(s)
+
+- prior_dist:
+
+  a list linking model name (character string) to a list describing the
+  prior distribution of each parameter to be estimated
+
+- ss_obs:
+
+  the observed summary statistics
+
+- nb_acc_prtcl:
+
+  the number of particles (per model, the total number corresponding to
+  this number multiplied by the number of models) to be accepted
+
+- thresholds:
+
+  a value of the threshold to be used to select acceptable particles
+  (currently, using multiple distances is not yet supported for this
+  method, but will be considered in the future). If NA, no particle will
+  be accepted and a number of parricles equal to max_attempts will be
+  generated
+
+- max_attempts:
+
+  the maximum number of particles to be tested during an iteration,
+  beyond which the procedure stops (in order to prevent excessively long
+  computations)
+
+- acceptance_rate_min:
+
+  the acceptance rate below which the procedure stops (in order to
+  prevent excessively long computations)
+
+- experiment_folderpath:
+
+  the folder in which to carry out the estimation procedure and save the
+  results
+
+- on_cluster:
+
+  whether or not the procedure is run on a computation cluster
+
+- cluster_type:
+
+  cluster type used (sge and slurm currently supported)
+
+- slurm_script_template:
+
+  script used to launch jobs on a slurm cluster
+
+- sge_script_template:
+
+  script used to launch jobs on a sge cluster
+
+- max_concurrent_jobs:
+
+  maximum number of jobs/tasks run in parallel
+
+- verbose:
+
+  whether or not to display specific information
+
+- progressbar:
+
+  whether or not to display progressbar
+
+## Value
+
+a list containing two dataframes corresponding to (1) the particles
+accepted and (2) all tested particles
+
+## Examples
+
+``` r
+library(BRREWABC)
+```

@@ -44,7 +44,7 @@ res <- abcsmc(model_list = model_list,
               max_concurrent_jobs = 5,
               verbose = FALSE)
 #> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.009037292 0.003794033
+#> [1] 0.007234216 0.002696565
 ```
 
 ## Plot results

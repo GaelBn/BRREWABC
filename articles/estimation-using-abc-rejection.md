@@ -53,7 +53,7 @@ res <- abcrejection(model_list = model_list,
 #> Folder created successfully.
 #> Check folder_path for : smplreject/res/figs
 #> Folder created successfully.
-#> Computation time - user : 5.970 s | system : 0.145 s | elapsed : 6.198 s 
+#> Computation time - user : 5.802 s | system : 0.148 s | elapsed : 6.051 s 
 #> Experiment done!
 ```
 

@@ -98,8 +98,6 @@ res <- abcsmc(model_list = model_list,
               previous_gens = all_accepted_particles,
               previous_epsilons = all_thresholds,
               verbose = FALSE)
-#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.009613005
 ```
 
 ## Plot new results

@@ -4,6 +4,7 @@
 # BRREWABC <img src="man/figures/icon.png" alt="BRREWABC R package logo" align="right" width="90" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 BRREWABC (Batched Resilient and Rapid Estimation Workflow through
@@ -54,6 +55,9 @@ et al. (2006) original algorithm [^1] in three ways:
   Bayesian Computation Sequential Monte Carlo algorithm, parallelized
   for enhanced computational efficiency.
 - **Flexible Model Specification**: Easily specify complex models.
+- **Simulation Diagnostics**: Optionally retain summary statistics and
+  detailed model outputs in Parquet files, including long tabular
+  trajectories.
 - **Customizable Settings**: Fine-tune algorithm parameters to suit
   specific modeling needs and computational resources.
 - **Scalable**: Utilize parallel computing capabilities to handle large
@@ -78,6 +82,84 @@ devtools::install_github("GaelBn/BRREWABC")
 For a basic example, see the [Get
 Started](https://gaelbn.github.io/BRREWABC/articles/BRREWABC.html)
 section.
+
+### Retaining summary statistics and model outputs
+
+Model functions may return only a numeric distance vector, as in
+previous versions, or a structured result containing distances, summary
+statistics, and detailed outputs:
+
+``` r
+compute_dist <- function(x, ss_obs) {
+  trajectory <- data.frame(
+    timestep = 1:3,
+    pop_id = "A",
+    S = c(900, 880, 850),
+    E = c(50, 55, 60),
+    I = c(40, 50, 65),
+    R = c(10, 15, 25)
+  )
+
+  list(
+    distances = c(dist1 = sum((trajectory$I - ss_obs)^2)),
+    summaries = list(
+      epidemic_trajectory = trajectory,
+      peak_infectious = max(trajectory$I)
+    ),
+    outputs = list(
+      final_state = trajectory[nrow(trajectory), ]
+    )
+  )
+}
+```
+
+Each named summary or output can be a vector, matrix, or data frame. For
+a given name, tabular column names and types must remain fixed across
+simulations, while the number of rows may vary.
+
+Choose independently which summary statistics and outputs to retain:
+
+``` r
+result <- abcsmc(
+  model_list = list(m1 = compute_dist),
+  prior_dist = prior_dist,
+  ss_obs = ss_obs,
+  store_summaries = "all",
+  store_outputs = "retained"
+)
+```
+
+The available policies are `"none"`, `"retained"`, `"accepted"`, and
+`"all"`. Stored objects are written to Parquet files under `res/parquet`
+and are loaded only when requested:
+
+``` r
+list_abc_stored_data(result)
+
+accepted_trajectories <- read_summary_statistics(
+  result,
+  name = "epidemic_trajectory",
+  generation = 5,
+  status = "accepted"
+)
+
+rejected_trajectories <- read_summary_statistics(
+  result,
+  name = "epidemic_trajectory",
+  status = "rejected"
+)
+
+retained_outputs <- read_model_outputs(
+  result,
+  name = "final_state",
+  status = "retained"
+)
+```
+
+The stored tables include `attempt_id`, `generation`, `job_id`,
+`accepted`, and `retained`, allowing each trajectory to be linked to the
+corresponding ABC attempt. See the `storing-summaries-and-outputs`
+vignette for further details.
 
 ## Getting help
 

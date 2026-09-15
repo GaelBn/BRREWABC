@@ -27,14 +27,18 @@
 #' @param slurm_script_template script used to launch jobs on a slurm cluster
 #' @param sge_script_template script used to launch jobs on a sge cluster
 #' @param max_concurrent_jobs maximum number of jobs/tasks run in parallel
+#' @param store_summaries which summary statistics to store in Parquet files:
+#' `"none"`, `"retained"`, `"accepted"`, or `"all"`
+#' @param store_outputs which model outputs to store in Parquet files, using the
+#' same policies as `store_summaries`
 # #' @param abc_user_param_file_path an R file containing the algorithm's
 # #' parameters (usage not recommended, included in this version for reasons of
 # #' compatibility with the procedure in script form used in some projects)
 #' @param verbose whether or not to display specific information
 #' @param progressbar whether or not to display progressbar
 #'
-#' @return a list containing two dataframes corresponding to (1) the particles
-#' accepted and (2) all tested particles
+#' @return a list containing accepted particles, all tested particles, and a
+#' `storage` descriptor for summary statistics and model outputs in Parquet.
 #' @export
 #' @include subjob.R saveEnvir.R
 #'
@@ -85,8 +89,13 @@ mkdir -p $error_fpath
 Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
 ', # TODO : queue selection via a function argument
                          max_concurrent_jobs = 1,
+                         store_summaries = c("none", "retained", "accepted", "all"),
+                         store_outputs = c("none", "retained", "accepted", "all"),
                          verbose = FALSE,
                          progressbar = FALSE) {
+
+  store_summaries <- normalizeStoragePolicy(store_summaries)
+  store_outputs <- normalizeStoragePolicy(store_outputs)
 
   tmp_folder_path <- "tmp"
   results_folder_path <- "res"
@@ -98,9 +107,11 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   tmp_local_task_std_out <- file.path(tmp_folder_path, "std_out")
   tmp_local_task_std_err <- file.path(tmp_folder_path, "std_err")
   tmp_current_abc_state <- file.path(tmp_folder_path, "currentABCState.RData")
+  tmp_object_store_root <- file.path(tmp_folder_path, "stored_objects")
 
   results_folder_path_CSV <- file.path(results_folder_path, "csv")
   results_folder_path_FIGS <- file.path(results_folder_path, "figs")
+  storage_root <- file.path(results_folder_path, "parquet")
   accepted_particles_filepath <- file.path(results_folder_path_CSV, "all_accepted_particles.csv")
   all_tested_particles_filepath <- file.path(results_folder_path_CSV, "all_particles.csv")
 
@@ -111,7 +122,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
   #
 
-  for (folder_path in c(tmp_folder_path, results_folder_path, results_folder_path_CSV, results_folder_path_FIGS)) {
+  for (folder_path in c(tmp_folder_path, results_folder_path, results_folder_path_CSV, results_folder_path_FIGS, storage_root)) {
     if (verbose) {cat(paste0("Check folder_path for : ", folder_path, "\n"))}
     # Check if the folder path exists
     if (!dir.exists(folder_path)) {
@@ -125,6 +136,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       if (verbose) {cat("Folder already exists.\n")}
     }
   }
+  unlink(tmp_object_store_root, recursive = TRUE)
+  dir.create(tmp_object_store_root, recursive = TRUE, showWarnings = FALSE)
 
   #
 
@@ -136,7 +149,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   dist_names <- paste0("dist", as.character(seq(1, nb_threshold, 1)))
   model_names <- names(model_list)
   param_names <- unique(Reduce(c, sapply(prior_dist, function(x) sapply(x, `[[`, 1))))
-  column_names <- c("model", param_names, dist_names)
+  column_names <- c("attempt_id", "job_id", "accepted", "retained",
+                    "model", param_names, dist_names)
 
   # define the total number of particles to accept before next gen, that will be
   # used as a upper limit for the number of simulation to run (avoid a while
@@ -154,7 +168,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   totattempts <- 0
 
   # print(ls()) # DEBUG
-  var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "max_concurrent_jobs", "accepted_particles_filepath", "all_tested_particles_filepath", "dist_names", "model_names", "param_names", "column_names", "tot_nb_acc_prtcl", "thresholds")
+  unlink(file.path(storage_root, "manifest.parquet"))
+  var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "max_concurrent_jobs", "accepted_particles_filepath", "all_tested_particles_filepath", "tmp_object_store_root", "store_summaries", "store_outputs", "dist_names", "model_names", "param_names", "column_names", "tot_nb_acc_prtcl", "thresholds")
     # saveEnvir(var_to_save, tmp_current_abc_state) # TODO : not working, need to fix this
   do.call("save", c(var_to_save, list(file = tmp_current_abc_state)))
 
@@ -276,6 +291,9 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   #
   acc_particles <- utils::read.csv(accepted_particles_filepath)
   all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
+  retained_ids <- acc_particles$attempt_id
+  persistStoredGeneration(tmp_object_store_root, storage_root, 0L,
+                          retained_ids, store_summaries, store_outputs)
 
   # acc_particles <- acc_particles[1:min(nrow(acc_particles), tot_nb_acc_prtcl),] # keep only the number of particle needed # TODO : improve comment
   # utils::write.csv(acc_particles, accepted_particles_filepath, row.names=FALSE, quote=FALSE)
@@ -292,5 +310,12 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   unlink(paste0(all_tested_particles_filepath, ".lck"))
   unlink(paste0(accepted_particles_filepath, ".lck"))
   #
-  return(list("acc_particles" = acc_particles, "all_tested_particles" = all_tested_particles))
+  storage <- list(
+    path = normalizePath(storage_root, winslash = "/", mustWork = FALSE),
+    format = "parquet",
+    manifest = file.path(normalizePath(storage_root, winslash = "/", mustWork = FALSE), "manifest.parquet")
+  )
+  return(list("acc_particles" = acc_particles,
+              "all_tested_particles" = all_tested_particles,
+              "storage" = storage))
 }

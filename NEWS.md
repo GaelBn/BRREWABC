@@ -1,5 +1,22 @@
+# BRREWABC 1.3.0
+
+* Added optional storage of model summary statistics and detailed outputs for
+  ABC rejection and ABC-SMC analyses.
+* Model functions can now return a structured list containing `distances`,
+  `summaries`, and `outputs`; the historical numeric distance vector remains
+  supported.
+* Added Parquet storage for vectors, matrices, and data frames, with independent
+  `none`, `retained`, `accepted`, and `all` retention policies for summaries and
+  outputs.
+* Added stable attempt identifiers and acceptance/retention metadata to link
+  stored tables to tested particles.
+* Added `list_abc_stored_data()`, `read_summary_statistics()`, and
+  `read_model_outputs()` to inspect and selectively load stored data by name,
+  generation, attempt identifier, or ABC status.
+
 # BRREWABC 1.2.1
-- Fixed a bug when many plots are generated
+
+* Fixed a bug when many plots are generated.
 
 # BRREWABC 1.2.0
 

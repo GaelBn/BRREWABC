@@ -49,11 +49,15 @@
 #' of iterations), in order to start from the last iteration performed
 #' @param previous_epsilons an object (dataframe) containing previous results
 #' (set of thresholds), in order to start from the last iteration performed
+#' @param store_summaries which summary statistics to store in Parquet files:
+#' `"none"`, `"retained"`, `"accepted"`, or `"all"`
+#' @param store_outputs which model outputs to store in Parquet files, using the
+#' same policies as `store_summaries`
 #' @param verbose whether or not to display specific information
 #' @param progressbar whether or not to display progressbar
 #'
-#' @return a list containing two dataframes corresponding to (1) the particles
-#' accepted and (2) the thresholds used, during the successive iterations
+#' @return a list containing accepted particles, thresholds, and a `storage`
+#' descriptor for summary statistics and model outputs stored in Parquet.
 #' @export
 #' @include createLHSfromPrior.R defineNextThreshold.R setEmpiricalSD.R subjob.R saveEnvir.R
 #'
@@ -146,8 +150,13 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
                    # abc_user_param_file_path = NULL,
                    previous_gens = NA,
                    previous_epsilons = NA,
+                   store_summaries = c("none", "retained", "accepted", "all"),
+                   store_outputs = c("none", "retained", "accepted", "all"),
                    verbose = FALSE,
                    progressbar = FALSE) {
+
+  store_summaries <- normalizeStoragePolicy(store_summaries)
+  store_outputs <- normalizeStoragePolicy(store_outputs)
 
   # # first, load user param file if exist
   # if (!is.null(abc_user_param_file_path)) {
@@ -165,12 +174,14 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
   tmp_accepted_particles_filepath <- file.path(tmp_folder_path, "tmp_current_gen_accepted_particles")
   tmp_all_tested_particles_filepath <- file.path(tmp_folder_path, "tmp_current_gen_all_tested_particles")
+  tmp_object_store_root <- file.path(tmp_folder_path, "stored_objects")
   tmp_local_task_std_out <- file.path(tmp_folder_path, "std_out")
   tmp_local_task_std_err <- file.path(tmp_folder_path, "std_err")
   tmp_current_abc_state <- file.path(tmp_folder_path, "currentABCState.RData")
 
   results_folder_path_CSV <- file.path(results_folder_path, "csv")
   results_folder_path_FIGS <- file.path(results_folder_path, "figs")
+  storage_root <- file.path(results_folder_path, "parquet")
   accepted_particles_filepath <- file.path(results_folder_path_CSV, "all_accepted_particles.csv")
   last_accepted_particles_filepath <- file.path(results_folder_path_CSV, "last_accepted_particles.csv")
   all_particles_filepath <- file.path(results_folder_path_CSV, "all_particles.csv")
@@ -184,7 +195,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
   #
 
-  for (folder_path in c(tmp_folder_path, results_folder_path, results_folder_path_CSV, results_folder_path_FIGS)) {
+  for (folder_path in c(tmp_folder_path, results_folder_path, results_folder_path_CSV, results_folder_path_FIGS, storage_root)) {
     if (verbose) {cat(paste0("Check folder_path for : ", folder_path, "\n"))}
     # Check if the folder path exists
     if (!dir.exists(folder_path)) {
@@ -198,6 +209,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       if (verbose) {cat("Folder already exists.\n")}
     }
   }
+  unlink(tmp_object_store_root, recursive = TRUE)
+  dir.create(tmp_object_store_root, recursive = TRUE, showWarnings = FALSE)
 
   #
 
@@ -209,7 +222,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   dist_names <- paste0("dist", as.character(seq(1, nb_threshold, 1)))
   model_names <- names(model_list)
   param_names <- unique(Reduce(c, sapply(prior_dist, function(x) sapply(x, `[[`, 1))))
-  column_names <- c("gen", "model", param_names, "pWeight", dist_names)
+  column_names <- c("gen", "attempt_id", "job_id", "accepted", "retained",
+                    "model", param_names, "pWeight", dist_names)
 
   # define the total number of particles to accept before next gen, that will be
   # used as a upper limit for the number of simulation to run (avoid a while
@@ -274,6 +288,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     # set the generation number
     gen <- gen + 1
   }
+  if (is.null(dim(previous_gens))) unlink(file.path(storage_root, "manifest.parquet"))
   #
   while (gen <= max_number_of_gen) {
     nb_accepted <- 0
@@ -291,7 +306,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     utils::write.csv(tmp_all_prtcls, paste0(tmp_all_tested_particles_filepath,"_",gen,".csv"), row.names=FALSE, quote=FALSE)
 
     # print(ls()) # DEBUG
-    var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "model_jump_prob", "use_lhs_for_first_iter", "max_concurrent_jobs", "tmp_accepted_particles_filepath", "tmp_all_tested_particles_filepath", "dist_names", "model_names", "param_names", "column_names", "nb_acc_prtcl_before_next_gen", "epsilon", "empirical_sd", "lhs_first_gen", "gen", "previous_acc_particles")
+    var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "model_jump_prob", "use_lhs_for_first_iter", "max_concurrent_jobs", "tmp_accepted_particles_filepath", "tmp_all_tested_particles_filepath", "tmp_object_store_root", "store_summaries", "store_outputs", "dist_names", "model_names", "param_names", "column_names", "nb_acc_prtcl_before_next_gen", "epsilon", "empirical_sd", "lhs_first_gen", "gen", "previous_acc_particles")
       # saveEnvir(var_to_save, tmp_current_abc_state) # TODO : not working, need to fix this
     do.call("save", c(var_to_save, list(file = tmp_current_abc_state)))
 
@@ -421,10 +436,21 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     # pb$terminate()
     # cat('\n')
     #
-    if (current_iter_broke == TRUE) {break}
+    tested_this_gen <- utils::read.csv(paste0(tmp_all_tested_particles_filepath,"_",gen,".csv"))
+    retained_ids <- character()
+    if (current_iter_broke == TRUE) {
+      persistStoredGeneration(tmp_object_store_root, storage_root, gen,
+                              retained_ids, store_summaries, store_outputs)
+      break
+    }
     #
     current_acc_particles <- utils::read.csv(paste0(tmp_accepted_particles_filepath,"_",gen,".csv"))
     current_acc_particles <- current_acc_particles[1:min(nrow(current_acc_particles),nb_acc_prtcl_before_next_gen),] # keep only the number of particle needed # TODO : improve comment
+    current_acc_particles$retained <- TRUE
+    retained_ids <- current_acc_particles$attempt_id
+    tested_this_gen$retained <- tested_this_gen$attempt_id %in% retained_ids
+    persistStoredGeneration(tmp_object_store_root, storage_root, gen,
+                            retained_ids, store_summaries, store_outputs)
     # normalise the weights
     for (mm in model_names) {
       if (mm %in% unique(current_acc_particles$model)) {
@@ -485,5 +511,11 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   }
   unlink(tmp_folder_path, recursive = TRUE)
   #
-  return(list("particles" = all_acc_particles, "thresholds" = epsilons))
+  storage <- list(
+    path = normalizePath(storage_root, winslash = "/", mustWork = FALSE),
+    format = "parquet",
+    manifest = file.path(normalizePath(storage_root, winslash = "/", mustWork = FALSE), "manifest.parquet")
+  )
+  return(list("particles" = all_acc_particles, "thresholds" = epsilons,
+              "storage" = storage))
 }

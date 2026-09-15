@@ -31,6 +31,8 @@ abcsmc(
   max_concurrent_jobs = 1,
   previous_gens = NA,
   previous_epsilons = NA,
+  store_summaries = c("none", "retained", "accepted", "all"),
+  store_outputs = c("none", "retained", "accepted", "all"),
   verbose = FALSE,
   progressbar = FALSE
 )
@@ -105,13 +107,19 @@ of iterations), in order to start from the last iteration performed}
 \item{previous_epsilons}{an object (dataframe) containing previous results
 (set of thresholds), in order to start from the last iteration performed}
 
+\item{store_summaries}{which summary statistics to store in Parquet files:
+`"none"`, `"retained"`, `"accepted"`, or `"all"`}
+
+\item{store_outputs}{which model outputs to store in Parquet files, using the
+same policies as `store_summaries`}
+
 \item{verbose}{whether or not to display specific information}
 
 \item{progressbar}{whether or not to display progressbar}
 }
 \value{
-a list containing two dataframes corresponding to (1) the particles
-accepted and (2) the thresholds used, during the successive iterations
+a list containing accepted particles, thresholds, and a `storage`
+descriptor for summary statistics and model outputs stored in Parquet.
 }
 \description{
 Run ABC-SMC inference in parallel

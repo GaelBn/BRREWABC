@@ -50,12 +50,25 @@ subjob_smc <- function(job_id,
   #  \__\___||___/\__|  | .__/ \__,_|_|   \__|_|\___|_|\___||___/
   #                     |_|
 
+  attempt_number <- 0L
   while (nb_acc_prtcls <= current_job_nb_acc_prtcl_before_next_gen) {
+    attempt_number <- attempt_number + 1L
+    attempt_id <- sprintf("g%04d-j%04d-a%012d", gen, job_id, attempt_number)
     # create the particle
     proposed_particle <- createParticleForSMC(gen, nb_acc_prtcls, lhs_first_gen, previous_acc_particles, empirical_sd, use_lhs_for_first_iter, prior_dist, model_names, model_jump_prob)
     proposed_particle[["job_id"]] <- job_id # if job_id need to be used in the model function
     # simulate and compute the distance
-    dist <- model_list[[proposed_particle[["model"]]]](proposed_particle, ss_obs)
+    model_result <- normalizeModelResult(
+      model_list[[proposed_particle[["model"]]]](proposed_particle, ss_obs),
+      dist_names
+    )
+    dist <- model_result$distances
+    accepted <- (gen == 1) || all(dist < epsilon)
+
+    stageStoredCollection(model_result$summaries, "summaries", store_summaries,
+                          accepted, attempt_id, gen, job_id, tmp_object_store_root)
+    stageStoredCollection(model_result$outputs, "outputs", store_outputs,
+                          accepted, attempt_id, gen, job_id, tmp_object_store_root)
 
     # compute the weight
     pWeight <- NA
@@ -71,9 +84,12 @@ subjob_smc <- function(job_id,
     }
 
     # save particle in the shared table
-    if ((gen == 1) || (all(dist < epsilon))) {
+    if (accepted) {
       # build the new row
-      new.row <- c(list(gen = gen, pWeight = pWeight), proposed_particle, stats::setNames(as.list(dist), dist_names))
+      particle_values <- proposed_particle[setdiff(names(proposed_particle), "job_id")]
+      new.row <- c(list(gen = gen, attempt_id = attempt_id, job_id = job_id,
+                        accepted = TRUE, retained = FALSE, pWeight = pWeight),
+                   particle_values, stats::setNames(as.list(dist), dist_names))
       new.row <- data.frame(new.row)
       missing_columns <- setdiff(column_names, colnames(new.row)) # add the missing columns to the new row with empty values (or NA)
       new.row[missing_columns] <- NA  # You can also define other default values if required
@@ -90,7 +106,10 @@ subjob_smc <- function(job_id,
 
     # in any case, add the tested particle in a file
     # build the new row
-    new.row <- c(list(gen = gen, pWeight = pWeight), proposed_particle, stats::setNames(as.list(dist), dist_names))
+    particle_values <- proposed_particle[setdiff(names(proposed_particle), "job_id")]
+    new.row <- c(list(gen = gen, attempt_id = attempt_id, job_id = job_id,
+                      accepted = accepted, retained = FALSE, pWeight = pWeight),
+                 particle_values, stats::setNames(as.list(dist), dist_names))
     new.row <- data.frame(new.row)
     missing_columns <- setdiff(column_names, colnames(new.row)) # add the missing columns to the new row with empty values (or NA)
     new.row[missing_columns] <- NA  # You can also define other default values if required
@@ -142,16 +161,32 @@ subjob_rejection <- function(job_id,
   #  \__\___||___/\__|  | .__/ \__,_|_|   \__|_|\___|_|\___||___/
   #                     |_|
 
+  attempt_number <- 0L
   while (nb_acc_prtcls < tot_nb_acc_prtcl) {
+    attempt_number <- attempt_number + 1L
+    attempt_id <- sprintf("g0000-j%04d-a%012d", job_id, attempt_number)
     # create the particle
     proposed_particle <- createParticle(prior_dist, model_names)
     proposed_particle[["job_id"]] <- job_id # if job_id need to be used in the model function
     # simulate and compute the distance
-    dist <- model_list[[proposed_particle[["model"]]]](proposed_particle, ss_obs)
+    model_result <- normalizeModelResult(
+      model_list[[proposed_particle[["model"]]]](proposed_particle, ss_obs),
+      dist_names
+    )
+    dist <- model_result$distances
+    accepted <- all(!is.na(thresholds)) && all(dist <= thresholds)
+
+    stageStoredCollection(model_result$summaries, "summaries", store_summaries,
+                          accepted, attempt_id, 0L, job_id, tmp_object_store_root)
+    stageStoredCollection(model_result$outputs, "outputs", store_outputs,
+                          accepted, attempt_id, 0L, job_id, tmp_object_store_root)
 
     # save particle in the shared tables
     # build the new row
-    new.row <- c(proposed_particle, stats::setNames(as.list(dist), dist_names))
+    particle_values <- proposed_particle[setdiff(names(proposed_particle), "job_id")]
+    new.row <- c(list(attempt_id = attempt_id, job_id = job_id,
+                      accepted = accepted, retained = accepted),
+                 particle_values, stats::setNames(as.list(dist), dist_names))
     new.row <- data.frame(new.row)
     missing_columns <- setdiff(column_names, colnames(new.row)) # add the missing columns to the new row with empty values (or NA)
     new.row[missing_columns] <- NA  # You can also define other default values if required
@@ -165,7 +200,7 @@ subjob_rejection <- function(job_id,
     filelock::unlock(lck)
 
     if (all(!is.na(thresholds))) {
-      if (all(dist <= thresholds)) {
+      if (accepted) {
         # put filelock::lock on resfile.csv.lck
         lck <- filelock::lock(paste0(accepted_particles_filepath, ".lck"))
         # Write the new line to the CSV file without reading it first

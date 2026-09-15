@@ -1,12 +1,14 @@
 # Estimation and model selection using ABC-SMC
 
 ``` r
+
 library(BRREWABC)
 ```
 
 ## Model definition
 
 ``` r
+
 compute_dist <- function(x, ss_obs) {
   ss_sim <- c(x[["alpha"]] + x[["beta"]] + rnorm(1, 0, 0.1),
               x[["alpha"]] * x[["beta"]] + rnorm(1, 0, 0.1))
@@ -36,6 +38,7 @@ model_list <- list("m1" = compute_dist,
 ## Define prior distribution
 
 ``` r
+
 prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
                                c("beta", "unif", 0, 1)),
                    "m2" = list(c("alpha", "unif", 0, 4),
@@ -47,12 +50,14 @@ prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
 ## Create a reference trajectory
 
 ``` r
+
 sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ## Run abc smc procedure
 
 ``` r
+
 res <- abcsmc(model_list = model_list,
               prior_dist = prior_dist,
               ss_obs = sum_stat_obs,
@@ -62,11 +67,16 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "mdlslctn",
               max_concurrent_jobs = 5,
               verbose = FALSE)
+#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
+#> : EOF within quoted string
+#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
+#> : EOF within quoted string
 ```
 
 ## Plot results
 
 ``` r
+
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,

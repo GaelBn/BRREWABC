@@ -6,6 +6,8 @@
   : Run ABC rejection inference in parallel
 - [`abcsmc()`](https://gaelbn.github.io/BRREWABC/reference/abcsmc.md) :
   Run ABC-SMC inference in parallel
+- [`list_abc_stored_data()`](https://gaelbn.github.io/BRREWABC/reference/list_abc_stored_data.md)
+  : List summary statistics and outputs stored for an ABC result
 - [`plot_abcrejection_res()`](https://gaelbn.github.io/BRREWABC/reference/plot_abcrejection_res.md)
   : Plot abcrejection results : pairplot
 - [`plot_abcsmc_res()`](https://gaelbn.github.io/BRREWABC/reference/plot_abcsmc_res.md)
@@ -18,6 +20,10 @@
   : Plot abcsmc results : ESS (Effective Sample Size) over iterations
 - [`plot_thresholds()`](https://gaelbn.github.io/BRREWABC/reference/plot_thresholds.md)
   : Plot abcsmc results : thresholds over iterations
+- [`read_model_outputs()`](https://gaelbn.github.io/BRREWABC/reference/read_model_outputs.md)
+  : Read model outputs stored in Parquet files
+- [`read_summary_statistics()`](https://gaelbn.github.io/BRREWABC/reference/read_summary_statistics.md)
+  : Read summary statistics stored in Parquet files
 - [`subjob_rejection()`](https://gaelbn.github.io/BRREWABC/reference/subjob_rejection.md)
   : Run a subtask of the ABC rejection Shouldn't have to be used by the
   user, this function is visible so that it can be used on cluster by

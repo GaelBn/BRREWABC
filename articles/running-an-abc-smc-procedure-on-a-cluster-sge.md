@@ -8,6 +8,7 @@ to launch the master job on the cluster.
 1.  `abc-smc_on_sge_cluster.R` :
 
 ``` r
+
 library(BRREWABC)
 
 # Model definition

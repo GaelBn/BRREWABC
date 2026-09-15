@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>BRREWABC • BRREWABC</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="BRREWABC">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BRREWABC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/resume-an-estimation-using-abc-smc.html">Resume an estimation using ABC-SMC</a></li>
     <li><a class="dropdown-item" href="../articles/running-an-abc-smc-procedure-on-a-cluster-sge.html">Running an ABC-SMC procedure on a cluster (SGE)</a></li>
     <li><a class="dropdown-item" href="../articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html">Running an ABC-SMC procedure on a cluster (Slurm)</a></li>
+    <li><a class="dropdown-item" href="../articles/storing-summaries-and-outputs.html">Store model summaries and outputs in Parquet</a></li>
     <li><a class="dropdown-item" href="../articles/use-of-several-distances-with-abc-smc.html">Use of several distances with ABC-SMC</a></li>
     <li><a class="dropdown-item" href="../articles/using-a-model-defined-in-a-separate-file.html">Using a model defined in a separate file</a></li>
   </ul>
@@ -115,7 +116,11 @@
 <span>              new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>              experiment_folderpath <span class="op">=</span> <span class="st">"smpl"</span>,</span>
 <span>              max_concurrent_jobs <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,</span></span>
+<span><span class="co">#&gt; : EOF within quoted string</span></span>
+<span><span class="co">#&gt; Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,</span></span>
+<span><span class="co">#&gt; : EOF within quoted string</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plot-results">Plot results<a class="anchor" aria-label="anchor" href="#plot-results"></a>
@@ -133,20 +138,20 @@
 <span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span>
 <span><span class="co">#&gt;    gen      ess</span></span>
 <span><span class="co">#&gt; 1    1 2000.000</span></span>
-<span><span class="co">#&gt; 2    2 1882.054</span></span>
-<span><span class="co">#&gt; 3    3 1913.199</span></span>
-<span><span class="co">#&gt; 4    4 1923.718</span></span>
-<span><span class="co">#&gt; 5    5 1927.286</span></span>
-<span><span class="co">#&gt; 6    6 1936.929</span></span>
-<span><span class="co">#&gt; 7    7 1918.413</span></span>
-<span><span class="co">#&gt; 8    8 1915.567</span></span>
-<span><span class="co">#&gt; 9    9 1912.714</span></span>
-<span><span class="co">#&gt; 10  10 1912.335</span></span>
-<span><span class="co">#&gt; 11  11 1908.937</span></span>
-<span><span class="co">#&gt; 12  12 1886.652</span></span>
-<span><span class="co">#&gt; 13  13 1864.783</span></span>
-<span><span class="co">#&gt; 14  14 1875.015</span></span>
-<span><span class="co">#&gt; 15  15 1884.697</span></span>
+<span><span class="co">#&gt; 2    2 1873.597</span></span>
+<span><span class="co">#&gt; 3    3 1904.187</span></span>
+<span><span class="co">#&gt; 4    4 1922.009</span></span>
+<span><span class="co">#&gt; 5    5 1929.502</span></span>
+<span><span class="co">#&gt; 6    6 1934.708</span></span>
+<span><span class="co">#&gt; 7    7 1924.360</span></span>
+<span><span class="co">#&gt; 8    8 1922.642</span></span>
+<span><span class="co">#&gt; 9    9 1905.740</span></span>
+<span><span class="co">#&gt; 10  10 1916.402</span></span>
+<span><span class="co">#&gt; 11  11 1885.071</span></span>
+<span><span class="co">#&gt; 12  12 1899.001</span></span>
+<span><span class="co">#&gt; 13  13 1843.760</span></span>
+<span><span class="co">#&gt; 14  14 1830.565</span></span>
+<span><span class="co">#&gt; 15  15 1870.537</span></span>
 <span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                   filename <span class="op">=</span> <span class="st">"smpl/res/figs/smpl_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"YlGnBu"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span></code></pre></div>
@@ -188,7 +193,7 @@ Density estimates for beta
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

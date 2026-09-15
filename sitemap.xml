@@ -8,6 +8,7 @@
 <url><loc>https://gaelbn.github.io/BRREWABC/articles/resume-an-estimation-using-abc-smc.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-sge.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html</loc></url>
+<url><loc>https://gaelbn.github.io/BRREWABC/articles/storing-summaries-and-outputs.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/articles/use-of-several-distances-with-abc-smc.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/articles/using-a-model-defined-in-a-separate-file.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/authors.html</loc></url>
@@ -16,12 +17,15 @@
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/abcrejection.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/abcsmc.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/index.html</loc></url>
+<url><loc>https://gaelbn.github.io/BRREWABC/reference/list_abc_stored_data.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_abcrejection_res.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_abcsmc_res.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_densityridges.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_distances.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_ess.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/plot_thresholds.html</loc></url>
+<url><loc>https://gaelbn.github.io/BRREWABC/reference/read_model_outputs.html</loc></url>
+<url><loc>https://gaelbn.github.io/BRREWABC/reference/read_summary_statistics.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/subjob_rejection.html</loc></url>
 <url><loc>https://gaelbn.github.io/BRREWABC/reference/subjob_smc.html</loc></url>
 </urlset>

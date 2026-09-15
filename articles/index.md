@@ -13,6 +13,8 @@
   (SGE)](https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-sge.md):
 - [Running an ABC-SMC procedure on a cluster
   (Slurm)](https://gaelbn.github.io/BRREWABC/articles/running-an-abc-smc-procedure-on-a-cluster-slurm.md):
+- [Store model summaries and outputs in
+  Parquet](https://gaelbn.github.io/BRREWABC/articles/storing-summaries-and-outputs.md):
 - [Use of several distances with
   ABC-SMC](https://gaelbn.github.io/BRREWABC/articles/use-of-several-distances-with-abc-smc.md):
 - [Using a model defined in a separate

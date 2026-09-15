@@ -1,12 +1,14 @@
 # Use of several distances with ABC-SMC
 
 ``` r
+
 library(BRREWABC)
 ```
 
 ## Model definition
 
 ``` r
+
 compute_dist <- function(x, ss_obs) {
   ss_sim <- c(x[["alpha"]] + x[["beta"]] + rnorm(1, 0, 0.1),
               x[["alpha"]] * x[["beta"]] + rnorm(1, 0, 0.1))
@@ -20,6 +22,7 @@ model_list <- list("m1" = compute_dist)
 ## Define prior distribution
 
 ``` r
+
 prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
                                c("beta", "unif", 0, 1)))
 ```
@@ -27,12 +30,14 @@ prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
 ## Create a reference trajectory
 
 ``` r
+
 sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ## Run abc smc procedure
 
 ``` r
+
 res <- abcsmc(model_list = model_list,
               prior_dist = prior_dist,
               ss_obs = sum_stat_obs,
@@ -44,12 +49,13 @@ res <- abcsmc(model_list = model_list,
               max_concurrent_jobs = 5,
               verbose = FALSE)
 #> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.007234216 0.002696565
+#> [1] 0.009527204 0.003846852
 ```
 
 ## Plot results
 
 ``` r
+
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation • BRREWABC</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation">
 <meta name="description" content="An R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm. This package streamlines the process of conducting Bayesian inference for complex models by implementing efficient parallelization techniques.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">BRREWABC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,7 @@
     <li><a class="dropdown-item" href="articles/resume-an-estimation-using-abc-smc.html">Resume an estimation using ABC-SMC</a></li>
     <li><a class="dropdown-item" href="articles/running-an-abc-smc-procedure-on-a-cluster-sge.html">Running an ABC-SMC procedure on a cluster (SGE)</a></li>
     <li><a class="dropdown-item" href="articles/running-an-abc-smc-procedure-on-a-cluster-slurm.html">Running an ABC-SMC procedure on a cluster (Slurm)</a></li>
+    <li><a class="dropdown-item" href="articles/storing-summaries-and-outputs.html">Store model summaries and outputs in Parquet</a></li>
     <li><a class="dropdown-item" href="articles/use-of-several-distances-with-abc-smc.html">Use of several distances with ABC-SMC</a></li>
     <li><a class="dropdown-item" href="articles/using-a-model-defined-in-a-separate-file.html">Using a model defined in a separate file</a></li>
   </ul>
@@ -96,6 +97,8 @@
 <li>
 <strong>Flexible Model Specification</strong>: Easily specify complex models.</li>
 <li>
+<strong>Simulation Diagnostics</strong>: Optionally retain summary statistics and detailed model outputs in Parquet files, including long tabular trajectories.</li>
+<li>
 <strong>Customizable Settings</strong>: Fine-tune algorithm parameters to suit specific modeling needs and computational resources.</li>
 <li>
 <strong>Scalable</strong>: Utilize parallel computing capabilities to handle large datasets and complex models with ease.</li>
@@ -116,11 +119,71 @@
 </h2>
 <!-- For a basic example, see the [Get Started](`vignette("BRREWABC")`) section. -->
 <p>For a basic example, see the <a href="https://gaelbn.github.io/BRREWABC/articles/BRREWABC.html">Get Started</a> section.</p>
+<div class="section level3">
+<h3 id="retaining-summary-statistics-and-model-outputs">Retaining summary statistics and model outputs<a class="anchor" aria-label="anchor" href="#retaining-summary-statistics-and-model-outputs"></a>
+</h3>
+<p>Model functions may return only a numeric distance vector, as in previous versions, or a structured result containing distances, summary statistics, and detailed outputs:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">compute_dist</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ss_obs</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">trajectory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    timestep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span>
+<span>    pop_id <span class="op">=</span> <span class="st">"A"</span>,</span>
+<span>    S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">900</span>, <span class="fl">880</span>, <span class="fl">850</span><span class="op">)</span>,</span>
+<span>    E <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">55</span>, <span class="fl">60</span><span class="op">)</span>,</span>
+<span>    I <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">50</span>, <span class="fl">65</span><span class="op">)</span>,</span>
+<span>    R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>dist1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">trajectory</span><span class="op">$</span><span class="va">I</span> <span class="op">-</span> <span class="va">ss_obs</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    summaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      epidemic_trajectory <span class="op">=</span> <span class="va">trajectory</span>,</span>
+<span>      peak_infectious <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">trajectory</span><span class="op">$</span><span class="va">I</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    outputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      final_state <span class="op">=</span> <span class="va">trajectory</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trajectory</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Each named summary or output can be a vector, matrix, or data frame. For a given name, tabular column names and types must remain fixed across simulations, while the number of rows may vary.</p>
+<p>Choose independently which summary statistics and outputs to retain:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/abcsmc.html">abcsmc</a></span><span class="op">(</span></span>
+<span>  model_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">compute_dist</span><span class="op">)</span>,</span>
+<span>  prior_dist <span class="op">=</span> <span class="va">prior_dist</span>,</span>
+<span>  ss_obs <span class="op">=</span> <span class="va">ss_obs</span>,</span>
+<span>  store_summaries <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  store_outputs <span class="op">=</span> <span class="st">"retained"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The available policies are <code>"none"</code>, <code>"retained"</code>, <code>"accepted"</code>, and <code>"all"</code>. Stored objects are written to Parquet files under <code>res/parquet</code> and are loaded only when requested:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/list_abc_stored_data.html">list_abc_stored_data</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">accepted_trajectories</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_summary_statistics.html">read_summary_statistics</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"epidemic_trajectory"</span>,</span>
+<span>  generation <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  status <span class="op">=</span> <span class="st">"accepted"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">rejected_trajectories</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_summary_statistics.html">read_summary_statistics</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"epidemic_trajectory"</span>,</span>
+<span>  status <span class="op">=</span> <span class="st">"rejected"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">retained_outputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_model_outputs.html">read_model_outputs</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"final_state"</span>,</span>
+<span>  status <span class="op">=</span> <span class="st">"retained"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The stored tables include <code>attempt_id</code>, <code>generation</code>, <code>job_id</code>, <code>accepted</code>, and <code>retained</code>, allowing each trajectory to be linked to the corresponding ABC attempt. See the <code>storing-summaries-and-outputs</code> vignette for further details.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Access package documentation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/help.html" class="external-link">help</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"BRREWABC"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -191,7 +254,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

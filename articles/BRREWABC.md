@@ -3,12 +3,14 @@
 ## Simple estimation using ABC-SMC
 
 ``` r
+
 library(BRREWABC)
 ```
 
 ### Model definition
 
 ``` r
+
 compute_dist <- function(x, ss_obs) {
   ss_sim <- c(x[["alpha"]] + x[["beta"]] + rnorm(1, 0, 0.1),
               x[["alpha"]] * x[["beta"]] + rnorm(1, 0, 0.1))
@@ -22,6 +24,7 @@ model_list <- list("m1" = compute_dist)
 ### Define prior distribution
 
 ``` r
+
 prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
                                c("beta", "unif", 0, 1)))
 ```
@@ -29,12 +32,14 @@ prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
 ### Create a reference trajectory
 
 ``` r
+
 sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ### Run abc smc procedure
 
 ``` r
+
 res <- abcsmc(model_list = model_list,
               prior_dist = prior_dist,
               ss_obs = sum_stat_obs,
@@ -44,11 +49,16 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "smpl",
               max_concurrent_jobs = 5,
               verbose = FALSE)
+#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
+#> : EOF within quoted string
+#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
+#> : EOF within quoted string
 ```
 
 ### Plot results
 
 ``` r
+
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
@@ -61,20 +71,20 @@ plot_ess(data = all_accepted_particles,filename = "smpl/res/figs/smpl_ess.png", 
 #> [1] "Plot saved as 'png'."
 #>    gen      ess
 #> 1    1 2000.000
-#> 2    2 1882.054
-#> 3    3 1913.199
-#> 4    4 1923.718
-#> 5    5 1927.286
-#> 6    6 1936.929
-#> 7    7 1918.413
-#> 8    8 1915.567
-#> 9    9 1912.714
-#> 10  10 1912.335
-#> 11  11 1908.937
-#> 12  12 1886.652
-#> 13  13 1864.783
-#> 14  14 1875.015
-#> 15  15 1884.697
+#> 2    2 1873.597
+#> 3    3 1904.187
+#> 4    4 1922.009
+#> 5    5 1929.502
+#> 6    6 1934.708
+#> 7    7 1924.360
+#> 8    8 1922.642
+#> 9    9 1905.740
+#> 10  10 1916.402
+#> 11  11 1885.071
+#> 12  12 1899.001
+#> 13  13 1843.760
+#> 14  14 1830.565
+#> 15  15 1870.537
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
 #> [1] "Plot saved as 'png'."

@@ -3,6 +3,7 @@
 ## In this example, the model is defined in a separate R file ‘model.R’:
 
 ``` r
+
 toy_model <- function(x) {
   c(x[["alpha"]] + x[["beta"]] + rnorm(1, 0, 0.1),
     x[["alpha"]] * x[["beta"]] + rnorm(1, 0, 0.1))
@@ -12,6 +13,7 @@ toy_model <- function(x) {
 After that, the procedure is pretty much the same:
 
 ``` r
+
 library(BRREWABC)
 source("model.R")
 ```
@@ -19,6 +21,7 @@ source("model.R")
 ## Model definition
 
 ``` r
+
 compute_dist <- function(x, ss_obs) {
   ss_sim <- toy_model(x)
   dist <- sum((ss_sim - ss_obs)^2)
@@ -31,6 +34,7 @@ model_list <- list("m1" = compute_dist)
 ## Define prior distribution
 
 ``` r
+
 prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
                                c("beta", "unif", 0, 1)))
 ```
@@ -38,12 +42,14 @@ prior_dist <- list("m1" = list(c("alpha", "unif", 0, 4),
 ## Create a reference trajectory
 
 ``` r
+
 sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ## Run abc smc procedure
 
 ``` r
+
 res <- abcsmc(model_list = model_list,
               model_def = "model.R",
               prior_dist = prior_dist,
@@ -59,6 +65,7 @@ res <- abcsmc(model_list = model_list,
 ## Plot results
 
 ``` r
+
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,

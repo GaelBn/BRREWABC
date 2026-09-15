@@ -13,12 +13,12 @@ Source:
 
 Beaunée G (2026). *BRREWABC: Batched Resilient and Rapid Estimation
 Workflow through Approximate Bayesian Computation*. R package version
-1.2.1, <https://github.com/GaelBn/BRREWABC>.
+1.3.0, <https://github.com/GaelBn/BRREWABC>.
 
     @Manual{,
       title = {BRREWABC: Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation},
       author = {Gaël Beaunée},
       year = {2026},
-      note = {R package version 1.2.1},
+      note = {R package version 1.3.0},
       url = {https://github.com/GaelBn/BRREWABC},
     }

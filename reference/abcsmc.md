@@ -32,6 +32,8 @@ abcsmc(
   max_concurrent_jobs = 1,
   previous_gens = NA,
   previous_epsilons = NA,
+  store_summaries = c("none", "retained", "accepted", "all"),
+  store_outputs = c("none", "retained", "accepted", "all"),
   verbose = FALSE,
   progressbar = FALSE
 )
@@ -149,6 +151,16 @@ abcsmc(
   an object (dataframe) containing previous results (set of thresholds),
   in order to start from the last iteration performed
 
+- store_summaries:
+
+  which summary statistics to store in Parquet files: \`"none"\`,
+  \`"retained"\`, \`"accepted"\`, or \`"all"\`
+
+- store_outputs:
+
+  which model outputs to store in Parquet files, using the same policies
+  as \`store_summaries\`
+
 - verbose:
 
   whether or not to display specific information
@@ -159,8 +171,8 @@ abcsmc(
 
 ## Value
 
-a list containing two dataframes corresponding to (1) the particles
-accepted and (2) the thresholds used, during the successive iterations
+a list containing accepted particles, thresholds, and a \`storage\`
+descriptor for summary statistics and model outputs stored in Parquet.
 
 ## Examples
 
@@ -189,8 +201,10 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
 new_threshold_quantile = 0.8, experiment_folderpath = tmp_dir,
 max_concurrent_jobs = 2, verbose = FALSE)
-#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.009996858
+#> Warning: EOF within quoted string
+#> Warning: EOF within quoted string
+#> Warning: EOF within quoted string
+#> Warning: EOF within quoted string
 
 # get results and plots
 all_accepted_particles = res$particles
@@ -204,25 +218,25 @@ plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.pat
 #> [1] "Plot saved as 'png'."
 #>    gen      ess
 #> 1    1 2000.000
-#> 2    2 1889.086
-#> 3    3 1919.443
-#> 4    4 1920.282
-#> 5    5 1922.430
-#> 6    6 1937.597
-#> 7    7 1935.380
-#> 8    8 1926.972
-#> 9    9 1910.761
-#> 10  10 1910.952
-#> 11  11 1860.097
-#> 12  12 1877.716
-#> 13  13 1879.491
-#> 14  14 1872.443
-#> 15  15 1874.390
-#> 16  16 1813.881
-#> 17  17 1826.109
-#> 18  18 1753.101
-#> 19  19 1759.983
-#> 20  20 1789.520
+#> 2    2 1875.993
+#> 3    3 1914.225
+#> 4    4 1915.111
+#> 5    5 1934.219
+#> 6    6 1930.498
+#> 7    7 1928.733
+#> 8    8 1920.193
+#> 9    9 1922.517
+#> 10  10 1914.963
+#> 11  11 1899.364
+#> 12  12 1872.430
+#> 13  13 1885.557
+#> 14  14 1835.226
+#> 15  15 1867.778
+#> 16  16 1820.865
+#> 17  17 1816.429
+#> 18  18 1801.023
+#> 19  19 1763.685
+#> 20  20 1752.913
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
 #> [1] "Plot saved as 'png'."
 ```

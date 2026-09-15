@@ -22,6 +22,8 @@ abcrejection(
   sge_script_template =
     "#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcrejection_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\n",
   max_concurrent_jobs = 1,
+  store_summaries = c("none", "retained", "accepted", "all"),
+  store_outputs = c("none", "retained", "accepted", "all"),
   verbose = FALSE,
   progressbar = FALSE
 )
@@ -95,6 +97,16 @@ abcrejection(
 
   maximum number of jobs/tasks run in parallel
 
+- store_summaries:
+
+  which summary statistics to store in Parquet files: \`"none"\`,
+  \`"retained"\`, \`"accepted"\`, or \`"all"\`
+
+- store_outputs:
+
+  which model outputs to store in Parquet files, using the same policies
+  as \`store_summaries\`
+
 - verbose:
 
   whether or not to display specific information
@@ -105,8 +117,9 @@ abcrejection(
 
 ## Value
 
-a list containing two dataframes corresponding to (1) the particles
-accepted and (2) all tested particles
+a list containing accepted particles, all tested particles, and a
+\`storage\` descriptor for summary statistics and model outputs in
+Parquet.
 
 ## Examples
 

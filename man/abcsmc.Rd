@@ -139,6 +139,7 @@ descriptor for summary statistics and model outputs stored in Parquet.
 Run ABC-SMC inference in parallel
 }
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(BRREWABC)
 
 tmp_dir <- tempdir()
@@ -171,4 +172,5 @@ plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "Y
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr", filename = file.path(tmp_dir, "thresholds.png"))
 plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.path(tmp_dir, "ess.png"))
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
+\dontshow{\}) # examplesIf}
 }

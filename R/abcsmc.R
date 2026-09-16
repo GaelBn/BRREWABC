@@ -69,7 +69,7 @@
 #' @export
 #' @include createLHSfromPrior.R defineNextThreshold.R setEmpiricalSD.R subjob.R saveEnvir.R
 #'
-#' @examples
+#' @examplesIf interactive()
 #' library(BRREWABC)
 #'
 #' tmp_dir <- tempdir()

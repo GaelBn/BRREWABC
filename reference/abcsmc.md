@@ -197,7 +197,6 @@ descriptor for summary statistics and model outputs stored in Parquet.
 ## Examples
 
 ``` r
-if (FALSE) { # interactive()
 library(BRREWABC)
 
 tmp_dir <- tempdir()
@@ -222,13 +221,40 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
 new_threshold_quantile = 0.8, experiment_folderpath = tmp_dir,
 max_concurrent_jobs = 2, verbose = FALSE)
+#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
+#> [1] 0.00934227
 
 # get results and plots
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "abcsmc_results.png"))
+#> [1] "Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot."
+#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr", filename = file.path(tmp_dir, "thresholds.png"))
+#> [1] "Plot saved as 'png'."
 plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.path(tmp_dir, "ess.png"))
+#> [1] "Plot saved as 'png'."
+#>    gen      ess
+#> 1    1 2000.000
+#> 2    2 1879.078
+#> 3    3 1915.578
+#> 4    4 1918.050
+#> 5    5 1918.375
+#> 6    6 1927.751
+#> 7    7 1928.476
+#> 8    8 1930.910
+#> 9    9 1910.356
+#> 10  10 1906.096
+#> 11  11 1888.987
+#> 12  12 1881.414
+#> 13  13 1867.488
+#> 14  14 1878.883
+#> 15  15 1831.240
+#> 16  16 1815.905
+#> 17  17 1792.396
+#> 18  18 1763.219
+#> 19  19 1743.900
+#> 20  20 1753.533
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
-}
+#> [1] "Plot saved as 'png'."
 ```

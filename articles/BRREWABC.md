@@ -59,11 +59,31 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "smpl/res/figs/smpl_pairplot_all.png", colorpal = "YlGnBu")
+#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "smpl/res/figs/smpl_thresholds.png", colorpal = "YlGnBu")
+#> [1] "Plot saved as 'png'."
 plot_ess(data = all_accepted_particles,filename = "smpl/res/figs/smpl_ess.png", colorpal = "YlGnBu")
+#> [1] "Plot saved as 'png'."
+#>    gen      ess
+#> 1    1 2000.000
+#> 2    2 1879.078
+#> 3    3 1917.254
+#> 4    4 1919.435
+#> 5    5 1916.851
+#> 6    6 1922.285
+#> 7    7 1937.035
+#> 8    8 1924.207
+#> 9    9 1904.724
+#> 10  10 1911.431
+#> 11  11 1865.868
+#> 12  12 1885.499
+#> 13  13 1885.318
+#> 14  14 1871.456
+#> 15  15 1793.177
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
+#> [1] "Plot saved as 'png'."
 ```
 
 ![Pairplot of all

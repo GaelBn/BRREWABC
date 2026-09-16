@@ -57,10 +57,13 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "rsmsmpl/res/figs/rsmsmpl_pairplot_all.png", colorpal = "Greys")
+#> [1] "Plot saved as 'png'."
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "rsmsmpl/res/figs/rsmsmpl_densityridges.png", colorpal = "Greys")
+#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "rsmsmpl/res/figs/rsmsmpl_thresholds.png", colorpal = "Greys")
+#> [1] "Plot saved as 'png'."
 ```
 
 ![Pairplot of all
@@ -112,11 +115,15 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "rsmsmpl/res/figs/rsmsmpl_pairplot_all_rsm.png", colorpal = "OrRd")
+#> [1] "Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot."
+#> [1] "Plot saved as 'png'."
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "rsmsmpl/res/figs/rsmsmpl_densityridges_rsm.png",
                    colorpal = "OrRd")
+#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "rsmsmpl/res/figs/rsmsmpl_thresholds_rsm.png", colorpal = "OrRd")
+#> [1] "Plot saved as 'png'."
 ```
 
 ![Pairplot of all

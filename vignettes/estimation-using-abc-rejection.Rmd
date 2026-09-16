@@ -44,7 +44,7 @@ sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ## Run abc smc procedure
-```{r}
+```{r, eval=FALSE}
 res <- abcrejection(model_list = model_list,
                     prior_dist = prior_dist,
                     ss_obs = sum_stat_obs,
@@ -58,7 +58,7 @@ res <- abcrejection(model_list = model_list,
 ```
 
 ## Plot results
-```{r}
+```{r, eval=FALSE}
 all_accepted_particles <- res$acc_particles
 all_tested_particles <- res$all_tested_particles
 plot_abcrejection_res(all_accepted_particles, prior_dist,

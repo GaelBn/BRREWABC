@@ -42,7 +42,7 @@ sum_stat_obs <- c(2.0, 0.75)
 ```
 
 ## Run abc smc procedure
-```{r}
+```{r, eval=FALSE}
 res <- abcsmc(model_list = model_list,
               prior_dist = prior_dist,
               ss_obs = sum_stat_obs,
@@ -56,7 +56,7 @@ res <- abcsmc(model_list = model_list,
 ```
 
 ## Plot results
-```{r}
+```{r, eval=FALSE}
 all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,

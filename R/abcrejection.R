@@ -293,7 +293,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
   retained_ids <- acc_particles$attempt_id
   persistStoredGeneration(tmp_object_store_root, storage_root, 0L,
-                          retained_ids, store_summaries, store_outputs)
+                          all_tested_particles$attempt_id, retained_ids,
+                          store_summaries, store_outputs)
 
   # acc_particles <- acc_particles[1:min(nrow(acc_particles), tot_nb_acc_prtcl),] # keep only the number of particle needed # TODO : improve comment
   # utils::write.csv(acc_particles, accepted_particles_filepath, row.names=FALSE, quote=FALSE)

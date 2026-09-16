@@ -27,6 +27,19 @@ test_that("vectors and tables are normalized for storage", {
   expect_equal(BRREWABC:::asStoredTable(table), table)
 })
 
+test_that("Parquet fragments become visible only after a complete write", {
+  directory <- file.path(tempdir(), paste0("atomic-", sample.int(1e8, 1)))
+  dir.create(directory, recursive = TRUE)
+  path <- file.path(directory, "fragment.parquet")
+
+  BRREWABC:::writeParquetAtomically(data.frame(value = 1:3), path)
+
+  expect_true(file.exists(path))
+  expect_gt(file.info(path)$size, 0)
+  expect_equal(as.data.frame(arrow::read_parquet(path))$value, 1:3)
+  expect_length(list.files(directory, pattern = "\\.tmp-"), 0)
+})
+
 test_that("Parquet data can be listed, filtered, and read", {
   staging <- file.path(tempdir(), paste0("stage-", sample.int(1e8, 1)))
   storage <- file.path(tempdir(), paste0("store-", sample.int(1e8, 1)))
@@ -44,13 +57,20 @@ test_that("Parquet data can be listed, filtered, and read", {
     list(state = trajectory), "outputs", "all", TRUE,
     "a1", 1, 1, staging
   )
-  BRREWABC:::persistStoredGeneration(staging, storage, 1, "a1", "all", "all")
+  BRREWABC:::stageStoredCollection(
+    list(trajectory = trajectory), "summaries", "all", TRUE,
+    "orphan", 1, 1, staging
+  )
+  BRREWABC:::persistStoredGeneration(
+    staging, storage, 1, c("a1", "a2"), "a1", "all", "all"
+  )
   result <- list(storage = list(path = storage))
 
   expect_equal(sort(list_abc_stored_data(result)$kind), c("outputs", "summaries"))
   expect_equal(unique(read_summary_statistics(result, status = "retained")$attempt_id), "a1")
   expect_equal(unique(read_summary_statistics(result, status = "rejected")$attempt_id), "a2")
   expect_equal(unique(read_summary_statistics(result, attempt_id = "a2")$attempt_id), "a2")
+  expect_false("orphan" %in% read_summary_statistics(result)$attempt_id)
   expect_equal(unique(read_model_outputs(result)$stored_name), "state")
 })
 
@@ -66,7 +86,9 @@ test_that("a changing table schema is rejected", {
     "summaries", "all", TRUE, "a2", 1, 1, staging
   )
   expect_error(
-    BRREWABC:::persistStoredGeneration(staging, storage, 1, c("a1", "a2"), "all", "none"),
+    BRREWABC:::persistStoredGeneration(
+      staging, storage, 1, c("a1", "a2"), c("a1", "a2"), "all", "none"
+    ),
     "schema"
   )
 })

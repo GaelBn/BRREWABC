@@ -10,6 +10,11 @@
   outputs.
 * Added stable attempt identifiers and acceptance/retention metadata to link
   stored tables to tested particles.
+* Parquet fragments are finalized atomically so stopping parallel workers cannot
+  expose partially written files during generation consolidation.
+* A tested particle is now committed before it is published as accepted, and
+  Parquet consolidation ignores orphan fragments not present in the committed
+  attempt journal.
 * Added `list_abc_stored_data()`, `read_summary_statistics()`, and
   `read_model_outputs()` to inspect and selectively load stored data by name,
   generation, attempt identifier, or ABC status.

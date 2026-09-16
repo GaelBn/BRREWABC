@@ -83,29 +83,7 @@ subjob_smc <- function(job_id,
       }
     }
 
-    # save particle in the shared table
-    if (accepted) {
-      # build the new row
-      particle_values <- proposed_particle[setdiff(names(proposed_particle), "job_id")]
-      new.row <- c(list(gen = gen, attempt_id = attempt_id, job_id = job_id,
-                        accepted = TRUE, retained = FALSE, pWeight = pWeight),
-                   particle_values, stats::setNames(as.list(dist), dist_names))
-      new.row <- data.frame(new.row)
-      missing_columns <- setdiff(column_names, colnames(new.row)) # add the missing columns to the new row with empty values (or NA)
-      new.row[missing_columns] <- NA  # You can also define other default values if required
-      new.row <- new.row[column_names] # sort the columns to keep them in the right order
-      # put filelock::lock on resfile.csv.lck
-      lck <- filelock::lock(paste0(tmp_accepted_particles_filepath, "_", gen, ".csv.lck"))
-      # Write the new line to the CSV file without reading it first
-      utils::write.table(new.row, file = paste0(tmp_accepted_particles_filepath, "_", gen, ".csv"), sep = ",", append = TRUE, col.names = FALSE, row.names = FALSE)
-      # remove filelock::lock on resfile.csv.lck
-      filelock::unlock(lck)
-      # increment the number of accepted particle
-      nb_acc_prtcls <- nb_acc_prtcls + 1
-    }
-
-    # in any case, add the tested particle in a file
-    # build the new row
+    # Build the row only after all associated Parquet files are complete.
     particle_values <- proposed_particle[setdiff(names(proposed_particle), "job_id")]
     new.row <- c(list(gen = gen, attempt_id = attempt_id, job_id = job_id,
                       accepted = accepted, retained = FALSE, pWeight = pWeight),
@@ -120,6 +98,14 @@ subjob_smc <- function(job_id,
     utils::write.table(new.row, file = paste0(tmp_all_tested_particles_filepath, "_", gen, ".csv"), sep = ",", append = TRUE, col.names = FALSE, row.names = FALSE)
     # remove filelock::lock on resfile.csv.lck
     filelock::unlock(lck)
+
+    # Publishing in the accepted-particle journal is the final commit step.
+    if (accepted) {
+      lck <- filelock::lock(paste0(tmp_accepted_particles_filepath, "_", gen, ".csv.lck"))
+      utils::write.table(new.row, file = paste0(tmp_accepted_particles_filepath, "_", gen, ".csv"), sep = ",", append = TRUE, col.names = FALSE, row.names = FALSE)
+      filelock::unlock(lck)
+      nb_acc_prtcls <- nb_acc_prtcls + 1
+    }
 
   }
 }

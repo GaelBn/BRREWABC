@@ -440,7 +440,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     retained_ids <- character()
     if (current_iter_broke == TRUE) {
       persistStoredGeneration(tmp_object_store_root, storage_root, gen,
-                              retained_ids, store_summaries, store_outputs)
+                              tested_this_gen$attempt_id, retained_ids,
+                              store_summaries, store_outputs)
       break
     }
     #
@@ -450,7 +451,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     retained_ids <- current_acc_particles$attempt_id
     tested_this_gen$retained <- tested_this_gen$attempt_id %in% retained_ids
     persistStoredGeneration(tmp_object_store_root, storage_root, gen,
-                            retained_ids, store_summaries, store_outputs)
+                            tested_this_gen$attempt_id, retained_ids,
+                            store_summaries, store_outputs)
     # normalise the weights
     for (mm in model_names) {
       if (mm %in% unique(current_acc_particles$model)) {

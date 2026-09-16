@@ -85,8 +85,10 @@ stageStoredCollection <- function(collection, kind, policy, accepted, attempt_id
       accepted = rep(isTRUE(accepted), nrow(data)),
       stringsAsFactors = FALSE
     )
-    arrow::write_parquet(cbind(metadata, data),
-                         file.path(object_dir, paste0(attempt_id, ".parquet")))
+    writeParquetAtomically(
+      cbind(metadata, data),
+      file.path(object_dir, paste0(attempt_id, ".parquet"))
+    )
   }
   invisible(NULL)
 }
@@ -95,8 +97,19 @@ schemaSignature <- function(data) {
   paste(paste(names(data), vapply(data, function(x) paste(class(x), collapse = "/"), character(1)), sep = ":"), collapse = "|")
 }
 
+writeParquetAtomically <- function(data, path) {
+  temporary_path <- paste0(path, ".tmp-", Sys.getpid())
+  on.exit(unlink(temporary_path), add = TRUE)
+  arrow::write_parquet(data, temporary_path)
+  if (!file.rename(temporary_path, path)) {
+    stop(sprintf("Unable to finalize Parquet file `%s`.", path), call. = FALSE)
+  }
+  invisible(path)
+}
+
 persistStoredGeneration <- function(staging_root, storage_root, generation,
-                                    retained_ids, summaries_policy, outputs_policy) {
+                                    committed_ids, retained_ids,
+                                    summaries_policy, outputs_policy) {
   manifest_path <- file.path(storage_root, "manifest.parquet")
   previous_manifest <- if (file.exists(manifest_path)) as.data.frame(arrow::read_parquet(manifest_path)) else NULL
   new_manifest <- list()
@@ -111,6 +124,7 @@ persistStoredGeneration <- function(staging_root, storage_root, generation,
       if (!length(files)) next
       records <- lapply(files, function(path) as.data.frame(arrow::read_parquet(path)))
       records <- records[vapply(records, function(z) all(z$generation == generation), logical(1))]
+      records <- records[vapply(records, function(z) z$attempt_id[1] %in% committed_ids, logical(1))]
       if (!length(records)) next
       if (policy == "retained") records <- records[vapply(records, function(z) z$attempt_id[1] %in% retained_ids, logical(1))]
       if (!length(records)) next
@@ -133,7 +147,7 @@ persistStoredGeneration <- function(staging_root, storage_root, generation,
       destination_dir <- file.path(storage_root, kind, object_name)
       dir.create(destination_dir, recursive = TRUE, showWarnings = FALSE)
       destination <- file.path(storage_root, destination_relative)
-      arrow::write_parquet(combined, destination)
+      writeParquetAtomically(combined, destination)
       new_manifest[[length(new_manifest) + 1L]] <- data.frame(
         kind = kind, name = object_name, generation = as.integer(generation),
         file = destination_relative,
@@ -149,7 +163,7 @@ persistStoredGeneration <- function(staging_root, storage_root, generation,
       keys <- paste(additions$kind, additions$name, additions$generation)
       previous_manifest <- previous_manifest[!paste(previous_manifest$kind, previous_manifest$name, previous_manifest$generation) %in% keys, , drop = FALSE]
     }
-    arrow::write_parquet(dplyr::bind_rows(previous_manifest, additions), manifest_path)
+    writeParquetAtomically(dplyr::bind_rows(previous_manifest, additions), manifest_path)
   }
   invisible(additions)
 }

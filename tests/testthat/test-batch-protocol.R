@@ -77,3 +77,15 @@ test_that("completed progress bars ignore late parallel updates", {
   expect_true(progress_bar$finished)
   expect_false(BRREWABC:::updateProgressBar(progress_bar, 1.4, list()))
 })
+
+test_that("cluster result polling reports files visible before its deadline", {
+  existing <- tempfile("cluster-result-")
+  writeLines("ready", existing)
+  missing <- tempfile("cluster-result-missing-")
+
+  expect_identical(
+    BRREWABC:::waitForClusterResults(c(existing, missing), timeout = 0),
+    c(TRUE, FALSE)
+  )
+  expect_true(BRREWABC:::waitForClusterResults(existing, timeout = 0))
+})

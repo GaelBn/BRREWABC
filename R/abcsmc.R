@@ -214,7 +214,15 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
       if (verbose) {cat("Folder already exists.\n")}
     }
   }
-  unlink(tmp_object_store_root, recursive = TRUE)
+  ## Remove incomplete or stale artifacts left by an interrupted previous run.
+  ## Otherwise a new cluster wave could mistake an old result.rds for its own.
+  unlink(
+    c(
+      tmp_object_store_root, tmp_batch_root,
+      tmp_local_task_std_out, tmp_local_task_std_err
+    ),
+    recursive = TRUE
+  )
   dir.create(tmp_object_store_root, recursive = TRUE, showWarnings = FALSE)
 
   #

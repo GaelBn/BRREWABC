@@ -459,6 +459,15 @@ clusterJobIsActive <- function(cluster_type, job_id) {
   }
 }
 
+waitForClusterResults <- function(paths, timeout = 60, poll_interval = 0.5) {
+  deadline <- Sys.time() + timeout
+  repeat {
+    complete <- file.exists(paths)
+    if (all(complete) || Sys.time() >= deadline) return(complete)
+    Sys.sleep(poll_interval)
+  }
+}
+
 runClusterBatches <- function(kind, generation, state_path, batch_root,
                               target_accepted, max_attempts, batch_size,
                               max_concurrent_jobs, cluster_type,
@@ -579,15 +588,29 @@ runClusterBatches <- function(kind, generation, state_path, batch_root,
       job_seen_active <- job_seen_active || active
       inactive_checks <- if (active) 0L else inactive_checks + 1L
       if ((job_seen_active && !active) || inactive_checks >= 20L) {
-        Sys.sleep(0.5)
-        if (!all(file.exists(result_paths))) {
+        ## A scheduler can stop reporting the job before all files become
+        ## visible on a shared filesystem (NFS, Lustre, GPFS, ...). Allow a
+        ## grace period before treating absent control files as task failures.
+        complete <- waitForClusterResults(result_paths)
+        if (!all(complete)) {
           missing <- vapply(
-            specs[!file.exists(result_paths)],
+            specs[!complete],
             function(x) x$batch_id, integer(1)
           )
+          missing_tasks <- vapply(
+            specs[!complete],
+            function(x) x$job_id, integer(1)
+          )
+          error_logs <- file.path(
+            stderr_dir, sprintf("subjob.%d.err", missing_tasks)
+          )
           stop(sprintf(
-            "Cluster job %s ended without results for batch(es): %s.",
-            job_id, paste(missing, collapse = ", ")
+            paste0(
+              "Cluster job %s ended without results for batch(es): %s ",
+              "after a 60-second filesystem grace period. Inspect: %s"
+            ),
+            job_id, paste(missing, collapse = ", "),
+            paste(error_logs, collapse = ", ")
           ), call. = FALSE)
         }
       }

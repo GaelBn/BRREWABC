@@ -50,18 +50,6 @@ res <- abcrejection(model_list = model_list,
                     experiment_folderpath = "smplreject",
                     max_concurrent_jobs = 5,
                     verbose = TRUE)
-#> Check folder_path for : smplreject/tmp
-#> Folder created successfully.
-#> Check folder_path for : smplreject/res
-#> Folder created successfully.
-#> Check folder_path for : smplreject/res/csv
-#> Folder created successfully.
-#> Check folder_path for : smplreject/res/figs
-#> Folder created successfully.
-#> Check folder_path for : smplreject/res/parquet
-#> Folder created successfully.
-#> Computation time - user : 2.965 s | system : 2.204 s | elapsed : 58.592 s 
-#> Experiment done!
 ```
 
 ### Plot results
@@ -73,12 +61,10 @@ all_tested_particles <- res$all_tested_particles
 plot_abcrejection_res(all_accepted_particles, prior_dist,
                       filename="smplreject/res/figs/smplreject_pairplot.png",
                       colorpal = "YlGnBu")
-#> [1] "Plot saved as '.png'."
 plot_abcrejection_res(all_tested_particles, prior_dist,
                       thresholds=c(5.0, 4.0, 3.0, 2.0, 1.0, 0.1, 0.05, 0.01),
                       filename="smplreject/res/figs/smplreject_pairplot_custom_thresholds.png",
                       colorpal = "YlGnBu")
-#> [1] "Plot saved as '.png'."
 ```
 
 ![Pairplot of accepted particles for the predefined

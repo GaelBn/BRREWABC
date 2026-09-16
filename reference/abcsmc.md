@@ -31,6 +31,8 @@ abcsmc(
     "#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcsmc_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\n",
   max_concurrent_jobs = 1,
   batch_size = 50,
+  storage_chunk_rows = 1e+06,
+  storage_chunk_mb = 128,
   previous_gens = NA,
   previous_epsilons = NA,
   store_summaries = c("none", "retained", "accepted", "all"),
@@ -149,6 +151,16 @@ abcsmc(
   loading occur once per batch, so use a sufficiently large value for
   inexpensive simulations.
 
+- storage_chunk_rows:
+
+  maximum number of stored summary/output rows kept in a worker buffer
+  before an atomic Parquet fragment is written.
+
+- storage_chunk_mb:
+
+  approximate maximum buffer size, in MiB, before an atomic Parquet
+  fragment is written.
+
 - previous_gens:
 
   an object (dataframe) containing previous results (set of iterations),
@@ -185,6 +197,7 @@ descriptor for summary statistics and model outputs stored in Parquet.
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 library(BRREWABC)
 
 tmp_dir <- tempdir()
@@ -214,33 +227,8 @@ max_concurrent_jobs = 2, verbose = FALSE)
 all_accepted_particles = res$particles
 all_thresholds = res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "abcsmc_results.png"))
-#> [1] "Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot."
-#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1, colorpal = "YlOrBr", filename = file.path(tmp_dir, "thresholds.png"))
-#> [1] "Plot saved as 'png'."
 plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.path(tmp_dir, "ess.png"))
-#> [1] "Plot saved as 'png'."
-#>    gen      ess
-#> 1    1 2000.000
-#> 2    2 1879.078
-#> 3    3 1915.578
-#> 4    4 1918.050
-#> 5    5 1918.375
-#> 6    6 1927.751
-#> 7    7 1928.476
-#> 8    8 1930.910
-#> 9    9 1910.616
-#> 10  10 1901.102
-#> 11  11 1888.539
-#> 12  12 1880.582
-#> 13  13 1901.126
-#> 14  14 1838.801
-#> 15  15 1815.780
-#> 16  16 1841.886
-#> 17  17 1827.413
-#> 18  18 1795.683
-#> 19  19 1784.275
-#> 20  20 1744.551
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
-#> [1] "Plot saved as 'png'."
+}
 ```

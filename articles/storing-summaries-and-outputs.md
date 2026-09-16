@@ -43,13 +43,18 @@ result <- abcsmc(
   prior_dist = prior_dist,
   ss_obs = ss_obs,
   store_summaries = "all",
-  store_outputs = "retained"
+  store_outputs = "retained",
+  storage_chunk_rows = 1000000,
+  storage_chunk_mb = 128
 )
 ```
 
 Available policies are `"none"`, `"retained"`, `"accepted"`, and
 `"all"`. Data are stored below `res/parquet`, separately for each object
-and generation.
+and generation. Workers buffer records and publish bounded Parquet
+fragments atomically. The row and approximate memory limits are
+independent of `batch_size`, which only controls the number of
+simulations assigned to a worker process.
 
 The manifest lists the available datasets:
 
@@ -79,7 +84,7 @@ rejected_trajectory <- read_summary_statistics(
 selected_output <- read_model_outputs(
   result,
   name = "final_state",
-  attempt_id = c("g0005-j0001-a000000000003"),
+  attempt_id = c("g0005-b00000001-a0003"),
   status = "all"
 )
 ```
@@ -87,3 +92,44 @@ selected_output <- read_model_outputs(
 The returned tables include `attempt_id`, `generation`, `job_id`,
 `accepted`, and `retained`. The `stored_name` column identifies the
 requested summary or output when several objects are read together.
+
+## Consolidating fragments on demand
+
+The fragmented layout is intended for robust computation and selective
+reads. For transfer or archival,
+[`consolidate_abc_storage()`](https://gaelbn.github.io/BRREWABC/reference/consolidate_abc_storage.md)
+creates one Parquet file per named object and generation:
+
+``` r
+
+plan <- consolidate_abc_storage(
+  result,
+  kind = c("summaries", "outputs"),
+  generation = 1:5,
+  dry_run = TRUE
+)
+
+exported <- consolidate_abc_storage(
+  result,
+  generation = 1:5
+)
+```
+
+The default `mode = "export"` writes below `res/parquet/consolidated`
+and does not alter the active storage manifest. To make compacted files
+active:
+
+``` r
+
+consolidate_abc_storage(
+  result,
+  kind = "outputs",
+  mode = "replace",
+  keep_fragments = TRUE
+)
+```
+
+Replacement is transactional: each compacted file is finalized before
+the manifest is updated. Keeping source fragments provides an additional
+recovery path; set `keep_fragments = FALSE` only when disk space is more
+important.

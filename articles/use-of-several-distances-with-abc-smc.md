@@ -48,8 +48,6 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "svrldist",
               max_concurrent_jobs = 5,
               verbose = FALSE)
-#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.009842929 0.004205746
 ```
 
 ## Plot results
@@ -60,13 +58,10 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "svrldist/res/figs/svrldist_pairplot_all.png", colorpal = "YlGnBu")
-#> [1] "Plot saved as 'png'."
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "svrldist/res/figs/svrldist_densityridges.png", colorpal = "YlGnBu")
-#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 2, # the number of thresholds/distances used has to be indicated
                 filename = "svrldist/res/figs/svrldist_thresholds.png", colorpal = "YlGnBu")
-#> [1] "Plot saved as 'png'."
 ```
 
 ![Pairplot of all

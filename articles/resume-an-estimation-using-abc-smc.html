@@ -123,13 +123,10 @@
 <span><span class="va">all_thresholds</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">thresholds</span></span>
 <span><span class="fu"><a href="../reference/plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_pairplot_all.png"</span>, colorpal <span class="op">=</span> <span class="st">"Greys"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span>
 <span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                   filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_densityridges.png"</span>, colorpal <span class="op">=</span> <span class="st">"Greys"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span>
 <span><span class="fu"><a href="../reference/plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_thresholds.png"</span>, colorpal <span class="op">=</span> <span class="st">"Greys"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span></code></pre></div>
+<span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_thresholds.png"</span>, colorpal <span class="op">=</span> <span class="st">"Greys"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="../reference/figures/rsmsmpl_pairplot_all.png" class="r-plt" alt="Pairplot of all iterations" width="100%"><p class="caption">
 Pairplot of all iterations
@@ -169,9 +166,7 @@ may have caused the previous procedure to terminate (here
 <span>              max_concurrent_jobs <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>              previous_gens <span class="op">=</span> <span class="va">all_accepted_particles</span>,</span>
 <span>              previous_epsilons <span class="op">=</span> <span class="va">all_thresholds</span>,</span>
-<span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span></span>
-<span><span class="co">#&gt; [1] 0.00950524</span></span></code></pre></div>
+<span>              verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot-new-results">Plot new results<a class="anchor" aria-label="anchor" href="#plot-new-results"></a>
@@ -181,15 +176,11 @@ may have caused the previous procedure to terminate (here
 <span><span class="va">all_thresholds</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">thresholds</span></span>
 <span><span class="fu"><a href="../reference/plot_abcsmc_res.html">plot_abcsmc_res</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_pairplot_all_rsm.png"</span>, colorpal <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot."</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span>
 <span><span class="fu"><a href="../reference/plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>                   filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_densityridges_rsm.png"</span>,</span>
 <span>                   colorpal <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span>
 <span><span class="fu"><a href="../reference/plot_thresholds.html">plot_thresholds</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_thresholds</span>, nb_threshold <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_thresholds_rsm.png"</span>, colorpal <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plot saved as 'png'."</span></span></code></pre></div>
+<span>                filename <span class="op">=</span> <span class="st">"rsmsmpl/res/figs/rsmsmpl_thresholds_rsm.png"</span>, colorpal <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="../reference/figures/rsmsmpl_pairplot_all_rsm.png" class="r-plt" alt="Pairplot of all iterations" width="100%"><p class="caption">
 Pairplot of all iterations

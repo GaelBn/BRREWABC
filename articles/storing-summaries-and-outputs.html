@@ -109,11 +109,17 @@ across simulations. The number of rows may vary.</p>
 <span>  prior_dist <span class="op">=</span> <span class="va">prior_dist</span>,</span>
 <span>  ss_obs <span class="op">=</span> <span class="va">ss_obs</span>,</span>
 <span>  store_summaries <span class="op">=</span> <span class="st">"all"</span>,</span>
-<span>  store_outputs <span class="op">=</span> <span class="st">"retained"</span></span>
+<span>  store_outputs <span class="op">=</span> <span class="st">"retained"</span>,</span>
+<span>  storage_chunk_rows <span class="op">=</span> <span class="fl">1000000</span>,</span>
+<span>  storage_chunk_mb <span class="op">=</span> <span class="fl">128</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Available policies are <code>"none"</code>, <code>"retained"</code>,
 <code>"accepted"</code>, and <code>"all"</code>. Data are stored below
-<code>res/parquet</code>, separately for each object and generation.</p>
+<code>res/parquet</code>, separately for each object and generation.
+Workers buffer records and publish bounded Parquet fragments atomically.
+The row and approximate memory limits are independent of
+<code>batch_size</code>, which only controls the number of simulations
+assigned to a worker process.</p>
 <p>The manifest lists the available datasets:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_abc_stored_data.html">list_abc_stored_data</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></code></pre></div>
@@ -136,7 +142,7 @@ identifier, or ABC status:</p>
 <span><span class="va">selected_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_model_outputs.html">read_model_outputs</a></span><span class="op">(</span></span>
 <span>  <span class="va">result</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"final_state"</span>,</span>
-<span>  attempt_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g0005-j0001-a000000000003"</span><span class="op">)</span>,</span>
+<span>  attempt_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g0005-b00000001-a0003"</span><span class="op">)</span>,</span>
 <span>  status <span class="op">=</span> <span class="st">"all"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The returned tables include <code>attempt_id</code>,
@@ -144,6 +150,40 @@ identifier, or ABC status:</p>
 <code>retained</code>. The <code>stored_name</code> column identifies
 the requested summary or output when several objects are read
 together.</p>
+<div class="section level2">
+<h2 id="consolidating-fragments-on-demand">Consolidating fragments on demand<a class="anchor" aria-label="anchor" href="#consolidating-fragments-on-demand"></a>
+</h2>
+<p>The fragmented layout is intended for robust computation and
+selective reads. For transfer or archival,
+<code><a href="../reference/consolidate_abc_storage.html">consolidate_abc_storage()</a></code> creates one Parquet file per
+named object and generation:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consolidate_abc_storage.html">consolidate_abc_storage</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  kind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"summaries"</span>, <span class="st">"outputs"</span><span class="op">)</span>,</span>
+<span>  generation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  dry_run <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">exported</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consolidate_abc_storage.html">consolidate_abc_storage</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  generation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The default <code>mode = "export"</code> writes below
+<code>res/parquet/consolidated</code> and does not alter the active
+storage manifest. To make compacted files active:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/consolidate_abc_storage.html">consolidate_abc_storage</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  kind <span class="op">=</span> <span class="st">"outputs"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"replace"</span>,</span>
+<span>  keep_fragments <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Replacement is transactional: each compacted file is finalized before
+the manifest is updated. Keeping source fragments provides an additional
+recovery path; set <code>keep_fragments = FALSE</code> only when disk
+space is more important.</p>
+</div>
   </main>
 </div>
 

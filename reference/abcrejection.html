@@ -69,6 +69,8 @@
 <span>    <span class="st">"#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcrejection_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID &gt;$output_fpath/subjob.${SGE_TASK_ID}.out 2&gt;$error_fpath/subjob.${SGE_TASK_ID}.err\n"</span>,</span>
 <span>  max_concurrent_jobs <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  batch_size <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  storage_chunk_rows <span class="op">=</span> <span class="fl">1e+06</span>,</span>
+<span>  storage_chunk_mb <span class="op">=</span> <span class="fl">128</span>,</span>
 <span>  store_summaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"retained"</span>, <span class="st">"accepted"</span>, <span class="st">"all"</span><span class="op">)</span>,</span>
 <span>  store_outputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"retained"</span>, <span class="st">"accepted"</span>, <span class="st">"all"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -153,6 +155,16 @@ computation cluster</p></dd>
 worker before returning control to the coordinator. Process startup and
 package loading occur once per batch, so use a sufficiently large value for
 inexpensive simulations.</p></dd>
+
+
+<dt id="arg-storage-chunk-rows">storage_chunk_rows<a class="anchor" aria-label="anchor" href="#arg-storage-chunk-rows"></a></dt>
+<dd><p>maximum number of stored summary/output rows kept
+in a worker buffer before an atomic Parquet fragment is written.</p></dd>
+
+
+<dt id="arg-storage-chunk-mb">storage_chunk_mb<a class="anchor" aria-label="anchor" href="#arg-storage-chunk-mb"></a></dt>
+<dd><p>approximate maximum buffer size, in MiB, before an
+atomic Parquet fragment is written.</p></dd>
 
 
 <dt id="arg-store-summaries">store_summaries<a class="anchor" aria-label="anchor" href="#arg-store-summaries"></a></dt>

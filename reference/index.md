@@ -6,6 +6,8 @@
   : Run ABC rejection inference in parallel
 - [`abcsmc()`](https://gaelbn.github.io/BRREWABC/reference/abcsmc.md) :
   Run ABC-SMC inference in parallel
+- [`consolidate_abc_storage()`](https://gaelbn.github.io/BRREWABC/reference/consolidate_abc_storage.md)
+  : Consolidate stored ABC summaries and outputs
 - [`list_abc_stored_data()`](https://gaelbn.github.io/BRREWABC/reference/list_abc_stored_data.md)
   : List summary statistics and outputs stored for an ABC result
 - [`plot_abcrejection_res()`](https://gaelbn.github.io/BRREWABC/reference/plot_abcrejection_res.md)

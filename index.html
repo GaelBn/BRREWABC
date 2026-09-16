@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Batched Resilient and Rapid Estimation Workflow through Approximate Bayesian Computation">
-<meta name="description" content="An R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm and ABC rejection. Parallel simulations are dispatched in bounded batches to isolated workers. A central coordinator owns the global execution state, collects atomically finalized private results, and selects retained particles without concurrent writes to shared result files.">
-<meta property="og:description" content="An R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm and ABC rejection. Parallel simulations are dispatched in bounded batches to isolated workers. A central coordinator owns the global execution state, collects atomically finalized private results, and selects retained particles without concurrent writes to shared result files.">
+<meta name="description" content="An R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm and ABC rejection. Parallel simulations are dispatched in bounded batches to isolated workers. A central coordinator owns the global execution state, collects atomically finalized private results, and selects retained particles without concurrent writes to shared result files. Optional summary statistics and model outputs are stored as bounded Parquet fragments that can be selectively read or consolidated on demand.">
+<meta property="og:description" content="An R package designed to facilitate inference through a parallelized Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm and ABC rejection. Parallel simulations are dispatched in bounded batches to isolated workers. A central coordinator owns the global execution state, collects atomically finalized private results, and selects retained particles without concurrent writes to shared result files. Optional summary statistics and model outputs are stored as bounded Parquet fragments that can be selectively read or consolidated on demand.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -155,10 +155,10 @@
 <span>  store_summaries <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  store_outputs <span class="op">=</span> <span class="st">"retained"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The available policies are <code>"none"</code>, <code>"retained"</code>, <code>"accepted"</code>, and <code>"all"</code>. Stored objects are written to Parquet files under <code>res/parquet</code> and are loaded only when requested:</p>
+<p>The available policies are <code>"none"</code>, <code>"retained"</code>, <code>"accepted"</code>, and <code>"all"</code>. Stored objects are buffered by each worker and written as bounded, atomic Parquet fragments under <code>res/parquet</code>. Buffer limits are independent of the simulation batch size and can be adjusted with <code>storage_chunk_rows</code> and <code>storage_chunk_mb</code>.</p>
 <blockquote>
 <p><strong>Storage and performance warning</strong></p>
-<p>Using <code>store_summaries = "all"</code> or <code>store_outputs = "all"</code> stores data for every tested particle, including rejected particles. This can generate many temporary Parquet fragments and require substantial disk space, memory, and consolidation time, especially when model outputs contain long trajectories or when the acceptance rate is low.</p>
+<p>Using <code>store_summaries = "all"</code> or <code>store_outputs = "all"</code> stores data for every tested particle, including rejected particles. This can require substantial disk space, especially when model outputs contain long trajectories or when the acceptance rate is low.</p>
 <p>For large analyses, prefer <code>"retained"</code> or <code>"accepted"</code> unless rejected simulations are required for diagnostics. Ensure that sufficient local storage is available. Writing many fragments to synchronized or network storage may substantially reduce performance.</p>
 </blockquote>
 <p>Parallel simulations are executed in bounded batches. Each local batch starts an isolated R process, so package loading and process startup are paid once per batch. When individual simulations are inexpensive, use a sufficiently large <code>batch_size</code> (for example 100 or more) to amortize this overhead. Smaller batches provide more responsive scheduling for expensive or highly variable simulations.</p>
@@ -183,13 +183,21 @@
 <span>  name <span class="op">=</span> <span class="st">"final_state"</span>,</span>
 <span>  status <span class="op">=</span> <span class="st">"retained"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>For transfer or archival, fragments can be consolidated on demand into one Parquet file per named object and generation. The default export mode leaves the operational fragmented storage unchanged:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/consolidate_abc_storage.html">consolidate_abc_storage</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  kind <span class="op">=</span> <span class="st">"summaries"</span>,</span>
+<span>  generation <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Use <code>dry_run = TRUE</code> to inspect the planned files and volume. With <code>mode = "replace"</code>, the consolidated files atomically replace the fragments in the active manifest; source fragments are retained unless <code>keep_fragments = FALSE</code> is requested.</p>
 <p>The stored tables include <code>attempt_id</code>, <code>generation</code>, <code>job_id</code>, <code>accepted</code>, and <code>retained</code>, allowing each trajectory to be linked to the corresponding ABC attempt. See the <code>storing-summaries-and-outputs</code> vignette for further details.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Access package documentation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/help.html" class="external-link">help</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"BRREWABC"</span><span class="op">)</span></span></code></pre></div>
 </div>

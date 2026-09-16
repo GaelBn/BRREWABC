@@ -8,6 +8,17 @@
   isolated `callr` processes.
 - Added `batch_size` to control how many simulations each worker
   performs before returning to the coordinator.
+- Summary statistics and model outputs are now buffered and written as
+  bounded, atomic Parquet fragments per batch instead of one temporary
+  file per particle. Fragment metadata is committed with the batch
+  result, and generation finalization uses bounded memory without
+  rescanning previous generations.
+- Added `storage_chunk_rows` and `storage_chunk_mb` to bound worker
+  storage buffers independently of the simulation batch size.
+- Added
+  [`consolidate_abc_storage()`](https://gaelbn.github.io/BRREWABC/reference/consolidate_abc_storage.md)
+  to export or transactionally replace active fragments with one Parquet
+  file per named object and generation.
 - Added optional storage of model summary statistics and detailed
   outputs for ABC rejection and ABC-SMC analyses.
 - Model functions can now return a structured list containing
@@ -19,8 +30,7 @@
 - Added stable attempt identifiers and acceptance/retention metadata to
   link stored tables to tested particles.
 - Parquet fragments are finalized atomically so stopping parallel
-  workers cannot expose partially written files during generation
-  consolidation.
+  workers cannot expose partially written files.
 - A tested particle is now committed before it is published as accepted,
   and Parquet consolidation ignores orphan fragments not present in the
   committed attempt journal.

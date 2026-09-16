@@ -77,14 +77,10 @@ all_accepted_particles <- res$particles
 all_thresholds <- res$thresholds
 plot_abcsmc_res(data = all_accepted_particles, prior = prior_dist,
                 filename = "mdlslctn/res/figs/mdlslctn_pairplot_all.png", colorpal = "YlGnBu")
-#> [1] "Number of generations exceed the threshold (15) allowed by ggpairs, it may cause long processing times. You may (re)define the iter argument to choose which generations to plot."
-#> [1] "Plot saved as 'png'."
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "mdlslctn/res/figs/mdlslctn_densityridges.png", colorpal = "YlGnBu")
-#> [1] "Plot saved as 'png'."
 plot_thresholds(data = all_thresholds, nb_threshold = 1,
                 filename = "mdlslctn/res/figs/mdlslctn_thresholds.png", colorpal = "YlGnBu")
-#> [1] "Plot saved as 'png'."
 ```
 
 ![Selected models over

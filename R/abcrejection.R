@@ -27,6 +27,10 @@
 #' @param slurm_script_template script used to launch jobs on a slurm cluster
 #' @param sge_script_template script used to launch jobs on a sge cluster
 #' @param max_concurrent_jobs maximum number of jobs/tasks run in parallel
+#' @param batch_size number of simulations performed by a local or cluster
+#' worker before returning control to the coordinator. Process startup and
+#' package loading occur once per batch, so use a sufficiently large value for
+#' inexpensive simulations.
 #' @param store_summaries which summary statistics to store in Parquet files:
 #' `"none"`, `"retained"`, `"accepted"`, or `"all"`
 #' @param store_outputs which model outputs to store in Parquet files, using the
@@ -89,6 +93,7 @@ mkdir -p $error_fpath
 Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err
 ', # TODO : queue selection via a function argument
                          max_concurrent_jobs = 1,
+                         batch_size = 50,
                          store_summaries = c("none", "retained", "accepted", "all"),
                          store_outputs = c("none", "retained", "accepted", "all"),
                          verbose = FALSE,
@@ -108,17 +113,13 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   tmp_local_task_std_err <- file.path(tmp_folder_path, "std_err")
   tmp_current_abc_state <- file.path(tmp_folder_path, "currentABCState.RData")
   tmp_object_store_root <- file.path(tmp_folder_path, "stored_objects")
+  tmp_batch_root <- file.path(tmp_folder_path, "batches")
 
   results_folder_path_CSV <- file.path(results_folder_path, "csv")
   results_folder_path_FIGS <- file.path(results_folder_path, "figs")
   storage_root <- file.path(results_folder_path, "parquet")
   accepted_particles_filepath <- file.path(results_folder_path_CSV, "all_accepted_particles.csv")
   all_tested_particles_filepath <- file.path(results_folder_path_CSV, "all_particles.csv")
-
-  subjob_script_name <- "brrewabc_subjob.R"
-  subjob_script_path <- file.path(tmp_folder_path, subjob_script_name)
-
-  abc_rejection_array_job_script_path <- file.path(tmp_folder_path, "abc_rejection_array_job.sh")
 
   #
 
@@ -139,12 +140,6 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   unlink(tmp_object_store_root, recursive = TRUE)
   dir.create(tmp_object_store_root, recursive = TRUE, showWarnings = FALSE)
 
-  #
-
-  subjob_script_content <- "library(BRREWABC)\nargs <- commandArgs(trailingOnly = TRUE)\nid <- as.integer(args[1])\nsubjob_rejection(job_id = id, path_to_abc_state = '%s')\n"
-  subjob_script <- sprintf(subjob_script_content, tmp_current_abc_state)
-  writeLines(subjob_script, subjob_script_path)
-
   nb_threshold <- length(thresholds)
   dist_names <- paste0("dist", as.character(seq(1, nb_threshold, 1)))
   model_names <- names(model_list)
@@ -163,122 +158,68 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   utils::write.csv(acc_particles, accepted_particles_filepath, row.names=FALSE, quote=FALSE)
   utils::write.csv(all_tested_particles, all_tested_particles_filepath, row.names=FALSE, quote=FALSE)
 
-  #
-  nb_accepted <- 0
-  totattempts <- 0
-
   # print(ls()) # DEBUG
   unlink(file.path(storage_root, "manifest.parquet"))
   var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "max_concurrent_jobs", "accepted_particles_filepath", "all_tested_particles_filepath", "tmp_object_store_root", "store_summaries", "store_outputs", "dist_names", "model_names", "param_names", "column_names", "tot_nb_acc_prtcl", "thresholds")
     # saveEnvir(var_to_save, tmp_current_abc_state) # TODO : not working, need to fix this
   do.call("save", c(var_to_save, list(file = tmp_current_abc_state)))
 
-  #
-  cluster_job_id <- NA
-  local_processes <- c()
-  if (on_cluster) {
-    # submit a job array with as many job as tot_nb_acc_prtcl (for gen == 1, need at one job per each particle)
-    cluster_script <- ""
-    # Replace placeholders in the template with actual parameter values
-    nbjobs <- max_concurrent_jobs
-    if (cluster_type == "slurm") {
-      cluster_script <- sprintf(slurm_script_template, 1, nbjobs, max_concurrent_jobs, tmp_local_task_std_out, tmp_local_task_std_err, subjob_script_path)
-    } else if (cluster_type == "sge") {
-      cluster_script <- sprintf(sge_script_template, 1, nbjobs, max_concurrent_jobs, tmp_local_task_std_out, tmp_local_task_std_err, subjob_script_path)
-    } else {
-      stop("Cluster type not supported in the current version")
-    }
-    # Write the modified cluster job script to a file
-    writeLines(cluster_script, abc_rejection_array_job_script_path)
-    # Submit the array job and capture the job ID
-    if (cluster_type == "slurm") {
-      cluster_job_id <- system(paste0('sbatch ', abc_rejection_array_job_script_path, ' | awk \'{print $4}\''), intern = TRUE)
-      print(paste("Submitted Slurm array job with ID:", cluster_job_id))
-    } else if (cluster_type == "sge") {
-      cluster_job_id <- system(paste0('qsub ', abc_rejection_array_job_script_path, ' | awk -F "." \'{print $1}\' | awk \'{print $3}\''), intern = TRUE)
-      print(paste("Submitted SGE array job with ID:", cluster_job_id))
-    } else {
-      stop("Cluster type not supported in the current version")
-    }
-  } else {
-    # Parallel task on local machine
-    for (task_index in 1:max_concurrent_jobs) {
-      # Launch external script
-      local_process <- callr::r_bg(
-        func = function() {
-          library(BRREWABC)
-          subjob_rejection(job_id = task_index, path_to_abc_state = tmp_current_abc_state)
-        },
-        stdout = paste0(tmp_local_task_std_out,"abc_rejection_task_",task_index,".out"),
-        stderr = paste0(tmp_local_task_std_err,"abc_rejection_task_",task_index,".err"),
-        package = TRUE
-      )
-      local_processes <- c(local_processes, local_process)
-    }
-  }
-  #
-  # Create a progress bar
-  if (progressbar && !on_cluster) {
+  pb <- NULL
+  if (progressbar) {
     pb <- progress::progress_bar$new(
       format = "[:bar] :percent (ar: :accrate | :nbattempt) | eta: :eta (:elapsed)",
       clear = FALSE,
       total = tot_nb_acc_prtcl
     )
   }
-  #
-  elapsed <- system.time({
-    while (nb_accepted < tot_nb_acc_prtcl) { # repeat until N particles accepted
-      accepted_particles <- utils::read.csv(accepted_particles_filepath)
-      all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
-      nb_accepted <- nrow(accepted_particles)
-      totattempts <- nrow(all_tested_particles)
-      current_acc_rate <- nb_accepted/totattempts
-      # Increment the progress bar
-      if (progressbar && !on_cluster) {
-        pb$update(
-          min(nb_accepted/tot_nb_acc_prtcl, 1.00),
-          tokens = list(
-            accrate = format(round(current_acc_rate,digits=3),nsmall=3),
-            nbattempt = totattempts
-          )
+  update_progress <- function(attempted, accepted) {
+    if (!is.null(pb)) {
+      rate <- if (attempted) accepted / attempted else 0
+      pb$update(
+        min(accepted / tot_nb_acc_prtcl, 1),
+        tokens = list(
+          accrate = format(round(rate, 3), nsmall = 3),
+          nbattempt = attempted
         )
-      }
-      if (totattempts > max_attempts) {
-        message('\n', "The maximum number of attempts to accept the N particles has been reached!", '\n')
-        break
-      }
-      if (all(!is.na(thresholds))) {
-        if ((totattempts >= (1/acceptance_rate_min)) && (current_acc_rate < acceptance_rate_min)) {
-          message('\n', "The acceptance rate has become too low (< specified acceptance_rate_min), the algorithm stops!")
-          break
-        }
-      }
-    }
-  })
-  # cancel subjob
-  if (on_cluster) {
-    # Cancel the array job
-    if (cluster_type == "slurm") {
-      cancel_command <- paste("scancel", cluster_job_id)
-      system(cancel_command, intern = TRUE)
-    } else if (cluster_type == "sge") {
-      cancel_command <- paste("qdel", cluster_job_id)
-      system(cancel_command, intern = TRUE)
-    } else {
-      stop("Cluster type not supported in the current version")
-    }
-  } else {
-    # kill local process if needed
-    for (local_process in local_processes) {
-      if (local_process$is_alive()) {
-        local_process$kill()
-      }
+      )
     }
   }
-  # Close the progress bar
-  # pb$terminate()
-  # cat('\n')
-  #
+  target_accepted <- if (all(is.na(thresholds))) NULL else tot_nb_acc_prtcl
+  acceptance_limit <- if (all(is.na(thresholds))) NULL else acceptance_rate_min
+  elapsed <- system.time({
+    batch_result <- if (on_cluster) {
+      runClusterBatches(
+        "rejection", 0L, tmp_current_abc_state, tmp_batch_root,
+        target_accepted, max_attempts, batch_size, max_concurrent_jobs,
+        cluster_type, slurm_script_template, sge_script_template,
+        tmp_local_task_std_out, tmp_local_task_std_err,
+        acceptance_limit, progress = update_progress
+      )
+    } else {
+      runLocalBatches(
+        "rejection", 0L, tmp_current_abc_state, tmp_batch_root,
+        target_accepted, max_attempts, batch_size, max_concurrent_jobs,
+        acceptance_limit, progress = update_progress
+      )
+    }
+  })
+  all_tested_particles <- batch_result$particles
+  accepted_indices <- which(all_tested_particles$accepted)
+  if (!is.null(target_accepted)) {
+    accepted_indices <- utils::head(accepted_indices, target_accepted)
+  }
+  all_tested_particles$retained <- FALSE
+  all_tested_particles$retained[accepted_indices] <- TRUE
+  acc_particles <- all_tested_particles[accepted_indices, , drop = FALSE]
+  internal_columns <- c("batch_id", "attempt_index")
+  all_tested_particles <- all_tested_particles[
+    setdiff(names(all_tested_particles), internal_columns)
+  ]
+  acc_particles <- acc_particles[setdiff(names(acc_particles), internal_columns)]
+  utils::write.csv(acc_particles, accepted_particles_filepath,
+                   row.names = FALSE, quote = FALSE)
+  utils::write.csv(all_tested_particles, all_tested_particles_filepath,
+                   row.names = FALSE, quote = FALSE)
   if (verbose) {
     cat(sprintf(
       "Computation time - user : %.3f s | system : %.3f s | elapsed : %.3f s \n",
@@ -289,27 +230,16 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   }
 
   #
-  acc_particles <- utils::read.csv(accepted_particles_filepath)
-  all_tested_particles <- utils::read.csv(all_tested_particles_filepath)
   retained_ids <- acc_particles$attempt_id
   persistStoredGeneration(tmp_object_store_root, storage_root, 0L,
                           all_tested_particles$attempt_id, retained_ids,
                           store_summaries, store_outputs)
 
-  # acc_particles <- acc_particles[1:min(nrow(acc_particles), tot_nb_acc_prtcl),] # keep only the number of particle needed # TODO : improve comment
-  # utils::write.csv(acc_particles, accepted_particles_filepath, row.names=FALSE, quote=FALSE)
-
   if (verbose) {
     cat("Experiment done!", "\n")
   }
   # cleaning
-  if (on_cluster) {
-    unlink(subjob_script_path)
-    unlink(abc_rejection_array_job_script_path)
-  }
   unlink(tmp_folder_path, recursive = TRUE)
-  unlink(paste0(all_tested_particles_filepath, ".lck"))
-  unlink(paste0(accepted_particles_filepath, ".lck"))
   #
   storage <- list(
     path = normalizePath(storage_root, winslash = "/", mustWork = FALSE),

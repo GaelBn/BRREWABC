@@ -8,9 +8,11 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0002-2627", Website = "https://gaelbn.com"))
   )
 Description: An R package designed to facilitate inference through a parallelized
-    Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm.
-    This package streamlines the process of conducting Bayesian inference for
-    complex models by implementing efficient parallelization techniques.
+    Approximate Bayesian Computation Sequential Monte Carlo (ABC SMC) algorithm
+    and ABC rejection. Parallel simulations are dispatched in bounded batches
+    to isolated workers. A central coordinator owns the global execution state,
+    collects atomically finalized private results, and selects retained
+    particles without concurrent writes to shared result files.
 License: GPL (>= 3)
 URL: https://github.com/GaelBn/BRREWABC, https://gaelbn.github.io/BRREWABC/
 Encoding: UTF-8
@@ -20,7 +22,6 @@ Imports:
     callr,
     dplyr,
     tidyr,
-    filelock,
     GGally,
     ggplot2,
     ggridges,
@@ -34,14 +35,14 @@ Imports:
 RoxygenNote: 7.3.2
 Collate:
     'saveEnvir.R'
-    'computeWeight.R'
-    'createParticle.R'
     'subjob.R'
     'abcrejection.R'
     'setEmpiricalSD.R'
     'defineNextThreshold.R'
     'createLHSfromPrior.R'
     'abcsmc.R'
+    'computeWeight.R'
+    'createParticle.R'
     'plots.R'
     'storedData.R'
 BugReports: https://github.com/GaelBn/BRREWABC/issues

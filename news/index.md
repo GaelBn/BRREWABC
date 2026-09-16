@@ -2,6 +2,12 @@
 
 ## BRREWABC 1.3.0
 
+- Replaced concurrent appends to shared CSV files and their file locks
+  with a coordinator-owned, batched execution protocol. Workers now
+  write private batch results atomically and local batches run in
+  isolated `callr` processes.
+- Added `batch_size` to control how many simulations each worker
+  performs before returning to the coordinator.
 - Added optional storage of model summary statistics and detailed
   outputs for ABC rejection and ABC-SMC analyses.
 - Model functions can now return a structured list containing

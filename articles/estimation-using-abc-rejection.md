@@ -60,7 +60,7 @@ res <- abcrejection(model_list = model_list,
 #> Folder created successfully.
 #> Check folder_path for : smplreject/res/parquet
 #> Folder created successfully.
-#> Computation time - user : 6.964 s | system : 0.216 s | elapsed : 7.386 s 
+#> Computation time - user : 2.965 s | system : 2.204 s | elapsed : 58.592 s 
 #> Experiment done!
 ```
 

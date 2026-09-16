@@ -25,10 +25,6 @@
 - [`read_summary_statistics()`](https://gaelbn.github.io/BRREWABC/reference/read_summary_statistics.md)
   : Read summary statistics stored in Parquet files
 - [`subjob_rejection()`](https://gaelbn.github.io/BRREWABC/reference/subjob_rejection.md)
-  : Run a subtask of the ABC rejection Shouldn't have to be used by the
-  user, this function is visible so that it can be used on cluster by
-  the main script
+  : Run a batch task of ABC rejection
 - [`subjob_smc()`](https://gaelbn.github.io/BRREWABC/reference/subjob_smc.md)
-  : Run a subtask of the ABC-SMC. Shouldn't have to be used by the user,
-  this function is visible so that it can be used on cluster by the main
-  script
+  : Run a batch task of ABC-SMC

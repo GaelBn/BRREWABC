@@ -67,10 +67,6 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "mdlslctn",
               max_concurrent_jobs = 5,
               verbose = FALSE)
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
 ```
 
 ## Plot results

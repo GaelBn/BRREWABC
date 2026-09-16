@@ -30,6 +30,7 @@ abcsmc(
   sge_script_template =
     "#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcsmc_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\n",
   max_concurrent_jobs = 1,
+  batch_size = 50,
   previous_gens = NA,
   previous_epsilons = NA,
   store_summaries = c("none", "retained", "accepted", "all"),
@@ -141,6 +142,13 @@ abcsmc(
 
   maximum number of jobs/tasks run in parallel
 
+- batch_size:
+
+  number of simulations performed by a local or cluster worker before
+  returning control to the coordinator. Process startup and package
+  loading occur once per batch, so use a sufficiently large value for
+  inexpensive simulations.
+
 - previous_gens:
 
   an object (dataframe) containing previous results (set of iterations),
@@ -201,10 +209,6 @@ res = abcsmc(model_list = MODEL_LIST, prior_dist = PRIOR_DIST,
 ss_obs = sum_stat_obs, max_number_of_gen = 20, nb_acc_prtcl_per_gen = 2000,
 new_threshold_quantile = 0.8, experiment_folderpath = tmp_dir,
 max_concurrent_jobs = 2, verbose = FALSE)
-#> Warning: EOF within quoted string
-#> Warning: EOF within quoted string
-#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.009531054
 
 # get results and plots
 all_accepted_particles = res$particles
@@ -218,25 +222,25 @@ plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.pat
 #> [1] "Plot saved as 'png'."
 #>    gen      ess
 #> 1    1 2000.000
-#> 2    2 1883.590
-#> 3    3 1906.700
-#> 4    4 1913.984
-#> 5    5 1929.245
-#> 6    6 1941.606
-#> 7    7 1926.280
-#> 8    8 1911.555
-#> 9    9 1927.955
-#> 10  10 1892.943
-#> 11  11 1896.012
-#> 12  12 1885.316
-#> 13  13 1896.608
-#> 14  14 1851.553
-#> 15  15 1878.589
-#> 16  16 1822.786
-#> 17  17 1806.386
-#> 18  18 1816.339
-#> 19  19 1651.616
-#> 20  20 1731.782
+#> 2    2 1879.078
+#> 3    3 1915.578
+#> 4    4 1918.050
+#> 5    5 1918.375
+#> 6    6 1927.751
+#> 7    7 1928.476
+#> 8    8 1930.910
+#> 9    9 1910.616
+#> 10  10 1901.102
+#> 11  11 1888.539
+#> 12  12 1880.582
+#> 13  13 1901.126
+#> 14  14 1838.801
+#> 15  15 1815.780
+#> 16  16 1841.886
+#> 17  17 1827.413
+#> 18  18 1795.683
+#> 19  19 1784.275
+#> 20  20 1744.551
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
 #> [1] "Plot saved as 'png'."
 ```

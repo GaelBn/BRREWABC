@@ -49,10 +49,6 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "smpl",
               max_concurrent_jobs = 5,
               verbose = FALSE)
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
 ```
 
 ### Plot results
@@ -71,20 +67,20 @@ plot_ess(data = all_accepted_particles,filename = "smpl/res/figs/smpl_ess.png", 
 #> [1] "Plot saved as 'png'."
 #>    gen      ess
 #> 1    1 2000.000
-#> 2    2 1885.294
-#> 3    3 1897.921
-#> 4    4 1924.354
-#> 5    5 1913.621
-#> 6    6 1926.283
-#> 7    7 1930.578
-#> 8    8 1924.336
-#> 9    9 1915.895
-#> 10  10 1907.674
-#> 11  11 1894.759
-#> 12  12 1897.465
-#> 13  13 1880.546
-#> 14  14 1869.768
-#> 15  15 1843.684
+#> 2    2 1879.078
+#> 3    3 1917.254
+#> 4    4 1919.435
+#> 5    5 1917.378
+#> 6    6 1931.276
+#> 7    7 1927.461
+#> 8    8 1927.208
+#> 9    9 1902.200
+#> 10  10 1902.753
+#> 11  11 1896.466
+#> 12  12 1888.519
+#> 13  13 1877.873
+#> 14  14 1851.406
+#> 15  15 1833.800
 plot_densityridges(data = all_accepted_particles, prior = prior_dist,
                    filename = "smpl/res/figs/smpl_densityridges.png", colorpal = "YlGnBu")
 #> [1] "Plot saved as 'png'."

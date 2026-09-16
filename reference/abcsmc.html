@@ -76,6 +76,7 @@
 <span>  sge_script_template <span class="op">=</span></span>
 <span>    <span class="st">"#!/bin/bash\n#$ -S /bin/bash\n#$ -N subjob_abcsmc_prlll\n# #$ -q \"short.q|long.q\"\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\n#$ -cwd\n#$ -V\n#$ -t %s-%s\n#$ -tc %d\n#$ -o /dev/null\n#$ -e /dev/null\noutput_fpath=%s\nerror_fpath=%s\nmkdir -p $output_fpath\nmkdir -p $error_fpath\nRscript %s $SGE_TASK_ID &gt;$output_fpath/subjob.${SGE_TASK_ID}.out 2&gt;$error_fpath/subjob.${SGE_TASK_ID}.err\n"</span>,</span>
 <span>  max_concurrent_jobs <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  batch_size <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  previous_gens <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  previous_epsilons <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  store_summaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"retained"</span>, <span class="st">"accepted"</span>, <span class="st">"all"</span><span class="op">)</span>,</span>
@@ -196,6 +197,13 @@ computation cluster</p></dd>
 <dd><p>maximum number of jobs/tasks run in parallel</p></dd>
 
 
+<dt id="arg-batch-size">batch_size<a class="anchor" aria-label="anchor" href="#arg-batch-size"></a></dt>
+<dd><p>number of simulations performed by a local or cluster
+worker before returning control to the coordinator. Process startup and
+package loading occur once per batch, so use a sufficiently large value for
+inexpensive simulations.</p></dd>
+
+
 <dt id="arg-previous-gens">previous_gens<a class="anchor" aria-label="anchor" href="#arg-previous-gens"></a></dt>
 <dd><p>an object (dataframe) containing previous results (set
 of iterations), in order to start from the last iteration performed</p></dd>
@@ -256,10 +264,6 @@ descriptor for summary statistics and model outputs stored in Parquet.</p>
 <span class="r-in"><span>ss_obs <span class="op">=</span> <span class="va">sum_stat_obs</span>, max_number_of_gen <span class="op">=</span> <span class="fl">20</span>, nb_acc_prtcl_per_gen <span class="op">=</span> <span class="fl">2000</span>,</span></span>
 <span class="r-in"><span>new_threshold_quantile <span class="op">=</span> <span class="fl">0.8</span>, experiment_folderpath <span class="op">=</span> <span class="va">tmp_dir</span>,</span></span>
 <span class="r-in"><span>max_concurrent_jobs <span class="op">=</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EOF within quoted string</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EOF within quoted string</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009531054</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get results and plots</span></span></span>
 <span class="r-in"><span><span class="va">all_accepted_particles</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">particles</span></span></span>
@@ -273,25 +277,25 @@ descriptor for summary statistics and model outputs stored in Parquet.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as 'png'."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    gen      ess</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    2 1883.590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    3 1906.700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    4 1913.984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    5 1929.245</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    6 1941.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    7 1926.280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    8 1911.555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    9 1927.955</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  10 1892.943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  11 1896.012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  12 1885.316</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  13 1896.608</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14  14 1851.553</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  15 1878.589</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  16 1822.786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17  17 1806.386</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18  18 1816.339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  19 1651.616</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  20 1731.782</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    2 1879.078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    3 1915.578</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    4 1918.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    5 1918.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    6 1927.751</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    7 1928.476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    8 1930.910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    9 1910.616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  10 1901.102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  11 1888.539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  12 1880.582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  13 1901.126</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  14 1838.801</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  15 1815.780</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  16 1841.886</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  17 1827.413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  18 1795.683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  19 1784.275</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  20 1744.551</span>
 <span class="r-in"><span><span class="fu"><a href="plot_densityridges.html">plot_densityridges</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">all_accepted_particles</span>, prior <span class="op">=</span> <span class="va">PRIOR_DIST</span>, colorpal <span class="op">=</span> <span class="st">"YlOrBr"</span>, filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp_dir</span>, <span class="st">"densityridges.png"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Plot saved as 'png'."</span>
 </code></pre></div>

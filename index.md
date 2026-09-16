@@ -140,6 +140,13 @@ and are loaded only when requested:
 > sufficient local storage is available. Writing many fragments to
 > synchronized or network storage may substantially reduce performance.
 
+Parallel simulations are executed in bounded batches. Each local batch
+starts an isolated R process, so package loading and process startup are
+paid once per batch. When individual simulations are inexpensive, use a
+sufficiently large `batch_size` (for example 100 or more) to amortize
+this overhead. Smaller batches provide more responsive scheduling for
+expensive or highly variable simulations.
+
 ``` r
 
 list_abc_stored_data(result)

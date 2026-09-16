@@ -46,7 +46,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="brrewabc-130">BRREWABC 1.3.0<a class="anchor" aria-label="anchor" href="#brrewabc-130"></a></h2>
-<ul><li>Added optional storage of model summary statistics and detailed outputs for ABC rejection and ABC-SMC analyses.</li>
+<ul><li>Replaced concurrent appends to shared CSV files and their file locks with a coordinator-owned, batched execution protocol. Workers now write private batch results atomically and local batches run in isolated <code>callr</code> processes.</li>
+<li>Added <code>batch_size</code> to control how many simulations each worker performs before returning to the coordinator.</li>
+<li>Added optional storage of model summary statistics and detailed outputs for ABC rejection and ABC-SMC analyses.</li>
 <li>Model functions can now return a structured list containing <code>distances</code>, <code>summaries</code>, and <code>outputs</code>; the historical numeric distance vector remains supported.</li>
 <li>Added Parquet storage for vectors, matrices, and data frames, with independent <code>none</code>, <code>retained</code>, <code>accepted</code>, and <code>all</code> retention policies for summaries and outputs.</li>
 <li>Added stable attempt identifiers and acceptance/retention metadata to link stored tables to tested particles.</li>

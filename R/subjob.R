@@ -28,6 +28,17 @@ validatePositiveInteger <- function(value, name) {
   as.integer(value)
 }
 
+updateProgressBar <- function(progress_bar, ratio, tokens = list()) {
+  if (is.null(progress_bar) || isTRUE(progress_bar$finished)) {
+    return(invisible(FALSE))
+  }
+  progress_bar$update(
+    max(0, min(ratio, 1)),
+    tokens = tokens
+  )
+  invisible(TRUE)
+}
+
 newBatchSpec <- function(batch_id, generation, job_id, n_attempts,
                          lhs_indices = NULL, seed = NULL) {
   if (is.null(seed)) seed <- sample.int(.Machine$integer.max, 1L)

@@ -66,3 +66,14 @@ test_that("batch size must be a positive integer", {
     BRREWABC:::validatePositiveInteger(0, "workers"), "workers.*positive"
   )
 })
+test_that("completed progress bars ignore late parallel updates", {
+  progress_bar <- progress::progress_bar$new(
+    total = 10,
+    clear = FALSE,
+    show_after = 3600
+  )
+
+  expect_true(BRREWABC:::updateProgressBar(progress_bar, 1, list()))
+  expect_true(progress_bar$finished)
+  expect_false(BRREWABC:::updateProgressBar(progress_bar, 1.4, list()))
+})

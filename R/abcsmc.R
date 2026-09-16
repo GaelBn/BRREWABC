@@ -317,8 +317,9 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     update_progress <- function(attempted, accepted) {
       if (!is.null(pb)) {
         rate <- if (attempted) accepted / attempted else 0
-        pb$update(
-          min(accepted / nb_acc_prtcl_before_next_gen, 1),
+        updateProgressBar(
+          pb,
+          accepted / nb_acc_prtcl_before_next_gen,
           tokens = list(
             gen = gen,
             accrate = format(round(rate, 3), nsmall = 3),

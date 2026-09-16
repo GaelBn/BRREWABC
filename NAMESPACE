@@ -2,6 +2,7 @@
 
 export(abcrejection)
 export(abcsmc)
+export(consolidate_abc_storage)
 export(list_abc_stored_data)
 export(plot_abcrejection_res)
 export(plot_abcsmc_res)

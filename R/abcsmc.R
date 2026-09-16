@@ -46,6 +46,10 @@
 #' worker before returning control to the coordinator. Process startup and
 #' package loading occur once per batch, so use a sufficiently large value for
 #' inexpensive simulations.
+#' @param storage_chunk_rows maximum number of stored summary/output rows kept
+#' in a worker buffer before an atomic Parquet fragment is written.
+#' @param storage_chunk_mb approximate maximum buffer size, in MiB, before an
+#' atomic Parquet fragment is written.
 # #' @param abc_user_param_file_path an R file containing the algorithm's
 # #' parameters (usage not recommended, included in this version for reasons of
 # #' compatibility with the procedure in script form used in some projects)
@@ -152,6 +156,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 ', # TODO : queue selection via a function argument
                    max_concurrent_jobs = 1,
                    batch_size = 50,
+                   storage_chunk_rows = 1000000,
+                   storage_chunk_mb = 128,
                    # abc_user_param_file_path = NULL,
                    previous_gens = NA,
                    previous_epsilons = NA,
@@ -296,7 +302,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     }
 
     # print(ls()) # DEBUG
-    var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "model_jump_prob", "use_lhs_for_first_iter", "max_concurrent_jobs", "tmp_object_store_root", "store_summaries", "store_outputs", "dist_names", "model_names", "param_names", "column_names", "nb_acc_prtcl_before_next_gen", "epsilon", "empirical_sd", "lhs_first_gen", "gen", "previous_acc_particles")
+    var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "model_jump_prob", "use_lhs_for_first_iter", "max_concurrent_jobs", "tmp_object_store_root", "store_summaries", "store_outputs", "storage_chunk_rows", "storage_chunk_mb", "dist_names", "model_names", "param_names", "column_names", "nb_acc_prtcl_before_next_gen", "epsilon", "empirical_sd", "lhs_first_gen", "gen", "previous_acc_particles")
       # saveEnvir(var_to_save, tmp_current_abc_state) # TODO : not working, need to fix this
     do.call("save", c(var_to_save, list(file = tmp_current_abc_state)))
 
@@ -370,7 +376,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     if (current_iter_broke == TRUE) {
       persistStoredGeneration(tmp_object_store_root, storage_root, gen,
                               tested_this_gen$attempt_id, retained_ids,
-                              store_summaries, store_outputs)
+                              store_summaries, store_outputs,
+                              batch_result$stored_fragments)
       break
     }
     #
@@ -383,7 +390,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
     retained_ids <- current_acc_particles$attempt_id
     persistStoredGeneration(tmp_object_store_root, storage_root, gen,
                             tested_this_gen$attempt_id, retained_ids,
-                            store_summaries, store_outputs)
+                            store_summaries, store_outputs,
+                            batch_result$stored_fragments)
     internal_columns <- c("batch_id", "attempt_index")
     current_acc_particles <- current_acc_particles[
       setdiff(names(current_acc_particles), internal_columns)

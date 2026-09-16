@@ -31,6 +31,10 @@
 #' worker before returning control to the coordinator. Process startup and
 #' package loading occur once per batch, so use a sufficiently large value for
 #' inexpensive simulations.
+#' @param storage_chunk_rows maximum number of stored summary/output rows kept
+#' in a worker buffer before an atomic Parquet fragment is written.
+#' @param storage_chunk_mb approximate maximum buffer size, in MiB, before an
+#' atomic Parquet fragment is written.
 #' @param store_summaries which summary statistics to store in Parquet files:
 #' `"none"`, `"retained"`, `"accepted"`, or `"all"`
 #' @param store_outputs which model outputs to store in Parquet files, using the
@@ -94,6 +98,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 ', # TODO : queue selection via a function argument
                          max_concurrent_jobs = 1,
                          batch_size = 50,
+                         storage_chunk_rows = 1000000,
+                         storage_chunk_mb = 128,
                          store_summaries = c("none", "retained", "accepted", "all"),
                          store_outputs = c("none", "retained", "accepted", "all"),
                          verbose = FALSE,
@@ -160,7 +166,7 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
 
   # print(ls()) # DEBUG
   unlink(file.path(storage_root, "manifest.parquet"))
-  var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "max_concurrent_jobs", "accepted_particles_filepath", "all_tested_particles_filepath", "tmp_object_store_root", "store_summaries", "store_outputs", "dist_names", "model_names", "param_names", "column_names", "tot_nb_acc_prtcl", "thresholds")
+  var_to_save <- c( "model_def", "model_list", "prior_dist", "ss_obs", "max_concurrent_jobs", "accepted_particles_filepath", "all_tested_particles_filepath", "tmp_object_store_root", "store_summaries", "store_outputs", "storage_chunk_rows", "storage_chunk_mb", "dist_names", "model_names", "param_names", "column_names", "tot_nb_acc_prtcl", "thresholds")
     # saveEnvir(var_to_save, tmp_current_abc_state) # TODO : not working, need to fix this
   do.call("save", c(var_to_save, list(file = tmp_current_abc_state)))
 
@@ -233,7 +239,8 @@ Rscript %s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/
   retained_ids <- acc_particles$attempt_id
   persistStoredGeneration(tmp_object_store_root, storage_root, 0L,
                           all_tested_particles$attempt_id, retained_ids,
-                          store_summaries, store_outputs)
+                          store_summaries, store_outputs,
+                          batch_result$stored_fragments)
 
   if (verbose) {
     cat("Experiment done!", "\n")

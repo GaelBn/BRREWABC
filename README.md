@@ -130,16 +130,17 @@ result <- abcsmc(
 ```
 
 The available policies are `"none"`, `"retained"`, `"accepted"`, and
-`"all"`. Stored objects are written to Parquet files under `res/parquet`
-and are loaded only when requested:
+`"all"`. Stored objects are buffered by each worker and written as
+bounded, atomic Parquet fragments under `res/parquet`. Buffer limits are
+independent of the simulation batch size and can be adjusted with
+`storage_chunk_rows` and `storage_chunk_mb`.
 
 > **Storage and performance warning**
 >
 > Using `store_summaries = "all"` or `store_outputs = "all"` stores data
 > for every tested particle, including rejected particles. This can
-> generate many temporary Parquet fragments and require substantial disk
-> space, memory, and consolidation time, especially when model outputs
-> contain long trajectories or when the acceptance rate is low.
+> require substantial disk space, especially when model outputs contain
+> long trajectories or when the acceptance rate is low.
 >
 > For large analyses, prefer `"retained"` or `"accepted"` unless
 > rejected simulations are required for diagnostics. Ensure that
@@ -175,6 +176,23 @@ retained_outputs <- read_model_outputs(
   status = "retained"
 )
 ```
+
+For transfer or archival, fragments can be consolidated on demand into
+one Parquet file per named object and generation. The default export
+mode leaves the operational fragmented storage unchanged:
+
+``` r
+consolidate_abc_storage(
+  result,
+  kind = "summaries",
+  generation = 5
+)
+```
+
+Use `dry_run = TRUE` to inspect the planned files and volume. With
+`mode = "replace"`, the consolidated files atomically replace the
+fragments in the active manifest; source fragments are retained unless
+`keep_fragments = FALSE` is requested.
 
 The stored tables include `attempt_id`, `generation`, `job_id`,
 `accepted`, and `retained`, allowing each trajectory to be linked to the

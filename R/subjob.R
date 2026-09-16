@@ -55,7 +55,7 @@ buildParticleRow <- function(values, metadata, distances, column_names) {
   row[column_names]
 }
 
-runSMCBatch <- function(spec, state) {
+runSMCBatch <- function(spec, state, stored_buffer) {
   rows <- vector("list", spec$n_attempts)
 
   for (attempt_index in seq_len(spec$n_attempts)) {
@@ -81,15 +81,15 @@ runSMCBatch <- function(spec, state) {
     distances <- model_result$distances
     accepted <- (state$gen == 1L) || all(distances < state$epsilon)
 
-    stageStoredCollection(
-      model_result$summaries, "summaries", state$store_summaries,
-      accepted, attempt_id, state$gen, spec$job_id,
-      state$tmp_object_store_root
+    appendStoredCollection(
+      stored_buffer, model_result$summaries, "summaries",
+      state$store_summaries, accepted, attempt_id, state$gen,
+      spec$job_id, attempt_index
     )
-    stageStoredCollection(
-      model_result$outputs, "outputs", state$store_outputs,
-      accepted, attempt_id, state$gen, spec$job_id,
-      state$tmp_object_store_root
+    appendStoredCollection(
+      stored_buffer, model_result$outputs, "outputs",
+      state$store_outputs, accepted, attempt_id, state$gen,
+      spec$job_id, attempt_index
     )
 
     p_weight <- NA_real_
@@ -125,7 +125,7 @@ runSMCBatch <- function(spec, state) {
   dplyr::bind_rows(rows)
 }
 
-runRejectionBatch <- function(spec, state) {
+runRejectionBatch <- function(spec, state, stored_buffer) {
   rows <- vector("list", spec$n_attempts)
 
   for (attempt_index in seq_len(spec$n_attempts)) {
@@ -142,15 +142,15 @@ runRejectionBatch <- function(spec, state) {
     accepted <- all(!is.na(state$thresholds)) &&
       all(distances <= state$thresholds)
 
-    stageStoredCollection(
-      model_result$summaries, "summaries", state$store_summaries,
-      accepted, attempt_id, 0L, spec$job_id,
-      state$tmp_object_store_root
+    appendStoredCollection(
+      stored_buffer, model_result$summaries, "summaries",
+      state$store_summaries, accepted, attempt_id, 0L,
+      spec$job_id, attempt_index
     )
-    stageStoredCollection(
-      model_result$outputs, "outputs", state$store_outputs,
-      accepted, attempt_id, 0L, spec$job_id,
-      state$tmp_object_store_root
+    appendStoredCollection(
+      stored_buffer, model_result$outputs, "outputs",
+      state$store_outputs, accepted, attempt_id, 0L,
+      spec$job_id, attempt_index
     )
 
     particle_values <- proposed_particle[
@@ -187,11 +187,17 @@ runABCBatch <- function(kind = c("smc", "rejection"), spec, state_path,
       sys.source(state$model_def, envir = state)
     }
     set.seed(spec$seed)
+    stored_buffer <- newStoredBuffer(
+      spec, state$tmp_object_store_root,
+      state$storage_chunk_rows %||% 1000000L,
+      state$storage_chunk_mb %||% 128
+    )
     particles <- if (kind == "smc") {
-      runSMCBatch(spec, state)
+      runSMCBatch(spec, state, stored_buffer)
     } else {
-      runRejectionBatch(spec, state)
+      runRejectionBatch(spec, state, stored_buffer)
     }
+    stored_fragments <- flushStoredBuffer(stored_buffer)
     particle_path <- file.path(batch_dir, "particles.rds")
     writeRDSAtomically(particles, particle_path)
     result <- list(
@@ -206,6 +212,7 @@ runABCBatch <- function(kind = c("smc", "rejection"), spec, state_path,
       particles_path = normalizePath(
         particle_path, winslash = "/", mustWork = FALSE
       ),
+      stored_fragments = stored_fragments,
       started_at = started_at,
       finished_at = Sys.time()
     )
@@ -292,6 +299,7 @@ runLocalBatches <- function(kind, generation, state_path, batch_root,
 
   active <- list()
   completed <- list()
+  stored_fragments <- list()
   next_batch_id <- 1L
   attempts_reserved <- 0L
   attempts_completed <- 0L
@@ -348,6 +356,11 @@ runLocalBatches <- function(kind, generation, state_path, batch_root,
       result <- collectLocalBatch(active[[id]])
       particles <- readRDS(result$particles_path)
       completed[[length(completed) + 1L]] <- particles
+      if (!is.null(result$stored_fragments) &&
+          nrow(result$stored_fragments)) {
+        stored_fragments[[length(stored_fragments) + 1L]] <-
+          result$stored_fragments
+      }
       attempts_completed <- attempts_completed + result$n_attempted
       accepted_completed <- accepted_completed + result$n_accepted
       active[[id]] <- NULL
@@ -385,7 +398,8 @@ runLocalBatches <- function(kind, generation, state_path, batch_root,
     particles = particles,
     attempts = attempts_completed,
     accepted = accepted_completed,
-    stop_reason = stop_reason %||% "completed"
+    stop_reason = stop_reason %||% "completed",
+    stored_fragments = dplyr::bind_rows(stored_fragments)
   )
 }
 
@@ -455,6 +469,7 @@ runClusterBatches <- function(kind, generation, state_path, batch_root,
   dir.create(stderr_dir, recursive = TRUE, showWarnings = FALSE)
 
   completed <- list()
+  stored_fragments <- list()
   next_batch_id <- 1L
   attempts_completed <- 0L
   accepted_completed <- 0L
@@ -577,6 +592,11 @@ runClusterBatches <- function(kind, generation, state_path, batch_root,
       }
       particles <- readRDS(result$particles_path)
       completed[[length(completed) + 1L]] <- particles
+      if (!is.null(result$stored_fragments) &&
+          nrow(result$stored_fragments)) {
+        stored_fragments[[length(stored_fragments) + 1L]] <-
+          result$stored_fragments
+      }
       attempts_completed <- attempts_completed + result$n_attempted
       accepted_completed <- accepted_completed + result$n_accepted
     }
@@ -604,7 +624,8 @@ runClusterBatches <- function(kind, generation, state_path, batch_root,
     particles = particles,
     attempts = attempts_completed,
     accepted = accepted_completed,
-    stop_reason = stop_reason %||% "completed"
+    stop_reason = stop_reason %||% "completed",
+    stored_fragments = dplyr::bind_rows(stored_fragments)
   )
 }
 

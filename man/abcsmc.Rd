@@ -30,6 +30,8 @@ abcsmc(
     "#!/bin/bash\\n#$ -S /bin/bash\\n#$ -N subjob_abcsmc_prlll\\n# #$ -q \\"short.q|long.q\\"\\n# THE FOLLOWING SECTION SHOULD NOT BE MODIFIED\\n#$ -cwd\\n#$ -V\\n#$ -t \%s-\%s\\n#$ -tc \%d\\n#$ -o /dev/null\\n#$ -e /dev/null\\noutput_fpath=\%s\\nerror_fpath=\%s\\nmkdir -p $output_fpath\\nmkdir -p $error_fpath\\nRscript \%s $SGE_TASK_ID >$output_fpath/subjob.${SGE_TASK_ID}.out 2>$error_fpath/subjob.${SGE_TASK_ID}.err\\n",
   max_concurrent_jobs = 1,
   batch_size = 50,
+  storage_chunk_rows = 1e+06,
+  storage_chunk_mb = 128,
   previous_gens = NA,
   previous_epsilons = NA,
   store_summaries = c("none", "retained", "accepted", "all"),
@@ -106,6 +108,12 @@ computation cluster}
 worker before returning control to the coordinator. Process startup and
 package loading occur once per batch, so use a sufficiently large value for
 inexpensive simulations.}
+
+\item{storage_chunk_rows}{maximum number of stored summary/output rows kept
+in a worker buffer before an atomic Parquet fragment is written.}
+
+\item{storage_chunk_mb}{approximate maximum buffer size, in MiB, before an
+atomic Parquet fragment is written.}
 
 \item{previous_gens}{an object (dataframe) containing previous results (set
 of iterations), in order to start from the last iteration performed}

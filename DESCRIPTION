@@ -12,7 +12,9 @@ Description: An R package designed to facilitate inference through a parallelize
     and ABC rejection. Parallel simulations are dispatched in bounded batches
     to isolated workers. A central coordinator owns the global execution state,
     collects atomically finalized private results, and selects retained
-    particles without concurrent writes to shared result files.
+    particles without concurrent writes to shared result files. Optional
+    summary statistics and model outputs are stored as bounded Parquet
+    fragments that can be selectively read or consolidated on demand.
 License: GPL (>= 3)
 URL: https://github.com/GaelBn/BRREWABC, https://gaelbn.github.io/BRREWABC/
 Encoding: UTF-8

@@ -50,6 +50,8 @@
 <li>Model functions can now return a structured list containing <code>distances</code>, <code>summaries</code>, and <code>outputs</code>; the historical numeric distance vector remains supported.</li>
 <li>Added Parquet storage for vectors, matrices, and data frames, with independent <code>none</code>, <code>retained</code>, <code>accepted</code>, and <code>all</code> retention policies for summaries and outputs.</li>
 <li>Added stable attempt identifiers and acceptance/retention metadata to link stored tables to tested particles.</li>
+<li>Parquet fragments are finalized atomically so stopping parallel workers cannot expose partially written files during generation consolidation.</li>
+<li>A tested particle is now committed before it is published as accepted, and Parquet consolidation ignores orphan fragments not present in the committed attempt journal.</li>
 <li>Added <code><a href="../reference/list_abc_stored_data.html">list_abc_stored_data()</a></code>, <code><a href="../reference/read_summary_statistics.html">read_summary_statistics()</a></code>, and <code><a href="../reference/read_model_outputs.html">read_model_outputs()</a></code> to inspect and selectively load stored data by name, generation, attempt identifier, or ABC status.</li>
 </ul></div>
     <div class="section level2">

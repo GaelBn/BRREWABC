@@ -203,8 +203,8 @@ new_threshold_quantile = 0.8, experiment_folderpath = tmp_dir,
 max_concurrent_jobs = 2, verbose = FALSE)
 #> Warning: EOF within quoted string
 #> Warning: EOF within quoted string
-#> Warning: EOF within quoted string
-#> Warning: EOF within quoted string
+#> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
+#> [1] 0.009531054
 
 # get results and plots
 all_accepted_particles = res$particles
@@ -218,25 +218,25 @@ plot_ess(data = all_accepted_particles, colorpal = "YlOrBr", filename = file.pat
 #> [1] "Plot saved as 'png'."
 #>    gen      ess
 #> 1    1 2000.000
-#> 2    2 1875.993
-#> 3    3 1914.225
-#> 4    4 1915.111
-#> 5    5 1934.219
-#> 6    6 1930.498
-#> 7    7 1928.733
-#> 8    8 1920.193
-#> 9    9 1922.517
-#> 10  10 1914.963
-#> 11  11 1899.364
-#> 12  12 1872.430
-#> 13  13 1885.557
-#> 14  14 1835.226
-#> 15  15 1867.778
-#> 16  16 1820.865
-#> 17  17 1816.429
-#> 18  18 1801.023
-#> 19  19 1763.685
-#> 20  20 1752.913
+#> 2    2 1883.590
+#> 3    3 1906.700
+#> 4    4 1913.984
+#> 5    5 1929.245
+#> 6    6 1941.606
+#> 7    7 1926.280
+#> 8    8 1911.555
+#> 9    9 1927.955
+#> 10  10 1892.943
+#> 11  11 1896.012
+#> 12  12 1885.316
+#> 13  13 1896.608
+#> 14  14 1851.553
+#> 15  15 1878.589
+#> 16  16 1822.786
+#> 17  17 1806.386
+#> 18  18 1816.339
+#> 19  19 1651.616
+#> 20  20 1731.782
 plot_densityridges(data = all_accepted_particles, prior = PRIOR_DIST, colorpal = "YlOrBr", filename = file.path(tmp_dir, "densityridges.png"))
 #> [1] "Plot saved as 'png'."
 ```

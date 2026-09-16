@@ -47,10 +47,6 @@ res <- abcsmc(model_list = model_list,
               experiment_folderpath = "rsmsmpl",
               max_concurrent_jobs = 5,
               verbose = FALSE)
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
-#> Warning in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,
-#> : EOF within quoted string
 ```
 
 ## Plot results
@@ -110,7 +106,7 @@ res <- abcsmc(model_list = model_list,
               previous_epsilons = all_thresholds,
               verbose = FALSE)
 #> The distance threshold(s) (epsilon(s)) fall(s) below the predetermined min value!
-#> [1] 0.00983266
+#> [1] 0.009427965
 ```
 
 ## Plot new results

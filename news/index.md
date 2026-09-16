@@ -12,6 +12,12 @@
   policies for summaries and outputs.
 - Added stable attempt identifiers and acceptance/retention metadata to
   link stored tables to tested particles.
+- Parquet fragments are finalized atomically so stopping parallel
+  workers cannot expose partially written files during generation
+  consolidation.
+- A tested particle is now committed before it is published as accepted,
+  and Parquet consolidation ignores orphan fragments not present in the
+  committed attempt journal.
 - Added
   [`list_abc_stored_data()`](https://gaelbn.github.io/BRREWABC/reference/list_abc_stored_data.md),
   [`read_summary_statistics()`](https://gaelbn.github.io/BRREWABC/reference/read_summary_statistics.md),

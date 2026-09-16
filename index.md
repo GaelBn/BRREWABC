@@ -127,6 +127,19 @@ The available policies are `"none"`, `"retained"`, `"accepted"`, and
 `"all"`. Stored objects are written to Parquet files under `res/parquet`
 and are loaded only when requested:
 
+> **Storage and performance warning**
+>
+> Using `store_summaries = "all"` or `store_outputs = "all"` stores data
+> for every tested particle, including rejected particles. This can
+> generate many temporary Parquet fragments and require substantial disk
+> space, memory, and consolidation time, especially when model outputs
+> contain long trajectories or when the acceptance rate is low.
+>
+> For large analyses, prefer `"retained"` or `"accepted"` unless
+> rejected simulations are required for diagnostics. Ensure that
+> sufficient local storage is available. Writing many fragments to
+> synchronized or network storage may substantially reduce performance.
+
 ``` r
 
 list_abc_stored_data(result)
